@@ -4,6 +4,7 @@
 <meta name="apple-mobile-web-app-title" content="Flame Test"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#F2F5F4" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0E1215" media="(prefers-color-scheme: dark)">
 <meta name="description" content="Ontario Grade 12 College Chemistry (SCH4C) study app with Fizz the flask.">
+<script src="supabase.js"></script>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 </head><body>
@@ -328,6 +329,8 @@ dt{color:var(--muted)} dd{margin:0}
 .whyb{margin-top:8px;border:0;background:none;padding:4px 0;font:800 14px var(--display);color:inherit;display:inline-flex;gap:6px;align-items:center;text-decoration:underline;text-underline-offset:3px}
 .whybox{margin-top:8px;max-height:30vh;overflow:auto;padding:10px 12px;border-radius:12px;background:var(--surface);font-size:15px;display:flex;flex-direction:column;gap:6px;color:var(--ink)}
 
+.acct input{font:16px var(--body);padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+.acct input:focus{outline:none;border-color:var(--c)}
 .keycard .crow input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:16px var(--mono);padding:9px 8px;outline:none}
 .keycard a{color:var(--ink);font-weight:700}
 /* bottom tabs (mobile) */
@@ -937,22 +940,47 @@ try{const raw=localStorage.getItem(KEY);if(raw)S=normalize(JSON.parse(raw));
 
 let syncState='local',docRef=null,writing=false,pending=false,saveT;
 function setSync(s){syncState=s;const el=$('#syncEl');if(el)el.outerHTML=syncHTML()}
-const syncHTML=()=>`<span class="sync ${syncState}" id="syncEl"><i></i>${{local:'Saved on this device',syncing:'Saving to your account…',cloud:'Synced to your Claude account',error:'Couldn’t reach your account. Saved on this device'}[syncState]}</span>`;
+const syncHTML=()=>`<span class="sync ${syncState}" id="syncEl"><i></i>${{local:'Saved on this device',syncing:'Syncing…',cloud:'Synced',error:'Couldn’t sync right now. Saved on this device'}[syncState]}</span>`;
 function save(){S.updated=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}clearTimeout(saveT);saveT=setTimeout(push,700)}
-async function push(){if(!docRef)return;if(writing){pending=true;return}writing=true;setSync('syncing');
-  try{await docRef.set(JSON.parse(JSON.stringify(S)));setSync('cloud')}catch(e){setSync('error')}
+/* ---------- Supabase sync (standalone build) ---------- */
+const SB_URL='https://eagsztlompasbqrrinzs.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhZ3N6dGxvbXBhc2JxcnJpbnpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNzQ3ODgsImV4cCI6MjEwNjk1MDc4OH0.j0YDXceNFwp6F6BQ30pz_dn00itgrWuObqeUCwFJbXg',SB_TABLE='flametest_progress';
+let sb=null,sbUser=null,firstPull=true;
+function mergeState(a,b){const n=(a.updated||0)>=(b.updated||0)?a:b,o=n===a?b:a,m=normalize(JSON.parse(JSON.stringify(n)));
+  m.done=Object.assign({},o.done||{},m.done);m.cp=Object.assign({},o.cp||{},m.cp);m.badges=Object.assign({},o.badges||{},m.badges);m.miss=Object.assign({},o.miss||{},m.miss);
+  for(const d in (o.days||{}))m.days[d]=Math.max(m.days[d]||0,o.days[d]);m.xp=Math.max(m.xp||0,o.xp||0);m.streak.best=Math.max(m.streak.best||0,(o.streak&&o.streak.best)||0);
+  m.updated=Date.now();return m}
+async function push(){if(!sb||!sbUser)return;if(writing){pending=true;return}writing=true;setSync('syncing');
+  try{const{error}=await sb.from(SB_TABLE).upsert({user_id:sbUser.id,data:JSON.parse(JSON.stringify(S)),updated_at:new Date().toISOString()});setSync(error?'error':'cloud')}catch(e){setSync('error')}
   writing=false;if(pending){pending=false;push()}}
-async function initCloud(){
-  if(!window.claude||typeof window.claude.use!=='function')return;
-  try{const[db,u]=await Promise.all([claude.use('db'),claude.use('user')]);if(!db||!u)return;
-    const id=await u.id();if(!id)return;
-    docRef=db.collection('data/users/'+id).doc('progress');
-    const snap=await Promise.race([docRef.get(),new Promise((_,r)=>setTimeout(()=>r('timeout'),10000))]);
-    const remote=snap&&snap.exists?snap.data():null;
-    if(remote&&(remote.updated||0)>(S.updated||0)){S=normalize(remote);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}applyTheme();if(!SES)route();setSync('cloud')}
-    else if(S.updated||Object.keys(S.done).length){push()}else setSync('cloud');
-  }catch(e){setSync(docRef?'error':'local')}
-}
+async function pull(){if(!sb||!sbUser)return;setSync('syncing');
+  try{const{data,error}=await sb.from(SB_TABLE).select('data').eq('user_id',sbUser.id).maybeSingle();if(error){setSync('error');return}
+    const remote=data&&data.data,hasLocal=Object.keys(S.done).length||S.xp;
+    if(!remote){firstPull=false;if(hasLocal)push();else setSync('cloud');return}
+    if(firstPull&&hasLocal){S=mergeState(S,remote);firstPull=false;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}push()}
+    else if((remote.updated||0)>(S.updated||0)){S=normalize(remote);firstPull=false;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}setSync('cloud')}
+    else if((S.updated||0)>(remote.updated||0)){firstPull=false;push();}
+    else{firstPull=false;setSync('cloud')}
+    applyTheme();if(!SES)route()}catch(e){setSync('error')}}
+function initCloud(){if(!window.supabase||SB_URL.startsWith('__'))return;
+  try{sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'flametest-auth'}})}catch(e){return}
+  sb.auth.onAuthStateChange((ev,session)=>{const u=session&&session.user||null,changed=(u&&u.id)!==(sbUser&&sbUser.id);sbUser=u;
+    if(changed){if(u){firstPull=true;setTimeout(pull,0)}else setSync('local');if(location.hash==='#profile'&&!SES)setTimeout(route,0)}});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&sbUser&&!SES)pull()})}
+function accountCard(){
+  if(!sb)return `<div class="card"><h3>Sync across devices</h3><p class="small" style="margin:6px 0 0;font-family:var(--body)">Sync isn’t available right now. Your progress is saved on this device.</p></div>`;
+  if(sbUser)return `<div class="card"><h3>Sync across devices</h3><div class="setrow" style="border:0;padding-bottom:0"><span>${esc(sbUser.email||'Signed in')}<br>${syncHTML()}</span><button class="b3 ghost" id="sbOut" style="padding:10px 14px;font-size:13px">Sign out</button></div></div>`;
+  return `<div class="card acct"><h3>Sync across devices</h3><p class="small" style="margin:6px 0 12px;font-family:var(--body)">Sign in to keep your XP, streak and lessons the same on every device.</p>
+   <form id="sbForm" style="display:flex;flex-direction:column;gap:10px"><label for="sbEmail" class="sr">Email</label><input type="email" id="sbEmail" placeholder="Email" autocomplete="email" required>
+   <label for="sbPass" class="sr">Password</label><input type="password" id="sbPass" placeholder="Password (6+ characters)" autocomplete="current-password" minlength="6" required>
+   <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="b3" type="submit" id="sbIn" style="flex:1">Sign in</button><button class="b3 ghost" type="button" id="sbUp" style="flex:1">Create account</button></div>
+   <p class="small" id="sbMsg" style="margin:0" hidden></p></form></div>`}
+function bindAccount(){const o=$('#sbOut');if(o)o.onclick=async()=>{await sb.auth.signOut();toast('Signed out. Progress stays on this device.')};
+  const f=$('#sbForm');if(!f)return;const msg=(t,bad)=>{const m=$('#sbMsg');m.hidden=false;m.style.color=bad?'var(--bad)':'var(--good)';m.textContent=t};
+  const busy=v=>{$('#sbIn').disabled=v;$('#sbUp').disabled=v};
+  f.onsubmit=async e=>{e.preventDefault();busy(true);const{error}=await sb.auth.signInWithPassword({email:$('#sbEmail').value.trim(),password:$('#sbPass').value});busy(false);
+    if(error)msg(/confirm/i.test(error.message)?'Confirm your email first: check your inbox for the link, then sign in here.':/invalid/i.test(error.message)?'Wrong email or password.':error.message,true);else toast('Signed in. Syncing…')};
+  $('#sbUp').onclick=async()=>{if(!f.reportValidity())return;busy(true);const{data,error}=await sb.auth.signUp({email:$('#sbEmail').value.trim(),password:$('#sbPass').value,options:{emailRedirectTo:location.origin+location.pathname}});busy(false);
+    if(error)msg(error.message,true);else if(!data.session)msg('Account created. Check your email for a confirmation link, then come back and sign in.');else toast('Account created. Syncing…')}}
 
 /* ---------- progress logic ---------- */
 const isDone=l=>!!S.done[l.id];
@@ -1119,6 +1147,7 @@ function viewProfile(){const L=level(),nx=lvlXP(L+1),pv=lvlXP(L),u=accentUnit();
    <div class="sbox"><span style="color:#D2334C">${ic('trophy',28)}</span><div><b>${S.streak.best}</b><span>best streak</span></div></div></div>
   <div class="card"><h3 style="margin-bottom:14px">Last 7 days</h3><div class="week">${days.map(d=>`<div><span class="v">${d.x||''}</span><i class="${d.x?'':'zero'}" style="height:${Math.max(3,d.x/mx*90)}px"></i><small>${'SMTWTFS'[d.d.getDay()]}</small></div>`).join('')}</div></div>
   <div class="card"><h3 style="margin-bottom:14px">Badges · ${BADGES.filter(b=>S.badges[b.id]).length}/${BADGES.length}</h3><div class="badges">${BADGES.map(b=>badgeImg(b,!!S.badges[b.id])).join('')}</div></div>
+  ${accountCard()}
   <div class="card"><h3>Settings</h3>
    <div class="setrow"><span>Daily goal</span><div class="seg" id="goalSeg">${[10,20,30,50].map(g=>`<button data-g="${g}" aria-pressed="${S.goal===g}">${g} XP</button>`).join('')}</div></div>
    <div class="setrow"><span>Sound effects</span><div class="seg"><button id="sndT" aria-pressed="${S.sound}">${S.sound?'On':'Off'}</button></div></div>
@@ -1126,9 +1155,8 @@ function viewProfile(){const L=level(),nx=lvlXP(L+1),pv=lvlXP(L),u=accentUnit();
    <div class="setrow"><span>Theme</span><div class="seg" id="thSeg">${['system','light','dark'].map(t=>`<button data-t="${t}" aria-pressed="${S.theme===t}">${t==='system'?'Auto':t[0].toUpperCase()+t.slice(1)}</button>`).join('')}</div></div>
    <div class="setrow"><span>Claude API key<br><span class="small">${getKey()?'Saved · ends in '+esc(getKey().slice(-4)):'Not set'}</span></span><div class="seg">${getKey()?'<button id="keyRm">Remove</button>':'<button id="keyAdd">Add</button>'}</div></div>
    <div class="setrow"><span>Fizz’s brain<br><span class="small">Haiku is cheapest, Sonnet is smartest</span></span><div class="seg" id="mdlSeg">${[['claude-haiku-5-5','Haiku'],['claude-sonnet-5-5','Sonnet']].map(([m,n])=>`<button data-m="${m}" aria-pressed="${getModel()===m}">${n}</button>`).join('')}</div></div>
-   <div class="setrow"><span>Progress</span>${syncHTML()}</div>
    <div class="setrow"><span>Start over</span><button class="b3 ghost" id="resetB" style="padding:10px 14px;font-size:13px">Reset progress</button></div></div></div>`}
-function bindProfile(){
+function bindProfile(){bindAccount();
   const kr=$('#keyRm');if(kr)kr.onclick=()=>{setKey('');toast('Key removed');route()};const ka=$('#keyAdd');if(ka)ka.onclick=()=>{location.hash='ask'};
   document.querySelectorAll('#mdlSeg [data-m]').forEach(b=>b.onclick=()=>{try{localStorage.setItem(MODELK,b.dataset.m)}catch(e){}route()});
   document.querySelectorAll('#goalSeg [data-g]').forEach(b=>b.onclick=()=>{S.goal=+b.dataset.g;save();route()});
