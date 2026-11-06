@@ -334,6 +334,21 @@ dt{color:var(--muted)} dd{margin:0}
 .acct input:focus{outline:none;border-color:var(--c)}
 .keycard .crow input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:16px var(--mono);padding:9px 8px;outline:none}
 .keycard a{color:var(--ink);font-weight:700}
+
+/* hearts, heart lab, bite cards */
+.stat.hs{color:#E5484D;border:0;background:none;cursor:pointer}.stat.hs.cold{color:var(--muted)}
+.hrow{display:flex;gap:6px;justify-content:center;color:var(--sunk)}.hrow .on{color:#E5484D}
+.hearts.pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+.lab{display:grid;grid-template-columns:1fr 1fr;gap:12px}.labcol{display:flex;flex-direction:column;gap:10px}
+.lab button{min-height:60px;border:2px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:0 3px 0 var(--line);font:700 17px/1.25 var(--body);padding:8px 10px;color:var(--ink);transition:transform .08s,opacity .3s}
+.lab button .f{font-size:1.05em}
+.lab button:active{transform:translateY(3px);box-shadow:none}
+.lab button[aria-pressed="true"]{border-color:#E5484D;background:color-mix(in oklab,#E5484D 12%,var(--surface));box-shadow:0 3px 0 color-mix(in oklab,#E5484D 55%,var(--line))}
+.lab button.ok{border-color:var(--good);background:color-mix(in oklab,var(--good) 14%,var(--surface));color:var(--good);opacity:.55;box-shadow:none}
+.lab button.bad{border-color:var(--bad);animation:shake .4s}
+.bite{padding:18px 20px;display:flex;flex-direction:column;gap:14px;animation:stepin .35s cubic-bezier(.16,1,.3,1) both}
+.bite .ltitle{font-size:clamp(26px,5vw,34px);letter-spacing:-.02em}
+.bite .tbl{border:0;border-radius:10px}
 /* bottom tabs (mobile) */
 .btabs{display:none}
 @media (max-width:1180px){.app{grid-template-columns:220px minmax(0,1fr)}.aside{display:none}}
@@ -932,7 +947,7 @@ function fizz({mood='idle',size=96,fill=.6,cls=''}={}){
 const KEY='flametest-sch4u-v2';/* key kept so existing progress carries over */
 const ds=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const dayOff=n=>{const d=new Date();d.setDate(d.getDate()+n);return ds(d)};
-function blank(){return{v:2,xp:0,done:{},cp:{},days:{},streak:{count:0,best:0,last:''},goal:30,badges:{},miss:{},sound:true,unlockAll:false,theme:'system',chat:[],updated:0}}
+function blank(){return{v:2,xp:0,done:{},cp:{},days:{},streak:{count:0,best:0,last:''},goal:30,badges:{},miss:{},sound:true,unlockAll:false,theme:'system',chat:[],hearts:5,heartsAt:0,updated:0}}
 function normalize(o){const b=blank();o=o&&typeof o==='object'?o:{};for(const k in b){if(o[k]===undefined||o[k]===null)o[k]=b[k]}o.streak=Object.assign(b.streak,o.streak);return o}
 let S=blank();
 try{const raw=localStorage.getItem(KEY);if(raw)S=normalize(JSON.parse(raw));
@@ -1075,7 +1090,8 @@ function renderAside(){const L=level(),nx=lvlXP(L+1),pv=lvlXP(L);
 function topStats(){const s=streakNow(),L=level();
   return `<div class="topstats"><a class="lvl" href="#profile"><i>${L}</i>${rank(L)}</a><div style="display:flex;gap:2px">
   <a class="stat streak ${S.streak.last===ds()?'':'cold'}" href="#profile" title="Day streak">${ic('flame',22,true)}${s}</a>
-  <a class="stat xp" href="#profile" title="Total XP">${ic('bolt',22,true)}${S.xp}</a></div></div>`}
+  <a class="stat xp" href="#profile" title="Total XP">${ic('bolt',22,true)}${S.xp}</a>
+  <button class="stat hs ${S.hearts?'':'cold'}" id="hStat" title="Hearts" aria-label="${S.hearts} hearts">${ic('heart',22,true)}${S.hearts}</button></div></div>`}
 function badgeImg(b,on,sz=64){return `<div class="badge ${on?'':'off'}" title="${b.name}: ${b.desc}"><div class="bimg" style="--bc:${b.c};width:${sz}px;height:${sz}px">${b.sym?`<b style="font-size:${sz*.34}px">${b.sym}</b>`:ic(b.icon,sz*.45,true)}</div>${sz>=60?`<span><b>${b.name}</b><br>${b.desc}</span>`:''}</div>`}
 
 /* ---------- views ---------- */
@@ -1178,18 +1194,82 @@ function bindProfile(){bindAccount();
   let armed=false;$('#resetB').onclick=e=>{if(!armed){armed=true;e.target.textContent='Tap again to erase everything';e.target.classList.remove('ghost');e.target.classList.add('nob');return}
     const keep={goal:S.goal,sound:S.sound,theme:S.theme};S=Object.assign(blank(),keep);save();toast('Progress reset');route()}}
 
+/* ---------- hearts (shared across lessons) ---------- */
+const HMAX=5,HREGEN=30*60*1000;
+function regen(){if(typeof S.hearts!=='number')S.hearts=HMAX;if(S.hearts>=HMAX){S.hearts=HMAX;S.heartsAt=0;return}
+  const now=Date.now();if(!S.heartsAt)S.heartsAt=now;const n=Math.floor((now-S.heartsAt)/HREGEN);
+  if(n>0){S.hearts=Math.min(HMAX,S.hearts+n);S.heartsAt=S.hearts>=HMAX?0:S.heartsAt+n*HREGEN;save()}}
+const nextHeartIn=()=>S.hearts>=HMAX?0:Math.max(0,S.heartsAt+HREGEN-Date.now());
+const mmss=ms=>{const t=Math.ceil(ms/1000);return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
+function loseHeart(){regen();if(S.hearts>=HMAX)S.heartsAt=Date.now();S.hearts=Math.max(0,S.hearts-1);save()}
+const usesHearts=()=>!!SES&&(SES.kind==='lesson'||SES.kind==='cp');
+const heartRow=()=>`<div class="hrow" aria-label="${S.hearts} of ${HMAX} hearts">${[...Array(HMAX)].map((_,i)=>`<span class="${i<S.hearts?'on':''}">${ic('heart',30,true)}</span>`).join('')}</div>`;
+function heartsSheet(after){regen();const full=S.hearts>=HMAX;
+  sheet(`<div class="fizzline">${fizz({mood:S.hearts?'idle':'sad',size:70,fill:Math.max(.1,S.hearts/HMAX)})}<div style="flex:1"><h3>${S.hearts?`You have ${S.hearts} heart${S.hearts>1?'s':''}`:'You’re out of hearts'}</h3>
+   <p>${full?'Full! Each mistake in a lesson or checkpoint costs one heart.':`Next heart in <b id="hTimer">${mmss(nextHeartIn())}</b>. Or win them all back now in Heart Lab.`}</p></div></div>${heartRow()}
+   <div class="btns">${full?'':`<button class="b3 wide" id="goLab">${ic('flask',20)} Play Heart Lab · 1 min</button>`}<button class="b3 ghost wide" data-close>${full?'Got it':'Not now'}</button></div>`);
+  const g=$('#goLab');if(g)g.onclick=()=>{closeSheet();startHeartLab(()=>{closeSession();if(after)after()},()=>closeSession())};
+  const t=setInterval(()=>{const el=$('#hTimer');if(!el){clearInterval(t);return}regen();el.textContent=mmss(nextHeartIn())},1000)}
+document.addEventListener('click',e=>{const h=e.target.closest&&e.target.closest('#hStat');if(h)heartsSheet()});
+
+/* Heart Lab: match symbols/formulas to names to refill hearts */
+const LABPAIRS=[['Na','sodium'],['K','potassium'],['Fe','iron'],['Cu','copper'],['Ag','silver'],['Pb','lead'],['Ca','calcium'],['Mg','magnesium'],['Cl','chlorine'],['Zn','zinc'],
+ ['{H2O}','water'],['{CO2}','carbon dioxide'],['NaCl','sodium chloride'],['{CH4}','methane'],['{NH3}','ammonia'],['{OH^-}','hydroxide'],['{NO3^-}','nitrate'],
+ ['{SO4^2-}','sulfate'],['{CO3^2-}','carbonate'],['{NH4^+}','ammonium'],['{C2H5OH}','ethanol'],['HCl','hydrochloric acid'],['{C3H8}','propane'],['{O3}','ozone']];
+let LAB=null;
+function startHeartLab(onDone,onQuit){const set=[...LABPAIRS].sort(()=>Math.random()-.5).slice(0,5);const ids=set.map((_,i)=>i);
+  LAB={set,left:[...ids].sort(()=>Math.random()-.5),right:[...ids].sort(()=>Math.random()-.5),sel:null,done:{},onDone,onQuit,won:0};
+  const s=$('#session');s.hidden=false;document.body.style.overflow='hidden';setAccent({c:'#E5484D'});renderLab()}
+function renderLab(){const s=$('#session'),L=LAB,n=Object.keys(L.done).length;
+  s.innerHTML=`<div class="shead"><button class="xbtn" id="labX" aria-label="Leave Heart Lab">${ic('x',28)}</button><div class="sbar"><span style="width:${n/L.set.length*100}%"></span></div><div class="hearts" id="labH">${ic('heart',26,true)}${S.hearts}</div></div>
+  <div class="sbody"><div class="sinner"><div class="fizzline">${fizz({mood:'happy',size:70,fill:.9})}<div class="say" style="flex:1"><b>Heart Lab!</b> Match each symbol or formula to its name. Every pair wins a heart.</div></div>
+  <div class="lab" role="group" aria-label="Match the pairs"><div class="labcol">${L.left.map(i=>labBtn('L',i)).join('')}</div><div class="labcol">${L.right.map(i=>labBtn('R',i)).join('')}</div></div></div></div>`;
+  s.querySelectorAll('.lab button').forEach(b=>b.onclick=()=>labTap(b));
+  $('#labX').onclick=()=>{LAB=null;if(SES){setAccent(SES.u);failScreen()}else L.onQuit()}}
+function labBtn(side,i){const[a,b]=LAB.set[i],done=LAB.done[i];return `<button data-side="${side}" data-i="${i}" class="${done?'ok':''}" ${done?'disabled':''} aria-pressed="false">${side==='L'?chem(a.startsWith('{')?a:'{'+a+'}'):b}</button>`}
+function labTap(b){const L=LAB,side=b.dataset.side,i=+b.dataset.i;
+  if(!L.sel||L.sel.side===side){document.querySelectorAll(`.lab button[data-side="${side}"]`).forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');L.sel={side,i,el:b};SND.tap();return}
+  const other=L.sel.el;L.sel=null;
+  if(+other.dataset.i===i){[b,other].forEach(x=>{x.classList.add('ok');x.disabled=true;x.setAttribute('aria-pressed','false')});L.done[i]=1;SND.ok();
+    S.hearts=Math.min(HMAX,S.hearts+1);if(S.hearts>=HMAX)S.heartsAt=0;const h=$('#labH');h.innerHTML=ic('heart',26,true)+S.hearts;h.classList.remove('pop');void h.offsetWidth;h.classList.add('pop');
+    $('.sbar span').style.width=(Object.keys(L.done).length/L.set.length*100)+'%';
+    if(Object.keys(L.done).length===L.set.length)setTimeout(labWin,450)}
+  else{[b,other].forEach(x=>{x.setAttribute('aria-pressed','false');x.classList.remove('bad');void x.offsetWidth;x.classList.add('bad')});SND.no()}}
+function labWin(){const L=LAB;S.hearts=HMAX;S.heartsAt=0;save();SND.win();confetti();
+  $('#session').innerHTML=`<div class="sbody" style="display:grid;place-items:center"><div class="sinner result" style="align-items:center;gap:18px">${fizz({mood:'happy',size:140,fill:1})}<h1 style="color:#E5484D">Hearts refilled!</h1>${heartRow()}<p style="margin:0;color:var(--muted)">Back to full. Let’s keep going.</p></div></div>
+  <div class="sfoot"><div class="sfin"><span></span><button class="b3" id="go">Continue</button></div></div>`;
+  $('#go').focus();$('#go').onclick=()=>{LAB=null;if(SES)setAccent(SES.u);L.onDone()}}
+
+/* Bite-size lesson cards: short screens with questions mixed in */
+const txtLen=h=>h.replace(/<[^>]+>/g,'').length;
+function lessonCards(l){const cards=[],bodyS=['Here’s how it works.','Keep going, you’ve got this.','Next bit.','This part matters.','Almost there.'];let bi=0;
+  cards.push({say:pick(['New idea!','Let’s learn something new.','Here’s a fresh one.']),html:`<h1 class="ltitle">${l.title}</h1><p class="lede">${chem(l.lede)}</p>`});
+  if(l.diagram==='pe')cards.push({say:'Look at this diagram.',html:peDiagram()});
+  if(l.body){const blocks=chem(l.body).match(/<(p|h2|ol|ul)\b[^>]*>[\s\S]*?<\/\1>/g)||[chem(l.body)];let cur='',held='';
+    blocks.forEach(b=>{if(/^<h2/.test(b)){if(cur){cards.push({say:bodyS[bi++%bodyS.length],html:cur});cur=''}held=b;return}
+      const piece=held+b;held='';if(cur&&txtLen(cur)+txtLen(piece)>340){cards.push({say:bodyS[bi++%bodyS.length],html:cur});cur=piece}else cur+=piece});
+    if(cur||held)cards.push({say:bodyS[bi++%bodyS.length],html:cur+held})}
+  if(l.table)cards.push({say:'Here’s a quick reference. No need to memorize it all now.',html:`<div class="tbl"><table><thead><tr>${l.table.head.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${l.table.rows.map(r=>`<tr>${r.map(c=>`<td>${chem(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`});
+  if(l.diagram==='cell')cards.push({say:'Here’s what it looks like.',html:cellDiagram()});
+  if(l.sim)cards.push({say:'Try it yourself! Tap the buttons and watch.',html:simHTML(),sim:true});
+  if(l.points)for(let i=0;i<l.points.length;i+=2)cards.push({say:i===0?'Key points to remember.':'A couple more.',html:`<ul class="points">${l.points.slice(i,i+2).map(p=>`<li>${chem(p)}</li>`).join('')}</ul>`});
+  if(l.analogy)cards.push({say:'Here’s a way to think about it.',html:`<div class="analogy">${chem(l.analogy)}</div>`,mood:'happy'});
+  if(l.example)cards.push({say:'Watch me work one out.',html:`<div class="ex"><div class="q">${chem(l.example.q)}</div><ol>${l.example.steps.map(s=>`<li>${chem(s)}</li>`).join('')}</ol></div>`,mood:'think'});
+  return cards.map(c=>Object.assign({t:'learn'},c))}
+
 /* ---------- sessions ---------- */
 let SES=null;
 function startLesson(l){const u=l.unit;setAccent(u);
-  const steps=[{t:'learn',p:'A',say:'New idea: '+l.title}];
-  if(l.table||l.points||l.sim||l.diagram==='cell')steps.push({t:'learn',p:'B',say:l.sim?'Try the simulator, then read the key points.':'Here are the key points.'});
-  if(l.example)steps.push({t:'learn',p:'C',say:'Watch me work one out.'});
-  const qs=l.quiz.map((q,i)=>({t:'q',qid:l.id+'-'+i}));
+  regen();if(S.hearts<=0){heartsSheet(()=>startLesson(l));return}
+  const cards=lessonCards(l),qs=l.quiz.map((q,i)=>({t:'q',qid:l.id+'-'+i}));
   const pool=[];LESSONS.forEach(x=>{if(x!==l&&isDone(x))x.quiz.forEach((q,i)=>pool.push(x.id+'-'+i))});
-  if(pool.length)qs.splice(1,0,{t:'q',qid:pick(pool),review:true});
-  SES={kind:'lesson',l,u,steps:steps.concat(qs),i:0,hearts:3,right:0,wrong:0,combo:0,best:0,start:Date.now(),requeued:{},sel:null,checked:false,replay:isDone(l)};
+  const mid=Math.max(1,Math.ceil(cards.length/2));
+  const steps=[...cards.slice(0,mid),qs[0],...cards.slice(mid),...qs.slice(1)];
+  if(pool.length&&cards.length>=3)steps.splice(2,0,{t:'q',qid:pick(pool),review:true});
+  SES={kind:'lesson',l,u,steps,i:0,hearts:3,right:0,wrong:0,combo:0,best:0,start:Date.now(),requeued:{},sel:null,checked:false,replay:isDone(l)};
   openSession()}
 function startQuiz(kind,arg){let pool=[],u=null;
+  if(kind==='cp'){regen();if(S.hearts<=0){heartsSheet(()=>startQuiz(kind,arg));return}}
   if(kind==='cp'){u=arg;u.lessons.forEach(l=>l.quiz.forEach((q,i)=>pool.push(l.id+'-'+i)))}
   else if(kind==='miss')pool=Object.keys(S.miss).filter(q=>byId(q.split('-')[0]));
   else LESSONS.forEach(l=>{if(arg==='all'||l.unit.id===arg||(arg==='done'&&isDone(l)))l.quiz.forEach((q,i)=>pool.push(l.id+'-'+i))});
@@ -1204,14 +1284,15 @@ const getQ=qid=>{const[l,i]=qid.split('-');return byId(l).quiz[+i]};
 
 function shead(){const pct=SES.i/SES.steps.length*100;
   return `<div class="shead"><button class="xbtn" id="sx" aria-label="Quit">${ic('x',28)}</button><div class="sbar" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%"></span></div>
-  ${SES.hearts!==null?`<div class="hearts" id="hearts">${ic('heart',26,true)}${SES.hearts}</div>`:`<div class="hearts" style="color:#C98A06">${ic('bolt',24,true)}${SES.right*2}</div>`}</div>`}
+  ${usesHearts()?`<div class="hearts" id="hearts">${ic('heart',26,true)}${S.hearts}</div>`:`<div class="hearts" style="color:#C98A06">${ic('bolt',24,true)}${SES.right*2}</div>`}</div>`}
 function renderStep(){const s=$('#session'),st=SES.steps[SES.i];SES.sel=null;SES.checked=false;
   if(st.t==='learn'){const l=SES.l;
-    s.innerHTML=shead()+`<div class="sbody"><div class="sinner"><div class="fizzline">${fizz({mood:st.p==='C'?'think':'idle',size:70,fill:.65})}<div class="say" style="flex:1">${st.say}</div></div>
-      ${st.p==='A'?`<h1 style="font-size:clamp(26px,4vw,36px);letter-spacing:-.02em">${l.title}</h1>`:''}<div class="prose">${learnHTML(l,st.p)}</div></div></div>
-      <div class="sfoot"><div class="sfin">${SES.replay&&SES.steps.findIndex(x=>x.t==='q')>SES.i?'<button class="b3 ghost" id="skip">Skip to questions</button>':'<span></span>'}<button class="b3" id="go">Continue</button></div></div>`;
-    $('#go').onclick=next;const sk=$('#skip');if(sk)sk.onclick=()=>{SES.i=SES.steps.findIndex(x=>x.t==='q');renderStep()};
-    if(st.p==='B')bindSim();
+    const moreLearn=SES.steps.slice(SES.i+1).some(x=>x.t==='learn');
+    s.innerHTML=shead()+`<div class="sbody"><div class="sinner"><div class="fizzline">${fizz({mood:st.mood||'idle',size:70,fill:.65})}<div class="say" style="flex:1">${st.say}</div></div>
+      <div class="prose card bite">${st.html}</div></div></div>
+      <div class="sfoot"><div class="sfin">${SES.replay&&moreLearn?'<button class="b3 ghost" id="skip">Skip to questions</button>':'<span></span>'}<button class="b3" id="go">Continue</button></div></div>`;
+    $('#go').onclick=next;const sk=$('#skip');if(sk)sk.onclick=()=>{SES.steps=SES.steps.slice(0,SES.i).concat(SES.steps.slice(SES.i).filter(x=>x.t==='q'));renderStep()};
+    if(st.sim)bindSim();
   }else{const q=getQ(st.qid),src=byId(st.qid.split('-')[0]);
     s.innerHTML=shead()+`<div class="sbody"><div class="sinner">${st.review||SES.kind!=='lesson'?`<span class="review">${ic('repeat',16)} ${st.review?'Review · ':''}${src.unit.name}: ${src.title}</span>`:''}${st.again?`<span class="review" style="color:var(--bad)">${ic('repeat',16)} Previous mistake</span>`:''}
       <div class="fizzline">${fizz({mood:'think',size:62,fill:.65})}<div class="say qprompt" style="flex:1;font-size:19px">${chem(q.q)}</div></div>
@@ -1228,7 +1309,7 @@ function check(){if(SES.sel===null||SES.checked)return;SES.checked=true;const st
   if(ok){SES.right++;SES.combo++;SES.best=Math.max(SES.best,SES.combo);delete S.miss[st.qid];SND.ok();head=pick(SAY.right);
     if(SES.combo>=3&&SES.combo%3===0)head=SES.combo+' '+pick(SAY.combo)}
   else{SES.wrong++;SES.combo=0;S.miss[st.qid]=1;SND.no();head=pick(SAY.wrong);
-    if(SES.hearts!==null){SES.hearts--;const h=$('#hearts');h.innerHTML=ic('heart',26,true)+SES.hearts;h.classList.remove('shake');void h.offsetWidth;h.classList.add('shake')}
+    if(usesHearts()){loseHeart();const h=$('#hearts');h.innerHTML=ic('heart',26,true)+S.hearts;h.classList.remove('shake');void h.offsetWidth;h.classList.add('shake')}
     if(SES.kind!=='miss'&&!SES.requeued[st.qid]){SES.requeued[st.qid]=1;SES.steps.push({t:'q',qid:st.qid,again:true})}}
   const sf=$('#sf');sf.className='sfoot '+(ok?'ok':'no');
   sf.innerHTML=`<div class="sfin"><div class="msg"><span class="ico">${ic(ok?'check':'x',26)}</span><div><h3>${head}</h3><p>${ok?'':'<b>Answer:</b> '+chem(q.o[q.a])+'. '}${chem(q.w)}</p>${ok?'':'<button class="whyb" id="whyB" type="button">'+ic('chat',16)+' Still confused? Ask Fizz why</button>'}</div></div><button class="b3 ${ok?'okb':'nob'}" id="go">Continue</button></div>`;
@@ -1237,15 +1318,14 @@ function check(){if(SES.sel===null||SES.checked)return;SES.checked=true;const st
   if(ok){const sv=document.querySelector('.sinner .fizz');if(sv)sv.outerHTML=fizz({mood:'happy',size:62,fill:.65})}
   else{const sv=document.querySelector('.sinner .fizz');if(sv)sv.outerHTML=fizz({mood:'sad',size:62,fill:.65})}
   try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
-function next(){if(SES.hearts!==null&&SES.hearts<=0){failScreen();return}SES.i++;if(SES.i>=SES.steps.length){finish();return}renderStep()}
+function next(){if(usesHearts()&&S.hearts<=0){failScreen();return}SES.i++;if(SES.i>=SES.steps.length){finish();return}renderStep()}
 function quitAsk(){sheet(`<div class="fizzline">${fizz({mood:'sad',size:70,fill:.5})}<div style="flex:1"><h3>Leaving already?</h3><p>You’ll lose your progress in this ${SES.kind==='lesson'?'lesson':'session'}.</p></div></div><div class="btns"><button class="b3 wide" data-close>Keep learning</button><button class="b3 ghost wide" id="quitY">Quit</button></div>`);
   $('#sheetHost').querySelector('.sheet').style.zIndex=70;$('#sheetHost').querySelector('.scrim').style.zIndex=69;$('#quitY').onclick=closeSession}
-function failScreen(){const s=$('#session');SND.no();
-  s.innerHTML=`<div class="sbody" style="display:grid;place-items:center"><div class="sinner result" style="align-items:center">${fizz({mood:'sad',size:140,fill:.15})}<h1>Out of hearts</h1><p style="max-width:44ch;margin:0;color:var(--muted)">Mistakes are part of it. Read the notes again, then have another go. The questions you missed are saved in Practice.</p></div></div>
-  <div class="sfoot"><div class="sfin">${SES.l?`<a class="b3 ghost" href="#notes-${SES.l.id}" id="fN">Read notes</a>`:'<span></span>'}<button class="b3" id="fR">Try again</button></div></div>`;
-  save();const k=SES.kind,l=SES.l,u=SES.u;
-  $('#fR').onclick=()=>{k==='lesson'?startLesson(l):startQuiz(k,u)};
-  const fn=$('#fN');if(fn)fn.onclick=()=>{$('#session').hidden=true;$('#session').innerHTML='';document.body.style.overflow='';SES=null;setAccent(accentUnit())}}
+function failScreen(){const s=$('#session');SND.no();save();
+  s.innerHTML=`<div class="sbody" style="display:grid;place-items:center"><div class="sinner result" style="align-items:center">${fizz({mood:'sad',size:130,fill:.12})}<h1 style="color:#E5484D">Out of hearts</h1>${heartRow()}<p style="max-width:44ch;margin:0;color:var(--muted)">Win them back with a quick matching game and pick up right where you left off. Or come back later: you get one heart back every 30 minutes.</p></div></div>
+  <div class="sfoot"><div class="sfin"><button class="b3 ghost" id="fQ">Quit</button><button class="b3" id="fLab">${ic('heart',20,true)} Get hearts back</button></div></div>`;
+  $('#fQ').onclick=closeSession;$('#fLab').focus();
+  $('#fLab').onclick=()=>startHeartLab(()=>next(),()=>closeSession())}
 function finish(){const sec=Math.round((Date.now()-SES.start)/1000),total=SES.right+SES.wrong,acc=total?Math.round(SES.right/total*100):100,perfect=SES.wrong===0;
   let xp=0,ctx={bestCombo:SES.best},title='Lesson complete!';
   if(SES.kind==='lesson'){const l=SES.l,prev=S.done[l.id];xp=(prev?5:10)+(perfect?5:0);S.done[l.id]={best:Math.max(acc,prev?prev.best:0),n:(prev?prev.n:0)+1};ctx.lesson=true;ctx.perfect=perfect;justDone=prev?null:l.id}
@@ -1496,7 +1576,7 @@ async function explainWhy(btn,q,chosen){if(!getKey()){btn.textContent='Add your 
   catch(e){box.innerHTML=e&&e.text?md(e.text):'<p>'+sampleErr(e)+'</p>'}}
 
 /* ---------- router ---------- */
-function route(){
+function route(){regen();
   const h=location.hash.slice(1)||'learn',m=$('#main');let html,after,tab=h;
   if(h.startsWith('notes-')&&byId(h.slice(6))){const l=byId(h.slice(6));setAccent(l.unit);html=viewNotes(l);tab='learn';
     after=()=>{bindSim();const g=$('#notesGo');if(g)g.onclick=()=>startLesson(l);$('#notesAsk').onclick=()=>askAbout(`I’m reading the notes on “${l.title}”. Can you explain the main idea a different way, with an everyday example?`)}}
