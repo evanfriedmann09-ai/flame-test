@@ -330,6 +330,7 @@ dt{color:var(--muted)} dd{margin:0}
 .whybox{margin-top:8px;max-height:30vh;overflow:auto;padding:10px 12px;border-radius:12px;background:var(--surface);font-size:15px;display:flex;flex-direction:column;gap:6px;color:var(--ink)}
 
 .acct input{font:16px var(--body);padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+.linkb{border:0;background:none;padding:2px 0;align-self:flex-start;font:700 14px var(--body);color:var(--muted);text-decoration:underline;text-underline-offset:3px}
 .acct input:focus{outline:none;border-color:var(--c)}
 .keycard .crow input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:16px var(--mono);padding:9px 8px;outline:none}
 .keycard a{color:var(--ink);font-weight:700}
@@ -944,7 +945,7 @@ const syncHTML=()=>`<span class="sync ${syncState}" id="syncEl"><i></i>${{local:
 function save(){S.updated=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}clearTimeout(saveT);saveT=setTimeout(push,700)}
 /* ---------- Supabase sync (standalone build) ---------- */
 const SB_URL='https://eagsztlompasbqrrinzs.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhZ3N6dGxvbXBhc2JxcnJpbnpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNzQ3ODgsImV4cCI6MjEwNjk1MDc4OH0.j0YDXceNFwp6F6BQ30pz_dn00itgrWuObqeUCwFJbXg',SB_TABLE='flametest_progress';
-let sb=null,sbUser=null,firstPull=true;
+let sb=null,sbUser=null,firstPull=true,RECOVERY=false;
 function mergeState(a,b){const n=(a.updated||0)>=(b.updated||0)?a:b,o=n===a?b:a,m=normalize(JSON.parse(JSON.stringify(n)));
   m.done=Object.assign({},o.done||{},m.done);m.cp=Object.assign({},o.cp||{},m.cp);m.badges=Object.assign({},o.badges||{},m.badges);m.miss=Object.assign({},o.miss||{},m.miss);
   for(const d in (o.days||{}))m.days[d]=Math.max(m.days[d]||0,o.days[d]);m.xp=Math.max(m.xp||0,o.xp||0);m.streak.best=Math.max(m.streak.best||0,(o.streak&&o.streak.best)||0);
@@ -963,22 +964,33 @@ async function pull(){if(!sb||!sbUser)return;setSync('syncing');
     applyTheme();if(!SES)route()}catch(e){setSync('error')}}
 function initCloud(){if(!window.supabase||SB_URL.startsWith('__'))return;
   try{sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'flametest-auth'}})}catch(e){return}
+  if(location.hash==='#profile'&&!SES)route();
   sb.auth.onAuthStateChange((ev,session)=>{const u=session&&session.user||null,changed=(u&&u.id)!==(sbUser&&sbUser.id);sbUser=u;
+    if(ev==='PASSWORD_RECOVERY'){RECOVERY=true;setTimeout(()=>{if(location.hash!=='#profile')location.hash='profile';else route()},0)}
     if(changed){if(u){firstPull=true;setTimeout(pull,0)}else setSync('local');if(location.hash==='#profile'&&!SES)setTimeout(route,0)}});
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&sbUser&&!SES)pull()})}
 function accountCard(){
   if(!sb)return `<div class="card"><h3>Sync across devices</h3><p class="small" style="margin:6px 0 0;font-family:var(--body)">Sync isn’t available right now. Your progress is saved on this device.</p></div>`;
+  if(sbUser&&RECOVERY)return `<div class="card acct"><h3>Set a new password</h3><p class="small" style="margin:6px 0 12px;font-family:var(--body)">For ${esc(sbUser.email||'your account')}. Use at least 6 characters.</p>
+   <form id="sbNew" style="display:flex;flex-direction:column;gap:10px"><label for="sbNewPass" class="sr">New password</label><input type="password" id="sbNewPass" placeholder="New password" autocomplete="new-password" minlength="6" required>
+   <button class="b3" type="submit" id="sbNewGo">Save password</button><p class="small" id="sbMsg" style="margin:0" hidden></p></form></div>`;
   if(sbUser)return `<div class="card"><h3>Sync across devices</h3><div class="setrow" style="border:0;padding-bottom:0"><span>${esc(sbUser.email||'Signed in')}<br>${syncHTML()}</span><button class="b3 ghost" id="sbOut" style="padding:10px 14px;font-size:13px">Sign out</button></div></div>`;
   return `<div class="card acct"><h3>Sync across devices</h3><p class="small" style="margin:6px 0 12px;font-family:var(--body)">Sign in to keep your XP, streak and lessons the same on every device.</p>
    <form id="sbForm" style="display:flex;flex-direction:column;gap:10px"><label for="sbEmail" class="sr">Email</label><input type="email" id="sbEmail" placeholder="Email" autocomplete="email" required>
    <label for="sbPass" class="sr">Password</label><input type="password" id="sbPass" placeholder="Password (6+ characters)" autocomplete="current-password" minlength="6" required>
    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="b3" type="submit" id="sbIn" style="flex:1">Sign in</button><button class="b3 ghost" type="button" id="sbUp" style="flex:1">Create account</button></div>
+   <button type="button" class="linkb" id="sbForgot">Forgot password?</button>
    <p class="small" id="sbMsg" style="margin:0" hidden></p></form></div>`}
-function bindAccount(){const o=$('#sbOut');if(o)o.onclick=async()=>{await sb.auth.signOut();toast('Signed out. Progress stays on this device.')};
+function bindAccount(){
+  const nf=$('#sbNew');if(nf){nf.onsubmit=async e=>{e.preventDefault();const b=$('#sbNewGo');b.disabled=true;const{error}=await sb.auth.updateUser({password:$('#sbNewPass').value});b.disabled=false;
+    if(error){const m=$('#sbMsg');m.hidden=false;m.style.color='var(--bad)';m.textContent=error.message}else{RECOVERY=false;toast('Password saved. You’re signed in.');route()}};return}const o=$('#sbOut');if(o)o.onclick=async()=>{await sb.auth.signOut();toast('Signed out. Progress stays on this device.')};
   const f=$('#sbForm');if(!f)return;const msg=(t,bad)=>{const m=$('#sbMsg');m.hidden=false;m.style.color=bad?'var(--bad)':'var(--good)';m.textContent=t};
   const busy=v=>{$('#sbIn').disabled=v;$('#sbUp').disabled=v};
   f.onsubmit=async e=>{e.preventDefault();busy(true);const{error}=await sb.auth.signInWithPassword({email:$('#sbEmail').value.trim(),password:$('#sbPass').value});busy(false);
     if(error)msg(/confirm/i.test(error.message)?'Confirm your email first: check your inbox for the link, then sign in here.':/invalid/i.test(error.message)?'Wrong email or password.':error.message,true);else toast('Signed in. Syncing…')};
+  $('#sbForgot').onclick=async()=>{const em=$('#sbEmail').value.trim();if(!em||!$('#sbEmail').checkValidity()){msg('Type your email above first.',true);$('#sbEmail').focus();return}
+    busy(true);const{error}=await sb.auth.resetPasswordForEmail(em,{redirectTo:location.origin+location.pathname});busy(false);
+    if(error)msg(/rate|seconds/i.test(error.message)?'Too many emails just now. Wait a minute and try again.':error.message,true);else msg('Reset link sent. Check your inbox (and spam), tap the link, and set a new password.')};
   $('#sbUp').onclick=async()=>{if(!f.reportValidity())return;busy(true);const{data,error}=await sb.auth.signUp({email:$('#sbEmail').value.trim(),password:$('#sbPass').value,options:{emailRedirectTo:location.origin+location.pathname}});busy(false);
     if(error)msg(error.message,true);else if(!data.session)msg('Account created. Check your email for a confirmation link, then come back and sign in.');else toast('Account created. Syncing…')}}
 
