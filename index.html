@@ -1,0 +1,1479 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Flame Test"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F2F5F4" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0E1215" media="(prefers-color-scheme: dark)">
+<meta name="description" content="Ontario Grade 12 College Chemistry (SCH4C) study app with Fizz the flask.">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head><body>
+<title>Flame Test SCH4C</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: nav | winding lesson path (centre) | goal + Fizz panel. Units wear flame-test colours; chunky pressable controls. */
+:root{
+  --bg:#F2F5F4; --surface:#FFFFFF; --sunk:#E6EBE9; --ink:#141A20; --muted:#55616B; --line:#D3DBD8;
+  --good:#1F7A46; --goodbtn:#23874D; --bad:#B3261E; --badbtn:#C2372F; --gold:#E9A800; --glass:#EAF3F4;
+  --display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --c:#E3A008; --on:#1a1405;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1215;--surface:#161B20;--sunk:#1F262C;--ink:#E6EBEE;--muted:#9AA6AF;--line:#2B343B;
+  --good:#5CC98A;--bad:#FF8A80;--glass:#1C2A30;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E1215;--surface:#161B20;--sunk:#1F262C;--ink:#E6EBEE;--muted:#9AA6AF;--line:#2B343B;
+  --good:#5CC98A;--bad:#FF8A80;--glass:#1C2A30;color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--ink)}
+body{font:17px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+::selection{background:color-mix(in oklab,var(--c) 35%,transparent)}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+select{font-size:16px}
+:focus-visible{outline:3px solid color-mix(in oklab,var(--c) 75%,var(--ink));outline-offset:3px;border-radius:8px}
+h1,h2,h3{font-family:var(--display);line-height:1.12;text-wrap:balance;margin:0}
+.f{font-family:var(--mono);font-size:.92em;white-space:nowrap}
+.f sub,.f sup{font-size:.72em}
+.ic{flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ic.solid{fill:currentColor}
+.ctext{color:color-mix(in oklab,var(--c) 70%,var(--ink))}
+.small{font-size:13px;color:var(--muted);font-family:var(--mono)}
+
+/* chunky buttons */
+.b3{font:800 15px/1 var(--display);letter-spacing:.06em;text-transform:uppercase;padding:15px 22px;border-radius:14px;border:0;background:var(--c);color:var(--on);
+  box-shadow:0 4px 0 color-mix(in oklab,var(--c) 62%,#000);display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;transition:transform .08s,box-shadow .08s,filter .15s}
+.b3:hover{filter:brightness(1.06)}
+.b3:active{transform:translateY(4px);box-shadow:0 0 0 transparent}
+.b3.ghost{background:var(--surface);color:var(--ink);box-shadow:0 4px 0 var(--line);outline:2px solid var(--line);outline-offset:-2px}
+.b3.okb{background:var(--goodbtn);color:#fff;box-shadow:0 4px 0 #165a33}
+.b3.nob{background:var(--badbtn);color:#fff;box-shadow:0 4px 0 #7f1a14}
+.b3:disabled{background:var(--sunk);color:var(--muted);box-shadow:0 4px 0 var(--line);cursor:default;filter:none;transform:none}
+.b3.wide{width:100%}
+
+/* app shell */
+.app{display:grid;grid-template-columns:230px minmax(0,1fr) 330px;min-height:100vh}
+.nav{position:sticky;top:0;height:100vh;padding-block:22px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 18px;text-decoration:none}
+.brand b{font:800 23px var(--display);letter-spacing:-.02em}
+.nav a.tab{display:flex;align-items:center;gap:14px;padding:11px 14px;border-radius:12px;text-decoration:none;font:800 14px var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:2px solid transparent}
+.nav a.tab:hover{background:var(--sunk)}
+.nav a.tab[aria-current="true"]{color:color-mix(in oklab,var(--c) 70%,var(--ink));background:color-mix(in oklab,var(--c) 12%,var(--surface));border-color:color-mix(in oklab,var(--c) 45%,var(--line))}
+main{min-width:0;overflow-x:clip;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 80px}
+.col{max-width:600px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+.aside{position:sticky;top:0;height:100vh;overflow:auto;padding-block:22px;padding-right:max(20px,env(safe-area-inset-right,0px));padding-left:8px;display:flex;flex-direction:column;gap:16px}
+
+.topstats{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);display:flex;gap:6px;justify-content:space-between;align-items:center;padding-block:14px;max-width:600px;margin:0 auto}
+.stat{display:inline-flex;align-items:center;gap:6px;font:800 16px var(--display);padding:6px 10px;border-radius:10px}
+.stat:hover{background:var(--sunk)}
+.stat.streak{color:#E8691C}.stat.streak.cold{color:var(--muted)}
+.stat.xp{color:#C98A06}
+.lvl{display:inline-flex;align-items:center;gap:8px;font:800 14px var(--display);padding:5px 12px 5px 5px;border-radius:99px;background:var(--surface);border:2px solid var(--line);text-decoration:none}
+.lvl i{font-style:normal;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-content:center;font-size:13px}
+
+.card{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:18px}
+.card h3{font-size:18px}
+
+/* Fizz */
+.fizz{display:block;overflow:visible}
+.fizz .fz-all{transform-box:fill-box;transform-origin:50% 100%;animation:bob 3s ease-in-out infinite}
+.fizz .fz-liq{animation:wave 2.2s linear infinite}
+.fizz .fz-eyes{transform-box:fill-box;transform-origin:center;animation:blink 4.6s infinite}
+.fizz .fz-b{animation:rise 3s ease-in infinite;opacity:0}
+.fizz .fz-b:nth-of-type(2){animation-delay:1s}.fizz .fz-b:nth-of-type(3){animation-delay:2s}
+.fizz .fz-arm{transform-box:fill-box}
+.fizz .fz-armL{transform-origin:100% 0}.fizz .fz-armR{transform-origin:0 0}
+.fizz.happy .fz-all{animation:hop .9s cubic-bezier(.3,.8,.4,1) infinite}
+.fizz.happy .fz-armL{animation:waveL .45s ease-in-out infinite alternate}
+.fizz.happy .fz-armR{animation:waveR .45s ease-in-out infinite alternate}
+.fizz.sad .fz-all{animation:none;transform:rotate(-7deg) translateY(3px)}
+.fizz.sad .fz-armL,.fizz.sad .fz-armR{transform:rotate(0)}
+.fizz.think .fz-all{animation:sway 2.4s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes hop{0%,100%{transform:translateY(0) scale(1,1)}15%{transform:translateY(0) scale(1.06,.92)}45%{transform:translateY(-16px) scale(.96,1.05)}75%{transform:translateY(0) scale(1.04,.95)}}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes wave{to{transform:translateX(60px)}}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}15%{opacity:.85}100%{transform:translateY(-38px);opacity:0}}
+@keyframes waveL{from{transform:rotate(0)}to{transform:rotate(38deg)}}
+@keyframes waveR{from{transform:rotate(0)}to{transform:rotate(-38deg)}}
+.say{position:relative;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:10px 14px;font-weight:700;font-size:15.5px;line-height:1.4}
+.say::before{content:"";position:absolute;left:-9px;top:22px;width:14px;height:14px;background:var(--surface);border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:rotate(45deg)}
+.fizzline{display:flex;align-items:flex-start;gap:12px}
+
+/* goal card */
+.goal{display:flex;gap:14px;align-items:center}
+.goal .ring{position:relative;width:64px;height:64px;flex:none}
+.goal .ring svg{transform:rotate(-90deg)}
+.goal .ring b{position:absolute;inset:0;display:grid;place-content:center;font:800 14px var(--display)}
+.goaltrack{height:14px;border-radius:99px;background:var(--sunk);overflow:hidden}
+.goaltrack span{display:block;height:100%;border-radius:99px;background:var(--gold);transition:width .8s cubic-bezier(.16,1,.3,1)}
+
+/* path */
+.unit{--c:#888;display:flex;flex-direction:column;gap:6px;margin-bottom:30px}
+.ubanner{background:var(--c);color:var(--on);border-radius:18px;padding:16px 18px;display:flex;align-items:center;gap:14px;box-shadow:0 5px 0 color-mix(in oklab,var(--c) 62%,#000);margin-bottom:22px}
+.ubanner .lbl{font:800 13px var(--display);letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.ubanner h2{font-size:22px}
+.ubanner p{margin:2px 0 0;font-size:14.5px;opacity:.9;line-height:1.4}
+.ubanner .notes{margin-left:auto;flex:none;border:2px solid currentColor;background:transparent;color:inherit;border-radius:12px;padding:8px;display:grid;place-content:center;opacity:.9;text-decoration:none}
+.ubanner .crown{font:800 13px var(--display);display:inline-flex;gap:4px;align-items:center;margin-top:6px;background:color-mix(in oklab,#000 18%,transparent);padding:3px 8px;border-radius:99px}
+.prow{position:relative;height:98px;display:flex;justify-content:center;align-items:center}
+.prow>.node{left:var(--off)}
+.node{position:relative;width:74px;height:68px;border-radius:50%;border:0;background:var(--c);color:var(--on);box-shadow:0 7px 0 color-mix(in oklab,var(--c) 62%,#000);display:grid;place-content:center;transition:transform .08s,box-shadow .08s}
+.node:active{transform:translateY(6px);box-shadow:0 1px 0 color-mix(in oklab,var(--c) 62%,#000)}
+.node.locked{background:var(--sunk);color:var(--muted);box-shadow:0 7px 0 var(--line)}
+.node.done{background:color-mix(in oklab,var(--c) 82%,#fff)}
+.node.chest{width:84px;height:76px;border-radius:22px}
+.node.current::before{content:"";position:absolute;inset:-11px;border-radius:50%;border:6px solid color-mix(in oklab,var(--c) 35%,transparent);animation:pulse 1.8s ease-out infinite}
+.node.chest.current::before{border-radius:28px}
+.node.pop{animation:pop .7s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pulse{0%{transform:scale(.92);opacity:1}100%{transform:scale(1.18);opacity:0}}
+@keyframes pop{0%{transform:scale(.4)}100%{transform:scale(1)}}
+.startbub{position:absolute;top:-30px;left:calc(50% + var(--off));transform:translateX(-50%);background:var(--surface);color:color-mix(in oklab,var(--c) 70%,var(--ink));border:2px solid var(--line);font:800 13px var(--display);letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:12px;white-space:nowrap;animation:bobx 1.6s ease-in-out infinite;z-index:2}
+.startbub::after{content:"";position:absolute;left:50%;bottom:-7px;width:10px;height:10px;background:var(--surface);border-right:2px solid var(--line);border-bottom:2px solid var(--line);transform:translateX(-50%) rotate(45deg)}
+@keyframes bobx{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-5px)}}
+.peek{position:absolute;top:2px;width:84px;left:calc(50% + var(--off));margin-left:-42px}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(10,14,18,.45);z-index:40;animation:fade .2s}
+.sheet{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(560px,100%);z-index:41;background:var(--surface);border-radius:22px 22px 0 0;border:2px solid var(--line);border-bottom:0;padding:22px max(20px,env(safe-area-inset-right,0px)) calc(22px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px;animation:up .32s cubic-bezier(.16,1,.3,1)}
+.sheet h3{font-size:22px}
+.sheet p{margin:0;color:var(--muted)}
+.sheet .btns{display:flex;flex-direction:column;gap:12px}
+@keyframes up{from{transform:translate(-50%,100%)}}
+@keyframes fade{from{opacity:0}}
+
+/* session overlay */
+.session{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.shead{flex:none;display:flex;align-items:center;gap:14px;padding-block:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:760px;width:100%;margin:0 auto}
+.xbtn{border:0;background:none;color:var(--muted);padding:6px;border-radius:10px;display:grid}
+.xbtn:hover{background:var(--sunk)}
+.sbar{flex:1;height:16px;border-radius:99px;background:var(--sunk);overflow:hidden}
+.sbar span{display:block;height:100%;background:var(--c);border-radius:99px;transition:width .5s cubic-bezier(.16,1,.3,1);box-shadow:inset 0 4px 0 rgba(255,255,255,.28)}
+.hearts{display:flex;align-items:center;gap:4px;color:#E5484D;font:800 17px var(--display)}
+.hearts.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.combo{font:800 13px var(--display);color:#E8691C;letter-spacing:.04em}
+.sbody{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding-block:8px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sinner{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:18px;animation:slidein .35s cubic-bezier(.16,1,.3,1)}
+@keyframes slidein{from{opacity:0;transform:translateX(24px)}}
+.sfoot{flex:none;border-top:2px solid var(--line);padding-block:18px calc(18px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));background:var(--bg)}
+.sfoot.ok{background:color-mix(in oklab,var(--good) 14%,var(--bg));border-color:transparent}
+.sfoot.no{background:color-mix(in oklab,var(--bad) 12%,var(--bg));border-color:transparent}
+.sfin{max-width:760px;margin:0 auto;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.sfin .msg{flex:1;min-width:220px;display:flex;gap:12px;align-items:flex-start}
+.sfin .msg .ico{width:44px;height:44px;border-radius:50%;display:grid;place-content:center;flex:none;background:var(--surface)}
+.ok .msg h3{color:var(--good)} .no .msg h3{color:var(--bad)}
+.ok .msg .ico{color:var(--good)} .no .msg .ico{color:var(--bad)}
+.msg p{margin:2px 0 0;font-size:15px}
+.sfin .b3{min-width:170px}
+.qprompt{font:800 22px/1.3 var(--display)}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;gap:14px;align-items:center;box-shadow:0 3px 0 var(--line);font-size:17px}
+.opt .k{flex:none;width:28px;height:28px;border-radius:8px;border:2px solid var(--line);display:grid;place-content:center;font:600 13px var(--mono);color:var(--muted)}
+.opt:hover:not(:disabled){background:var(--sunk)}
+.opt[aria-pressed="true"]{border-color:color-mix(in oklab,var(--c) 70%,var(--line));background:color-mix(in oklab,var(--c) 12%,var(--surface));box-shadow:0 3px 0 color-mix(in oklab,var(--c) 55%,var(--line))}
+.opt[aria-pressed="true"] .k{border-color:var(--c);color:var(--ink)}
+.opt.right{border-color:var(--good);background:color-mix(in oklab,var(--good) 12%,var(--surface));box-shadow:0 3px 0 var(--good)}
+.opt.wrong{border-color:var(--bad);background:color-mix(in oklab,var(--bad) 10%,var(--surface));box-shadow:0 3px 0 var(--bad)}
+.opt:disabled{cursor:default}
+.review{display:inline-flex;gap:6px;align-items:center;font:800 13px var(--display);letter-spacing:.06em;text-transform:uppercase;color:#C98A06}
+
+/* reading */
+.prose{display:flex;flex-direction:column;gap:14px}
+.prose p{margin:0}
+.prose h2{font-size:22px;margin-top:6px}
+.prose ol{margin:0;padding-left:24px;display:flex;flex-direction:column;gap:6px}
+.lede{font-size:19px;line-height:1.55;margin:0}
+.points{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.points li{padding-left:22px;position:relative}
+.points li::before{content:"";position:absolute;left:2px;top:.62em;width:9px;height:9px;border-radius:2px;background:var(--c)}
+.analogy{background:color-mix(in oklab,var(--c) 11%,var(--surface));border-radius:14px;padding:14px 18px}
+.analogy b{display:block;font-family:var(--display);font-size:15px;margin-bottom:2px}
+.ex{border:2px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
+.ex .q{padding:16px 18px;border-bottom:2px solid var(--line);font-weight:700}
+.ex ol{margin:0;padding:14px 18px 16px 40px;display:flex;flex-direction:column;gap:6px}
+.ex ol li{opacity:0;animation:stepin .45s cubic-bezier(.16,1,.3,1) forwards}
+.ex ol li:nth-child(1){animation-delay:.1s}.ex ol li:nth-child(2){animation-delay:.5s}.ex ol li:nth-child(3){animation-delay:.9s}.ex ol li:nth-child(4){animation-delay:1.3s}.ex ol li:nth-child(5){animation-delay:1.7s}
+@keyframes stepin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.tbl{overflow-x:auto;border:2px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+thead th{border-top:0;font-family:var(--display);font-size:14px;background:var(--sunk)}
+td.num{font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:14px}
+figure{margin:0;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:14px;overflow-x:auto}
+figure svg{display:block;max-width:100%;height:auto;margin:0 auto}
+figcaption{font-size:14px;color:var(--muted);margin-top:8px}
+.crumb{font-size:14px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;padding-top:20px}
+.crumb a{text-decoration:none;font-weight:700}
+
+/* sim */
+.sim{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:16px}
+.sim .eq{font-size:17px;text-align:center;white-space:normal}
+.bars{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;height:190px;align-items:end;padding:0 6px;border-bottom:2px solid var(--line)}
+.bar{display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bar .fill{width:100%;max-width:90px;border-radius:8px 8px 0 0;background:var(--c);transition:height .9s cubic-bezier(.16,1,.3,1);min-height:2px}
+.bar .v{font:600 14px var(--mono);font-variant-numeric:tabular-nums}
+.barlabels{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:center;margin-top:-8px}
+.controls{display:flex;flex-wrap:wrap;gap:8px}
+.controls button{border:2px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 12px;font-size:14.5px;font-weight:700}
+.controls button:hover{border-color:var(--c)}
+.status{min-height:52px;padding:10px 14px;border-radius:12px;background:var(--sunk);font-size:15.5px}
+.readout{display:flex;gap:18px;flex-wrap:wrap;font:14px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* tools */
+.tool{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.tool h2{font-size:24px}
+.tool p{margin:0;color:var(--muted)}
+.inrow{display:flex;gap:10px;flex-wrap:wrap}
+input[type=text]{font:18px var(--mono);padding:10px 14px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink);flex:1;min-width:0;caret-color:var(--c)}
+input[type=text]:focus{outline:none;border-color:var(--c)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{border:2px solid var(--line);background:var(--bg);border-radius:99px;padding:4px 10px;font:13px var(--mono)}
+.mmout .big{font:800 34px var(--display);letter-spacing:-.02em}
+.pt{display:grid;grid-template-columns:repeat(18,minmax(30px,1fr));gap:3px;min-width:640px}
+.pt button{aspect-ratio:1/1.1;border:0;border-radius:4px;padding:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;background:var(--k);color:#10161b}
+.pt button b{font:700 14px var(--display)}
+.pt button small{font:9px var(--mono);opacity:.8}
+.pt button[aria-pressed="true"]{outline:2.5px solid var(--ink);outline-offset:1px}
+.ptwrap{overflow-x:auto;padding:3px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:13px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:3px;background:var(--k)}
+.eldetail{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+.elbig{width:96px;height:104px;border-radius:8px;background:var(--k);color:#10161b;display:grid;place-content:center;text-align:center;position:relative}
+.elbig i{position:absolute;top:5px;left:8px;font:600 12px var(--mono);font-style:normal}
+.elbig b{font:800 40px/1 var(--display)}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:15px}
+dt{color:var(--muted)} dd{margin:0}
+
+/* profile */
+.phead{display:flex;gap:18px;align-items:center;padding-top:10px}
+.phead h1{font-size:clamp(28px,4vw,38px);letter-spacing:-.02em}
+.lvbar{height:14px;border-radius:99px;background:var(--sunk);overflow:hidden;margin-top:8px}
+.lvbar span{display:block;height:100%;background:var(--c);border-radius:99px;transition:width .8s cubic-bezier(.16,1,.3,1)}
+.sgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.sbox{border:2px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;gap:10px;align-items:center;background:var(--surface)}
+.sbox b{display:block;font:800 22px/1.1 var(--display);font-variant-numeric:tabular-nums}
+.sbox span{font-size:13.5px;color:var(--muted)}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:130px}
+.week div{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.week i{display:block;width:100%;max-width:34px;border-radius:7px 7px 3px 3px;background:var(--gold);min-height:3px}
+.week i.zero{background:var(--sunk)}
+.week small{font:12px var(--mono);color:var(--muted)}
+.week .v{font:600 12px var(--mono)}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:12px}
+.badge{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;font-size:13px;line-height:1.25}
+.badge .bimg{width:64px;height:64px;border-radius:18px;display:grid;place-content:center;background:var(--bc,var(--gold));color:#fff;box-shadow:0 4px 0 color-mix(in oklab,var(--bc,var(--gold)) 60%,#000);position:relative}
+.badge .bimg b{font:800 22px var(--display)}
+.badge.off .bimg{background:var(--sunk);color:var(--muted);box-shadow:0 4px 0 var(--line)}
+.badge.off{color:var(--muted)}
+.badge.new .bimg{animation:pop .7s cubic-bezier(.3,1.6,.5,1)}
+.setrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-top:2px solid var(--line)}
+.setrow:first-of-type{border-top:0}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:2px solid var(--line);background:var(--bg);border-radius:10px;padding:6px 12px;font:700 14px var(--body)}
+.seg button[aria-pressed="true"]{border-color:var(--c);background:color-mix(in oklab,var(--c) 15%,var(--surface))}
+.sync{display:inline-flex;gap:8px;align-items:center;font-size:14px;color:var(--muted)}
+.sync i{width:9px;height:9px;border-radius:50%;background:var(--muted)}
+.sync.cloud i{background:var(--good)}.sync.error i{background:var(--bad)}.sync.syncing i{background:var(--gold)}
+
+/* results */
+.result{text-align:center;align-items:center}
+.result h1{font-size:clamp(30px,5vw,42px);color:color-mix(in oklab,var(--c) 70%,var(--ink))}
+.rtiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%;max-width:480px}
+.rtile{border:2px solid var(--rc);border-radius:16px;overflow:hidden;background:var(--rc)}
+.rtile .rl{font:800 12px var(--display);letter-spacing:.08em;text-transform:uppercase;color:#fff;padding:5px}
+.rtile .rv{background:var(--surface);border-radius:13px;padding:12px 4px;font:800 22px var(--display);display:flex;gap:6px;justify-content:center;align-items:center;color:var(--rc);font-variant-numeric:tabular-nums}
+.ribbon{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+.ribbon .pill{display:inline-flex;gap:8px;align-items:center;padding:8px 14px;border-radius:99px;background:var(--surface);border:2px solid var(--line);font-weight:700;font-size:15px;animation:stepin .5s .6s both}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:80}
+.toast{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:90;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:700;animation:fade .2s;max-width:calc(100% - 32px)}
+
+
+/* chat */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.chat{gap:16px;padding-top:12px}
+.chathead .fizzline{gap:12px}
+.msgs{display:flex;flex-direction:column;gap:14px;min-height:30vh}
+.m.u{align-self:flex-end;background:var(--c);color:var(--on);border-radius:20px 20px 6px 20px;padding:10px 15px;max-width:85%;font-weight:700;overflow-wrap:anywhere;animation:stepin .25s both}
+.imgtag{display:inline-flex;gap:4px;align-items:center;font-size:13px;opacity:.85;margin-right:6px}
+.m.a{display:flex;gap:10px;align-items:flex-start;max-width:100%;animation:stepin .3s both}
+.m.a .fizz{flex:none;margin-top:2px}
+.bub{background:var(--surface);border:2px solid var(--line);border-radius:6px 20px 20px 20px;padding:10px 15px;min-width:0;flex:1;overflow-wrap:anywhere;display:flex;flex-direction:column;gap:8px;line-height:1.55}
+.bub.err{border-color:color-mix(in oklab,var(--bad) 45%,var(--line))}
+.bub p,.whybox p{margin:0}.bub ul,.bub ol,.whybox ul,.whybox ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px}
+.bub pre{margin:0;background:var(--sunk);border-radius:10px;padding:10px;overflow-x:auto;font:14px var(--mono)}
+.bub code{font:.92em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:5px}
+.typing{display:flex;gap:5px;padding:6px 0}.typing span{width:8px;height:8px;border-radius:50%;background:var(--muted);animation:dot 1s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-4px)}}
+.sugg{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.sugg button{border:2px solid var(--line);background:var(--surface);border-radius:16px;padding:9px 14px;font-weight:700;font-size:15px;text-align:right;box-shadow:0 3px 0 var(--line);max-width:90%}
+.sugg button:hover{border-color:var(--c)}
+.composer{position:sticky;bottom:0;z-index:10;background:var(--bg);padding-block:10px 14px;display:flex;flex-direction:column;gap:8px}
+.crow{display:flex;gap:8px;align-items:flex-end;background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:6px}
+.crow:focus-within{border-color:var(--c)}
+.crow textarea{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:16px/1.4 var(--body);resize:none;padding:9px 6px;max-height:140px;outline:none;caret-color:var(--c)}
+.cbtn{flex:none;width:42px;height:42px;border-radius:50%;border:0;background:transparent;color:var(--muted);display:grid;place-content:center;cursor:pointer}
+.cbtn:hover{background:var(--sunk)}
+.cbtn.send{background:var(--c);color:var(--on)}
+.cbtn.send:disabled{background:var(--sunk);color:var(--muted)}
+.cbtn.stop{background:var(--ink);color:var(--bg)}
+.thumb{position:relative;width:72px;height:72px}.thumb img{width:72px;height:72px;object-fit:cover;border-radius:12px;border:2px solid var(--line)}
+.thumb button{position:absolute;top:-8px;right:-8px;width:26px;height:26px;border-radius:50%;border:0;background:var(--ink);color:var(--bg);display:grid;place-content:center}
+.whyb{margin-top:8px;border:0;background:none;padding:4px 0;font:800 14px var(--display);color:inherit;display:inline-flex;gap:6px;align-items:center;text-decoration:underline;text-underline-offset:3px}
+.whybox{margin-top:8px;max-height:30vh;overflow:auto;padding:10px 12px;border-radius:12px;background:var(--surface);font-size:15px;display:flex;flex-direction:column;gap:6px;color:var(--ink)}
+
+.keycard .crow input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:16px var(--mono);padding:9px 8px;outline:none}
+.keycard a{color:var(--ink);font-weight:700}
+/* bottom tabs (mobile) */
+.btabs{display:none}
+@media (max-width:1180px){.app{grid-template-columns:220px minmax(0,1fr)}.aside{display:none}}
+@media (min-width:1181px){.mgoal{display:none}}
+@media (max-width:760px){
+  .app{grid-template-columns:1fr}
+  .nav{display:none}
+  .btabs{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg);border-top:2px solid var(--line);justify-content:space-around;padding-block:6px calc(6px + env(safe-area-inset-bottom,0px));padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
+  .btabs a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 12px;border-radius:12px;text-decoration:none;color:var(--muted);font:800 11px var(--display);letter-spacing:.05em;text-transform:uppercase;border:2px solid transparent}
+  .btabs a[aria-current="true"]{color:color-mix(in oklab,var(--c) 70%,var(--ink));border-color:color-mix(in oklab,var(--c) 45%,var(--line));background:color-mix(in oklab,var(--c) 12%,var(--surface))}
+  main{padding-bottom:110px}
+  .composer{bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+  .btabs a{flex:1;min-width:0;padding:6px 2px;font-size:10px}
+  .btabs a span{white-space:nowrap}
+  .sfin .msg{min-width:0}
+  .prow{height:92px}
+  .startbub{font-size:12px}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:25;background:var(--bg)}
+  body{font-size:16.5px}
+  .eldetail{grid-template-columns:1fr}
+  .sfin .b3{width:100%}
+  .rtile .rv{font-size:18px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.ex ol li{opacity:1}}
+</style>
+
+<div class="app">
+  <nav class="nav" aria-label="Main">
+    <a class="brand" href="#learn"><span id="brandFizz" style="width:34px"></span><b>Flame Test</b></a>
+    <a class="tab" href="#learn" data-tab="learn"></a>
+    <a class="tab" href="#practice" data-tab="practice"></a>
+    <a class="tab" href="#ask" data-tab="ask"></a>
+    <a class="tab" href="#tools" data-tab="tools"></a>
+    <a class="tab" href="#profile" data-tab="profile"></a>
+  </nav>
+  <main id="main" tabindex="-1"></main>
+  <aside class="aside" id="aside" aria-label="Today"></aside>
+</div>
+<nav class="btabs" aria-label="Main">
+  <a href="#learn" data-tab="learn"></a><a href="#practice" data-tab="practice"></a><a href="#ask" data-tab="ask"></a><a href="#tools" data-tab="tools"></a><a href="#profile" data-tab="profile"></a>
+</nav>
+<div id="sheetHost"></div>
+<div class="session" id="session" hidden></div>
+<canvas id="confetti" hidden></canvas>
+
+<script>
+/* ---------- formula markup ---------- */
+function fmt(f){let out='',prev='',inSub=false;
+  for(let i=0;i<f.length;i++){const c=f[i];
+    if(c==='^'){let j=i+1,s='';while(j<f.length&&!' ()[]'.includes(f[j])){s+=f[j];j++}out+='<sup>'+s+'</sup>';i=j-1;prev='';inSub=false;continue}
+    if(/\d/.test(c)&&(inSub||/[A-Za-z)]/.test(prev))){out+='<sub>'+c+'</sub>';inSub=true;prev=c;continue}
+    inSub=false;out+=c;prev=c}
+  return out}
+const chem=s=>s.replace(/\{([^}]+)\}/g,(m,f)=>'<span class="f">'+fmt(f)+'</span>');
+const $=s=>document.querySelector(s);
+
+/* ---------- content ---------- */
+
+const OLDUNITS=[
+{id:'f',sym:'Na',z:11,c:'#E3A008',light:true,name:'Foundations',flame:'sodium · yellow',
+ blurb:'The Grade 11 basics this course assumes you know. Start here.',lessons:[
+ {id:'f1',title:'Atoms and the periodic table',sub:'What everything is made of',
+  lede:'Everything around you is built from about 90 kinds of atoms. Each kind is an <b>element</b>, and the periodic table is the map of them.',
+  body:`<p>An atom has a tiny, heavy <b>nucleus</b> made of <b>protons</b> (positive charge) and <b>neutrons</b> (no charge). Around it moves a cloud of <b>electrons</b> (negative charge), which are very light.</p>
+  <p>The number of protons is the <b>atomic number</b>, and it decides which element you have. Carbon always has 6 protons. If it had 7, it would be nitrogen. A neutral atom has the same number of electrons as protons.</p>
+  <p>The table is arranged in rows called <b>periods</b> and columns called <b>groups</b>. Elements in the same group behave alike because they have the same number of <b>valence electrons</b>, the outermost electrons that take part in reactions.</p>`,
+  points:['Metals sit on the left and middle; non-metals on the upper right; noble gases (group 18) on the far right barely react.','Group 1 atoms have 1 valence electron, group 2 have 2, groups 13 to 18 have 3 to 8.','An <b>ion</b> is an atom that gained or lost electrons. Metals lose electrons and become positive ({Na^+}); non-metals gain them and become negative ({Cl^-}).','<b>Isotopes</b> are atoms of the same element with different numbers of neutrons, such as carbon-12 and carbon-14.'],
+  analogy:'Think of the atomic number as an element’s ID number. Neutrons can vary and electrons can be gained or lost, but the proton count never changes without the element changing.',
+  example:{q:'Chlorine has atomic number 17. How many protons and electrons does a {Cl^-} ion have?',steps:['Protons = atomic number = 17.','A neutral Cl atom has 17 electrons.','The 1− charge means it gained one electron: 17 + 1 = <b>18 electrons</b>.']},
+  quiz:[{q:'Carbon has atomic number 6. How many protons does every carbon atom have?',o:['12','6','4','It varies'],a:1,w:'The atomic number is the proton count, and it is fixed for an element.'},
+        {q:'Why do sodium and potassium react in similar ways?',o:['Same number of neutrons','Same atomic mass','Same number of valence electrons','Both are gases'],a:2,w:'Both are in group 1, so each has one valence electron to give away.'}]},
+ {id:'f2',title:'Chemical bonding',sub:'How atoms stick together',
+  lede:'Atoms bond to reach a stable arrangement of electrons, usually 8 in the outer shell. This is called the <b>octet rule</b>.',
+  body:`<p>There are two main ways to do it. In an <b>ionic bond</b>, a metal hands electrons to a non-metal. The resulting positive and negative ions attract each other. Table salt, {NaCl}, is the classic example.</p>
+  <p>In a <b>covalent bond</b>, two non-metals share a pair of electrons. Water, {H2O}, has two covalent bonds between O and H. Sharing two pairs makes a double bond; three pairs makes a triple bond.</p>
+  <p>Atoms do not share equally. <b>Electronegativity</b> measures how strongly an atom pulls on shared electrons. When two atoms differ a lot, the bond is <b>polar</b>: one end is slightly negative (δ−) and the other slightly positive (δ+).</p>`,
+  points:['Metal + non-metal → usually ionic. Non-metal + non-metal → covalent.','<b>Lewis structures</b> draw valence electrons as dots and shared pairs as lines.','Electronegativity difference: under 0.5 non-polar, 0.5 to 1.7 polar covalent, above about 1.7 mostly ionic.','Metals bond to each other with a “sea” of shared electrons, which is why they conduct electricity.'],
+  example:{q:'What type of bond forms between Mg and O in {MgO}?',steps:['Mg is a metal (group 2) and O is a non-metal.','Mg gives its 2 valence electrons to O, forming {Mg^2+} and {O^2-}.','So the bond is <b>ionic</b>.']},
+  quiz:[{q:'Which compound has ionic bonding?',o:['{CO2}','{CH4}','{KBr}','{NH3}'],a:2,w:'K is a metal and Br is a non-metal, so K transfers an electron to Br.'},
+        {q:'In a covalent bond, atoms…',o:['transfer electrons','share electrons','lose protons','share neutrons'],a:1,w:'Covalent bonds are shared electron pairs between non-metals.'}]},
+ {id:'f3',title:'The mole',sub:'Counting atoms by weighing them',
+  lede:'Atoms are far too small to count one by one, so chemists count them in batches called <b>moles</b>.',
+  body:`<p>One mole is 6.02 × 10<sup>23</sup> particles. This number is <b>Avogadro’s number</b>. It is like a dozen, just enormous.</p>
+  <p>The useful part: one mole of an element weighs its atomic mass in grams. One mole of carbon is 12.01 g. This is the <b>molar mass</b>, written <i>M</i>, in g/mol. For a compound, add up the masses of every atom in the formula.</p>
+  <p>The key equation is <span class="f">n = m / M</span>, where <i>n</i> is moles, <i>m</i> is mass in grams, and <i>M</i> is molar mass. You will use this in almost every unit.</p>`,
+  points:['Molar mass of {H2O} = 2(1.01) + 16.00 = 18.02 g/mol.','To go from grams to moles, divide by <i>M</i>. To go from moles to grams, multiply by <i>M</i>.','Moles × 6.02 × 10<sup>23</sup> = number of particles.','Try the molar mass calculator in Lab tools for any formula.'],
+  example:{q:'How many moles are in 36.0 g of water?',steps:['<i>M</i>({H2O}) = 18.02 g/mol.','n = m / M = 36.0 g ÷ 18.02 g/mol.','n = <b>2.00 mol</b>.']},
+  quiz:[{q:'The molar mass of {CO2} is 44.01 g/mol. How many moles are in 88.02 g?',o:['0.50 mol','1.00 mol','2.00 mol','88.02 mol'],a:2,w:'n = 88.02 ÷ 44.01 = 2.00 mol.'},
+        {q:'What is the molar mass of {NaCl}? (Na = 22.99, Cl = 35.45)',o:['58.44 g/mol','12.46 g/mol','35.45 g/mol','22.99 g/mol'],a:0,w:'Add one Na and one Cl: 22.99 + 35.45 = 58.44 g/mol.'}]},
+ {id:'f4',title:'Chemical equations',sub:'Writing and balancing reactions',
+  lede:'A chemical equation is a recipe: reactants on the left, products on the right. Atoms are never created or destroyed, so both sides must have the same atoms.',
+  body:`<p>To <b>balance</b> an equation, change only the <b>coefficients</b> (the big numbers in front), never the subscripts. Changing a subscript changes the substance.</p>
+  <p>Example: methane burning. Unbalanced: {CH4 + O2 → CO2 + H2O}. There are 4 H on the left but only 2 on the right, so put a 2 in front of water. Now there are 4 O on the right, so put a 2 in front of {O2}. Balanced: {CH4 + 2O2 → CO2 + 2H2O}.</p>
+  <p>State symbols show the phase: (s) solid, (l) liquid, (g) gas, (aq) dissolved in water.</p>`,
+  points:['<b>Synthesis</b>: A + B → AB.','<b>Decomposition</b>: AB → A + B.','<b>Single displacement</b>: A + BC → AC + B.','<b>Double displacement</b>: AB + CD → AD + CB.','<b>Combustion</b>: fuel + {O2 → CO2 + H2O}.'],
+  analogy:'Balance one element at a time. Leave H and O for last, since they usually appear in several places.',
+  example:{q:'Balance: {C3H8 + O2 → CO2 + H2O}',steps:['3 C on the left, so put 3 in front of {CO2}.','8 H on the left, so put 4 in front of {H2O}.','Right side O: 3×2 + 4×1 = 10, so put 5 in front of {O2}.','<b>{C3H8 + 5O2 → 3CO2 + 4H2O}</b>']},
+  quiz:[{q:'What coefficient goes in front of {O2}: {2H2 + _O2 → 2H2O}?',o:['1','2','3','4'],a:0,w:'2 water molecules contain 2 O atoms, which is one {O2} molecule.'},
+        {q:'When balancing an equation, you may change…',o:['subscripts only','coefficients only','both','neither'],a:1,w:'Changing subscripts would turn the substance into a different one.'}]},
+ {id:'f5',title:'Stoichiometry and solutions',sub:'Using mole ratios and concentration',
+  lede:'The coefficients in a balanced equation are a mole ratio. They tell you how much product you get from a given amount of reactant.',
+  body:`<p>In {2H2 + O2 → 2H2O}, 2 mol of hydrogen react with 1 mol of oxygen to make 2 mol of water. The standard method is: grams → moles → use the ratio → moles → grams.</p>
+  <p>Most reactions in this course happen in <b>solutions</b>. The <b>concentration</b> of a solution is how many moles are dissolved per litre: <span class="f">c = n / V</span>, in mol/L (also written M).</p>
+  <p>The <b>limiting reactant</b> is the one that runs out first. It decides how much product forms.</p>`,
+  points:['Always balance the equation before using ratios.','Convert mL to L by dividing by 1000.','Rearrange as needed: n = c × V.'],
+  example:{q:'0.20 mol of NaCl is dissolved in 500 mL of water. What is the concentration?',steps:['V = 500 mL = 0.500 L.','c = n / V = 0.20 ÷ 0.500.','c = <b>0.40 mol/L</b>.']},
+  quiz:[{q:'In {N2 + 3H2 → 2NH3}, how many mol of {NH3} form from 3 mol of {H2}?',o:['1 mol','2 mol','3 mol','6 mol'],a:1,w:'The ratio {H2} : {NH3} is 3 : 2, so 3 mol of {H2} gives 2 mol of {NH3}.'},
+        {q:'How many moles are in 2.0 L of a 0.50 mol/L solution?',o:['0.25 mol','1.0 mol','2.5 mol','4.0 mol'],a:1,w:'n = c × V = 0.50 × 2.0 = 1.0 mol.'}]},
+ {id:'f6',title:'Acids and bases',sub:'pH and neutralization',
+  lede:'An <b>acid</b> donates hydrogen ions ({H^+}). A <b>base</b> accepts them. This is the Brønsted–Lowry definition you use in Grade 12.',
+  body:`<p>In water, {H^+} attaches to a water molecule to form the hydronium ion, {H3O^+}. The more hydronium in a solution, the more acidic it is.</p>
+  <p>The <b>pH scale</b> measures this: {pH = −log[H3O^+]}. Below 7 is acidic, 7 is neutral, above 7 is basic. Each step of one pH unit is a tenfold change.</p>
+  <p>Acids and bases cancel each other out in <b>neutralization</b>: acid + base → salt + water. For example, {HCl + NaOH → NaCl + H2O}.</p>`,
+  points:['Square brackets mean concentration in mol/L. [{H3O^+}] reads “concentration of hydronium”.','If [{H3O^+}] = 1 × 10<sup>−3</sup> mol/L, then pH = 3.','pH 3 is 10 times more acidic than pH 4 and 100 times more than pH 5.'],
+  example:{q:'A solution has [{H3O^+}] = 1.0 × 10<sup>−5</sup> mol/L. What is the pH?',steps:['pH = −log(1.0 × 10<sup>−5</sup>).','The log of 10<sup>−5</sup> is −5.','pH = <b>5.00</b>, so it is acidic.']},
+  quiz:[{q:'[{H3O^+}] = 1 × 10<sup>−3</sup> mol/L. The pH is…',o:['−3','3','11','0.001'],a:1,w:'pH = −log(10<sup>−3</sup>) = 3.'},
+        {q:'How much more acidic is pH 2 than pH 4?',o:['2 times','20 times','100 times','1000 times'],a:2,w:'Two pH units is 10 × 10 = 100 times.'}]}
+]},
+{id:'b',sym:'Ba',z:56,c:'#3E9B4F',name:'Organic Chemistry',flame:'barium · green',
+ blurb:'Carbon compounds: naming, functional groups, reactions and polymers.',lessons:[
+ {id:'b1',title:'Hydrocarbons',sub:'Alkanes, alkenes and alkynes',
+  lede:'Organic chemistry is the chemistry of carbon. Carbon makes four bonds and can link to itself in long chains and rings, which gives millions of compounds.',
+  body:`<p>The simplest organic compounds are <b>hydrocarbons</b>: only carbon and hydrogen. They are named by chain length and by the type of carbon–carbon bond.</p>
+  <p><b>Alkanes</b> have only single bonds (C<sub>n</sub>H<sub>2n+2</sub>): methane {CH4}, ethane {C2H6}, propane {C3H8}. <b>Alkenes</b> have at least one double bond ({C=C}), and <b>alkynes</b> have a triple bond.</p>`,
+  table:{head:['Carbons','Prefix','Alkane'],rows:[['1','meth-','methane'],['2','eth-','ethane'],['3','prop-','propane'],['4','but-','butane'],['5','pent-','pentane'],['6','hex-','hexane'],['7','hept-','heptane'],['8','oct-','octane'],['9','non-','nonane'],['10','dec-','decane']]},
+  points:['Ending tells the bond: -ane single, -ene double, -yne triple.','A number shows where the multiple bond is: but-2-ene has the double bond starting at carbon 2.','<b>Cyclic</b> hydrocarbons form rings: cyclohexane. <b>Benzene</b> ({C6H6}) is a special flat ring, called aromatic.','Isomers have the same formula but different structures.'],
+  analogy:'Memory trick for the first four: “Monkeys Eat Peeled Bananas” → meth, eth, prop, but.',
+  quiz:[{q:'What is the name of {C3H8}?',o:['methane','propane','propene','butane'],a:1,w:'3 carbons = prop-, and {C3H8} fits C<sub>n</sub>H<sub>2n+2</sub>, so it is an alkane: propane.'},
+        {q:'A hydrocarbon with a {C=C} double bond is an…',o:['alkane','alkene','alkyne','alcohol'],a:1,w:'The -ene ending means at least one double bond.'}]},
+ {id:'b2',title:'Naming organic compounds',sub:'IUPAC rules, step by step',
+  lede:'IUPAC naming gives every compound one exact name, so anyone can draw it from the name alone.',
+  body:`<p>Follow the same steps every time:</p>
+  <ol><li>Find the <b>longest continuous carbon chain</b>. That is the parent name.</li><li>Number the chain from the end that gives the branches (or the main functional group) the <b>lowest numbers</b>.</li><li>Name each branch: {CH3}– is <b>methyl</b>, {C2H5}– is <b>ethyl</b>. Halogens are fluoro, chloro, bromo, iodo.</li><li>Use di-, tri-, tetra- for repeated branches, and list branches <b>alphabetically</b>.</li></ol>`,
+  points:['Numbers and words are separated by hyphens; numbers from each other by commas.','Ignore di-, tri- when alphabetizing: ethyl comes before dimethyl.'],
+  example:{q:'Name {CH3CH(CH3)CH2CH3}.',steps:['Longest chain: 4 carbons → butane.','A {CH3} branch is on carbon 2 when numbered from the left (carbon 3 from the right, so use left).','Name: <b>2-methylbutane</b>.']},
+  quiz:[{q:'How many carbon atoms are in 2-methylpropane?',o:['2','3','4','5'],a:2,w:'Propane has 3 carbons plus a 1-carbon methyl branch = 4.'},
+        {q:'When numbering the main chain you choose the direction that…',o:['starts at the left','gives the lowest numbers to branches','gives the highest numbers','makes the chain shortest'],a:1,w:'The lowest-locant rule decides the direction.'}]},
+ {id:'b3',title:'Functional groups',sub:'The parts that make molecules react',
+  lede:'A <b>functional group</b> is a specific group of atoms that gives a family of compounds its properties. Learn to spot these and most of the unit falls into place.',
+  table:{head:['Family','Group','Ending','Example'],rows:[['Alcohol','–OH','-ol','ethanol {C2H5OH}'],['Alkyl halide','–F, –Cl, –Br, –I','halo- prefix','chloromethane {CH3Cl}'],['Aldehyde','–CHO (C=O at end)','-al','methanal {HCHO}'],['Ketone','C=O in the middle','-one','propanone (acetone)'],['Carboxylic acid','–COOH','-oic acid','ethanoic acid (vinegar)'],['Ester','–COO–','-oate','methyl ethanoate'],['Ether','–O–','-oxy','methoxymethane'],['Amine','–NH2','-amine','methanamine'],['Amide','–CONH2','-amide','ethanamide']]},
+  body:`<p>Functional groups also explain physical properties. Groups with O–H or N–H can form <b>hydrogen bonds</b>, so alcohols and acids have much higher boiling points than alkanes of similar size and dissolve better in water.</p>`,
+  points:['More polar groups → higher boiling point and better solubility in water.','A longer carbon chain makes a molecule less soluble in water, since the chain is non-polar.','Esters often smell fruity; they are used in flavourings.'],
+  quiz:[{q:'Ethanol contains which functional group?',o:['carbonyl','hydroxyl (–OH)','carboxyl','amino'],a:1,w:'The -ol ending signals an alcohol, which has an –OH group.'},
+        {q:'A compound whose name ends in “-oic acid” is a…',o:['ketone','ester','carboxylic acid','ether'],a:2,w:'-oic acid names carboxylic acids, which contain –COOH.'}]},
+ {id:'b4',title:'Organic reactions',sub:'Six reaction types to recognize',
+  lede:'Most SCH4U reaction questions ask you to name the reaction type or predict the product. There are only a handful of types.',
+  table:{head:['Type','What happens','Example'],rows:[['Addition','Atoms add across a double or triple bond','{C2H4 + H2O → C2H5OH}'],['Substitution','One atom swaps for another (often H for a halogen)','{CH4 + Cl2 → CH3Cl + HCl}'],['Elimination','Atoms are removed, forming a double bond','{C2H5OH → C2H4 + H2O}'],['Esterification','Acid + alcohol → ester + water','{CH3COOH + CH3OH → CH3COOCH3 + H2O}'],['Oxidation','Alcohol gains O / loses H','ethanol → ethanal → ethanoic acid'],['Combustion','Burns in oxygen','fuel + {O2 → CO2 + H2O}']]},
+  body:`<p>Addition and elimination are opposites. Esterification is a type of <b>condensation</b> reaction because a small molecule (water) is released when two molecules join.</p>`,
+  points:['Primary alcohols oxidize to aldehydes, then to carboxylic acids.','Secondary alcohols oxidize to ketones.','Alkenes react more readily than alkanes because the double bond is reactive.'],
+  quiz:[{q:'Ethene + water → ethanol is which type of reaction?',o:['substitution','addition','elimination','combustion'],a:1,w:'Water adds across the {C=C} double bond.'},
+        {q:'A carboxylic acid and an alcohol react to form…',o:['an ether and water','an ester and water','an alkene','an amide'],a:1,w:'This is esterification, a condensation reaction.'}]},
+ {id:'b5',title:'Polymers',sub:'Long chains made of repeating units',
+  lede:'A <b>polymer</b> is a huge molecule made by linking many small molecules called <b>monomers</b>. Plastics, proteins and starch are all polymers.',
+  body:`<p><b>Addition polymers</b> form when alkene monomers open their double bonds and link up. Ethene becomes polyethylene (grocery bags). Nothing else is produced.</p>
+  <p><b>Condensation polymers</b> form when monomers with two functional groups join and release a small molecule, usually water. Nylon (an amide link) and polyester (an ester link) are examples, as are proteins, built from amino acids.</p>
+  <p>SCH4U also asks you to weigh impacts: plastics are cheap and durable, but that durability means they persist in the environment for centuries. Recycling, bioplastics and reduced use are common discussion points.</p>`,
+  points:['Addition polymer: monomer must have a double bond.','Condensation polymer: monomer needs two reactive ends; water is a by-product.','Natural polymers: proteins, cellulose, starch, DNA.'],
+  quiz:[{q:'Condensation polymerization produces the polymer and…',o:['nothing else','a small molecule such as water','oxygen gas','heat only'],a:1,w:'Each link releases a small molecule, often {H2O}.'},
+        {q:'Which monomer could form an addition polymer?',o:['ethane','ethene','ethanol','ethanoic acid'],a:1,w:'Addition polymers need a double bond to open, and ethene has one.'}]}
+]},
+{id:'c',sym:'K',z:19,c:'#8A63D2',name:'Structure and Properties',flame:'potassium · lilac',
+ blurb:'The quantum atom, electron configurations, shapes of molecules, forces between them.',lessons:[
+ {id:'c1',title:'The quantum model of the atom',sub:'Energy levels and orbitals',
+  lede:'Electrons do not orbit like planets. They exist in specific energy levels and occupy regions of space called <b>orbitals</b>.',
+  body:`<p>Bohr noticed that heated elements give off only certain colours of light (a <b>line spectrum</b>). That is the science behind flame tests, and behind this app’s colours. Electrons can only have certain energies. When one drops from a higher level to a lower one, it releases light of one exact colour.</p>
+  <p>The modern model describes each electron with four <b>quantum numbers</b>:</p>`,
+  table:{head:['Symbol','Name','Tells you'],rows:[['n','principal','energy level / size (1, 2, 3…)'],['l','secondary','orbital shape: s (0), p (1), d (2), f (3)'],['m<sub>l</sub>','magnetic','orientation in space'],['m<sub>s</sub>','spin','+½ or −½']]},
+  points:['Each orbital holds at most 2 electrons, with opposite spins.','s has 1 orbital (2 e⁻), p has 3 (6 e⁻), d has 5 (10 e⁻), f has 7 (14 e⁻).','Level n contains n<sup>2</sup> orbitals.'],
+  quiz:[{q:'What is the maximum number of electrons in one orbital?',o:['1','2','6','8'],a:1,w:'The Pauli exclusion principle allows 2, with opposite spins.'},
+        {q:'Why does each element give a unique flame colour?',o:['Different nuclei glow','Electrons drop between specific energy levels','The flame reacts with oxygen','Protons release light'],a:1,w:'Each element has its own set of energy levels, so its emitted light has specific wavelengths.'}]},
+ {id:'c2',title:'Electron configurations',sub:'Where the electrons go',
+  lede:'An electron configuration lists which orbitals an atom’s electrons occupy, filled from lowest energy upward.',
+  body:`<p>Three rules decide the order. <b>Aufbau</b>: fill the lowest energy first. <b>Pauli</b>: two electrons per orbital, opposite spins. <b>Hund</b>: in a set of equal orbitals (like the three p), spread electrons out one each before pairing.</p>
+  <p>The fill order is {1s 2s 2p 3s 3p 4s 3d 4p 5s 4d 5p}. Note that 4s fills before 3d.</p>
+  <p>Shorthand uses the previous noble gas in brackets. Iron (26 e⁻) is {[Ar] 4s^2 3d^6}.</p>`,
+  points:['Superscripts add up to the total electron count.','Exceptions: chromium is {[Ar] 4s^1 3d^5} and copper is {[Ar] 4s^1 3d^10}; half-full and full d sets are extra stable.','The periodic table itself is a map of this: the s-block is groups 1–2, the p-block groups 13–18, the d-block the transition metals.','Tap any element in Lab tools to see its configuration.'],
+  example:{q:'Write the configuration for oxygen (8 electrons).',steps:['1s holds 2 → 6 left.','2s holds 2 → 4 left.','2p takes the remaining 4.','<b>{1s^2 2s^2 2p^4}</b>']},
+  quiz:[{q:'Which is the configuration for sodium (11 e⁻)?',o:['{1s^2 2s^2 2p^7}','{1s^2 2s^2 2p^6 3s^1}','{1s^2 2s^2 3s^2 3p^5}','{1s^2 2p^6 3s^3}'],a:1,w:'Fill 1s, 2s, 2p (10 electrons), then the 11th goes into 3s.'},
+        {q:'Which sublevel fills right before 3d?',o:['3p','4s','4p','3s'],a:1,w:'4s is slightly lower in energy than 3d, so it fills first.'}]},
+ {id:'c3',title:'Periodic trends',sub:'Size, ionization energy, electronegativity',
+  lede:'Properties change in predictable ways across the table. Two ideas explain all of them: <b>more protons pull harder</b>, and <b>more shells put electrons farther away</b>.',
+  table:{head:['Property','Across a period →','Down a group ↓'],rows:[['Atomic radius','decreases','increases'],['Ionization energy (energy to remove an e⁻)','increases','decreases'],['Electronegativity','increases','decreases'],['Metallic character','decreases','increases']]},
+  body:`<p>Across a period, protons are added but the shell stays the same, so electrons are pulled in tighter: atoms shrink and hold their electrons more strongly. Down a group, a new shell is added each row, so the outer electrons are farther away and easier to remove.</p>`,
+  points:['Fluorine is the most electronegative element (3.98).','Positive ions are smaller than their atoms; negative ions are larger.','Noble gases have the highest ionization energies in each period.'],
+  quiz:[{q:'Which atom is larger: Na or Cl?',o:['Na','Cl','Same size'],a:0,w:'Across period 3, the growing nuclear charge pulls electrons closer, so Cl is smaller.'},
+        {q:'Which element is most electronegative?',o:['Cs','O','F','Cl'],a:2,w:'Electronegativity peaks at the top right (excluding noble gases): fluorine.'}]},
+ {id:'c4',title:'Molecular shapes (VSEPR)',sub:'Why molecules are 3D',
+  lede:'Electron pairs repel each other, so they spread out as far as possible around a central atom. This is <b>VSEPR</b> theory, and it predicts a molecule’s shape.',
+  body:`<p>Count the electron groups around the central atom (bonds count as one group each, whether single or double, plus lone pairs). That sets the arrangement. Then the shape is named by where the atoms sit, ignoring lone pairs.</p>`,
+  table:{head:['Groups','Lone pairs','Shape','Angle','Example'],rows:[['2','0','linear','180°','{CO2}'],['3','0','trigonal planar','120°','{BF3}'],['4','0','tetrahedral','109.5°','{CH4}'],['4','1','trigonal pyramidal','≈107°','{NH3}'],['4','2','bent','≈104.5°','{H2O}'],['5','0','trigonal bipyramidal','90°, 120°','{PCl5}'],['6','0','octahedral','90°','{SF6}']]},
+  points:['Lone pairs push harder than bonds, which squeezes the angle (109.5° → 107° → 104.5°).','A molecule is <b>polar</b> if it has polar bonds <i>and</i> an asymmetric shape.','{CO2} has polar bonds but is non-polar, because the two pulls cancel in a straight line. {H2O} is bent, so it is polar.'],
+  quiz:[{q:'What is the shape of {CH4}?',o:['linear','trigonal planar','tetrahedral','bent'],a:2,w:'4 bonding groups, no lone pairs → tetrahedral, 109.5°.'},
+        {q:'Is {CO2} polar?',o:['Yes, C=O bonds are polar','No, the linear shape cancels the bond dipoles'],a:1,w:'Equal and opposite dipoles in a straight line cancel out.'}]},
+ {id:'c5',title:'Intermolecular forces and solids',sub:'Forces between molecules',
+  lede:'Bonds hold atoms together <i>inside</i> a molecule. <b>Intermolecular forces</b> hold separate molecules to each other, and they decide boiling points, melting points and solubility.',
+  table:{head:['Force','Found in','Strength'],rows:[['London dispersion','all molecules; grows with size','weakest (per contact)'],['Dipole–dipole','polar molecules','medium'],['Hydrogen bonding','H bonded to N, O or F','strongest of the three']]},
+  body:`<p>Water ({H2O}) boils at 100 °C while the similar but larger {H2S} boils at −60 °C. The difference is hydrogen bonding in water.</p>
+  <p>Solids fall into four types:</p>`,
+  points:['<b>Ionic</b> (NaCl): high melting point, brittle, conducts only when melted or dissolved.','<b>Molecular</b> (ice, sugar): low melting point, soft, does not conduct.','<b>Metallic</b> (Cu): conducts as a solid, malleable.','<b>Covalent network</b> (diamond, quartz {SiO2}): extremely hard, very high melting point.','“Like dissolves like”: polar dissolves polar, non-polar dissolves non-polar.'],
+  quiz:[{q:'Why does water boil at a much higher temperature than {H2S}?',o:['Water molecules are larger','Hydrogen bonding between water molecules','{H2S} is ionic','Water has covalent network bonds'],a:1,w:'O is very electronegative, so O–H bonds allow hydrogen bonding; S–H bonds do not.'},
+        {q:'Diamond is an example of which type of solid?',o:['ionic','molecular','metallic','covalent network'],a:3,w:'Every carbon is covalently bonded to 4 others in a giant network.'}]}
+]},
+{id:'d',sym:'Sr',z:38,c:'#D2334C',name:'Energy and Rates',flame:'strontium · crimson',
+ blurb:'Heat in reactions, Hess’s law, and what controls how fast reactions go.',lessons:[
+ {id:'d1',title:'Enthalpy and calorimetry',sub:'Measuring heat in reactions',
+  lede:'Breaking bonds takes energy; forming bonds releases energy. The overall heat change at constant pressure is called <b>enthalpy change</b>, ΔH.',
+  body:`<p>An <b>exothermic</b> reaction releases heat to the surroundings (they get warmer) and has <b>ΔH &lt; 0</b>. Burning fuel is exothermic. An <b>endothermic</b> reaction absorbs heat (the surroundings get colder) and has <b>ΔH &gt; 0</b>. A cold pack is endothermic.</p>
+  <p>In a <b>calorimeter</b>, you measure the temperature change of water and calculate heat with <span class="f">q = mcΔT</span>. For water, c = 4.18 J/(g·°C). Then ΔH = −q / n for the reaction, since the heat the water gained came from the reaction.</p>`,
+  points:['A thermochemical equation includes ΔH: {CH4 + 2O2 → CO2 + 2H2O}, ΔH = −890 kJ.','If the equation is doubled, ΔH doubles.','Units: q in J, divide by 1000 for kJ; molar enthalpy in kJ/mol.'],
+  example:{q:'50.0 g of water warms by 10.0 °C. How much heat did it absorb?',steps:['q = mcΔT = 50.0 × 4.18 × 10.0','q = 2090 J','q = <b>2.09 kJ</b>']},
+  quiz:[{q:'A reaction has ΔH = −890 kJ. It is…',o:['endothermic','exothermic','neither','impossible to tell'],a:1,w:'Negative ΔH means heat is released.'},
+        {q:'100 g of water cools by 2.0 °C. How much heat did it lose?',o:['418 J','836 J','200 J','8.36 J'],a:1,w:'q = 100 × 4.18 × 2.0 = 836 J.'}]},
+ {id:'d2',title:'Hess’s law',sub:'Adding reactions together',
+  lede:'The total ΔH of a reaction is the same no matter what path you take. So you can build an unknown reaction from known ones and add their ΔH values.',
+  body:`<p>When you manipulate equations, apply the same change to ΔH:</p>`,
+  points:['Reverse an equation → flip the sign of ΔH.','Multiply an equation by a number → multiply ΔH by that number.','Add the equations; cancel anything that appears on both sides.','With standard enthalpies of formation: ΔH° = Σ nΔH°<sub>f</sub>(products) − Σ nΔH°<sub>f</sub>(reactants). Elements in their standard state have ΔH°<sub>f</sub> = 0.'],
+  example:{q:'Find ΔH for {C + 1/2O2 → CO}, given (1) {C + O2 → CO2} ΔH = −393.5 kJ and (2) {CO + 1/2O2 → CO2} ΔH = −283.0 kJ.',steps:['Keep (1) as is: −393.5 kJ.','Reverse (2): {CO2 → CO + 1/2O2}, ΔH = +283.0 kJ.','Add: {CO2} cancels, ½{O2} is left on the reactant side.','ΔH = −393.5 + 283.0 = <b>−110.5 kJ</b>']},
+  quiz:[{q:'A → B has ΔH = +50 kJ. What is ΔH for B → A?',o:['+50 kJ','−50 kJ','0','+100 kJ'],a:1,w:'Reversing a reaction flips the sign.'},
+        {q:'If you multiply an equation by 3, its ΔH…',o:['stays the same','is divided by 3','is multiplied by 3','flips sign'],a:2,w:'Three times the amount of reaction gives three times the heat.'}]},
+ {id:'d3',title:'Reaction rates and collision theory',sub:'Why some reactions are fast',
+  lede:'For a reaction to happen, particles must collide with enough energy and in the right orientation. That minimum energy is the <b>activation energy</b>, E<sub>a</sub>.',
+  diagram:'pe',
+  body:`<p>Rate is how fast a concentration changes: rate = Δ[product] / Δt, in mol/(L·s). Anything that increases the number of effective collisions speeds up a reaction:</p>`,
+  points:['<b>Concentration</b> or pressure up → more collisions.','<b>Temperature</b> up → particles move faster and more of them exceed E<sub>a</sub>. A 10 °C rise often roughly doubles the rate.','<b>Surface area</b> up (powder vs lump) → more particles exposed.','<b>Catalyst</b> → provides a path with a lower E<sub>a</sub>; it is not used up and does not change ΔH.','<b>Nature of reactants</b> → ions in solution react faster than solids with strong bonds.'],
+  quiz:[{q:'A catalyst speeds up a reaction by…',o:['raising the temperature','lowering the activation energy','changing ΔH','adding more reactant'],a:1,w:'It opens an alternative pathway with a lower energy barrier.'},
+        {q:'Why does powdered zinc react faster with acid than a zinc lump?',o:['Powder is hotter','Powder has more surface area','Powder has lower ΔH','Powder is a catalyst'],a:1,w:'More exposed surface allows more collisions per second.'}]},
+ {id:'d4',title:'Rate laws and mechanisms',sub:'Putting numbers to speed',
+  lede:'A <b>rate law</b> shows how rate depends on each concentration: <span class="f">rate = k[A]<sup>m</sup>[B]<sup>n</sup></span>.',
+  body:`<p><i>k</i> is the rate constant (it changes with temperature). The exponents <i>m</i> and <i>n</i> are the <b>orders</b>, and they must be found from experiment, not from the balanced equation.</p>
+  <p>Compare two trials where only one concentration changes:</p>`,
+  table:{head:['[A] change','Rate change','Order in A'],rows:[['× 2','no change','0'],['× 2','× 2','1'],['× 2','× 4','2']]},
+  points:['The overall order is m + n.','Most reactions happen in several small steps called a <b>mechanism</b>.','The slowest step is the <b>rate-determining step</b>, and the rate law matches it.','A species made in one step and used in a later step is an <b>intermediate</b>.'],
+  quiz:[{q:'Doubling [A] makes the rate 4 times faster. The order in A is…',o:['0','1','2','4'],a:2,w:'2<sup>m</sup> = 4, so m = 2.'},
+        {q:'The rate-determining step is the…',o:['first step','fastest step','slowest step','last step'],a:2,w:'The slowest step limits the overall rate, like the narrowest point in a funnel.'}]}
+]},
+{id:'e',sym:'Ca',z:20,c:'#DE6A1F',light:true,name:'Equilibrium',flame:'calcium · orange',
+ blurb:'Reversible reactions, K, Le Châtelier, acids, bases and solubility.',lessons:[
+ {id:'e1',title:'Dynamic equilibrium',sub:'Reactions that go both ways',
+  lede:'Many reactions are <b>reversible</b>. In a closed system they reach a point where the forward and reverse reactions run at the same rate. That is <b>equilibrium</b>.',
+  body:`<p>We write reversible reactions with a double arrow: {N2 + 3H2 ⇌ 2NH3}. At equilibrium, reactions have not stopped. Both directions are still happening, just at equal speeds, so the concentrations stay constant. That is why it is called dynamic.</p>`,
+  points:['At equilibrium, concentrations are <b>constant</b>, not necessarily equal.','Equilibrium needs a closed system, where nothing enters or leaves.','You can reach the same equilibrium starting from either side.'],
+  analogy:'Picture an escalator going up while you walk down at the same speed. You stay in place even though both motions continue.',
+  quiz:[{q:'At equilibrium…',o:['the reaction stops','reactant and product concentrations are equal','forward and reverse rates are equal','only products remain'],a:2,w:'Both reactions continue at equal rates, so concentrations stay constant.'},
+        {q:'Equilibrium can only be established in…',o:['an open system','a closed system','a solid','a vacuum'],a:1,w:'If products escape, the reverse reaction cannot keep up.'}]},
+ {id:'e2',title:'The equilibrium constant, K',sub:'A number for where equilibrium lies',
+  lede:'For {aA + bB ⇌ cC + dD}, the equilibrium constant is products over reactants, each raised to its coefficient.',
+  body:`<p class="f" style="font-size:1.05em">K = [C]<sup>c</sup>[D]<sup>d</sup> / ([A]<sup>a</sup>[B]<sup>b</sup>)</p>
+  <p>For the Haber process, {N2 + 3H2 ⇌ 2NH3}: K = [{NH3}]<sup>2</sup> / ([{N2}][{H2}]<sup>3</sup>).</p>
+  <p>Leave out pure solids and liquids; their concentrations do not change. K changes only with temperature.</p>
+  <p>To predict which way a mixture will move, calculate the <b>reaction quotient Q</b> with the current concentrations and compare it to K.</p>`,
+  table:{head:['Compare','Meaning'],rows:[['K &gt; 1','products favoured at equilibrium'],['K &lt; 1','reactants favoured'],['Q &lt; K','shifts right, toward products'],['Q &gt; K','shifts left, toward reactants'],['Q = K','at equilibrium']]},
+  points:['ICE tables (Initial, Change, Equilibrium) organize equilibrium calculations.'],
+  example:{q:'At equilibrium, [{H2}] = 0.10, [{I2}] = 0.10 and [{HI}] = 0.70 mol/L for {H2 + I2 ⇌ 2HI}. Find K.',steps:['K = [HI]<sup>2</sup> / ([H<sub>2</sub>][I<sub>2</sub>])','K = (0.70)<sup>2</sup> / (0.10 × 0.10) = 0.49 / 0.010','K = <b>49</b>, so products are favoured.']},
+  quiz:[{q:'If Q < K, the reaction will…',o:['shift right','shift left','stay put','stop'],a:0,w:'There are not enough products yet, so the forward reaction wins until Q = K.'},
+        {q:'Which substances are left out of a K expression?',o:['gases','aqueous ions','pure solids and liquids','products'],a:2,w:'Their concentrations are effectively constant.'}]},
+ {id:'e3',title:'Le Châtelier’s principle',sub:'How equilibrium responds to change',
+  lede:'If you disturb a system at equilibrium, it shifts in the direction that partly undoes the disturbance.',
+  sim:true,
+  points:['Add a substance → shift away from it. Remove a substance → shift toward it.','Increase pressure (decrease volume) → shift to the side with fewer gas molecules.','For temperature, treat heat as a reactant or product. In an exothermic reaction heat is a product, so heating shifts left.','Temperature is the only change that alters the value of K.','A catalyst speeds up both directions equally, so no shift happens.'],
+  quiz:[{q:'An exothermic reaction is at equilibrium. You heat it. It shifts…',o:['right','left','not at all'],a:1,w:'Heat is a product in an exothermic reaction, so adding heat shifts left.'},
+        {q:'For {N2 + 3H2 ⇌ 2NH3}, increasing the pressure shifts…',o:['right (2 gas molecules)','left (4 gas molecules)','nowhere'],a:0,w:'The right side has fewer gas molecules (2 vs 4).'}]},
+ {id:'e4',title:'Acid–base equilibria',sub:'Strong vs weak, Ka, Kb and buffers',
+  lede:'<b>Strong</b> acids ionize completely in water. <b>Weak</b> acids ionize only a little and reach an equilibrium.',
+  body:`<p>Strong acids to know: HCl, HBr, HI, {HNO3}, {H2SO4}, {HClO4}. Most others, like ethanoic acid, are weak. For a weak acid: {HA + H2O ⇌ H3O^+ + A^-}, with K<sub>a</sub> = [{H3O^+}][{A^-}] / [HA]. A bigger K<sub>a</sub> means a stronger acid.</p>
+  <p>Water itself ionizes slightly: K<sub>w</sub> = [{H3O^+}][{OH^-}] = 1.0 × 10<sup>−14</sup> at 25 °C. That gives <b>pH + pOH = 14</b>.</p>
+  <p>A <b>buffer</b> is a mix of a weak acid and its conjugate base. It resists pH change when small amounts of acid or base are added. Your blood is buffered.</p>`,
+  points:['Conjugate pair: an acid and the base it becomes after losing {H^+}, e.g. {NH4^+} / {NH3}.','For a strong acid, [{H3O^+}] = concentration of the acid.','Titration finds an unknown concentration; the equivalence point is where moles of acid = moles of base.'],
+  example:{q:'What is the pH of 0.010 mol/L HCl?',steps:['HCl is strong, so [{H3O^+}] = 0.010 mol/L.','pH = −log(0.010)','pH = <b>2.00</b>']},
+  quiz:[{q:'If pH = 4, the pOH is…',o:['4','10','14','−4'],a:1,w:'pH + pOH = 14, so pOH = 10.'},
+        {q:'Which acid is weak?',o:['HCl','{HNO3}','ethanoic acid','{H2SO4}'],a:2,w:'Ethanoic (acetic) acid only partially ionizes.'}]},
+ {id:'e5',title:'Solubility equilibria',sub:'Ksp and precipitates',
+  lede:'Even “insoluble” salts dissolve a tiny bit. The equilibrium between the solid and its ions is described by the <b>solubility product</b>, K<sub>sp</sub>.',
+  body:`<p>For silver chloride: {AgCl(s) ⇌ Ag^+(aq) + Cl^-(aq)}, so K<sub>sp</sub> = [{Ag^+}][{Cl^-}]. The solid is left out.</p>
+  <p>Mix two solutions and calculate the ion product Q. If <b>Q &gt; K<sub>sp</sub></b>, a <b>precipitate</b> forms. If Q ≤ K<sub>sp</sub>, everything stays dissolved.</p>`,
+  points:['Smaller K<sub>sp</sub> → less soluble.','<b>Common ion effect</b>: adding an ion already in the equilibrium (e.g. NaCl to AgCl) shifts it left and lowers solubility.','For {AgCl}, if solubility is s mol/L then K<sub>sp</sub> = s<sup>2</sup>.'],
+  quiz:[{q:'A precipitate forms when…',o:['Q &lt; K<sub>sp</sub>','Q = K<sub>sp</sub>','Q &gt; K<sub>sp</sub>','K<sub>sp</sub> > 1'],a:2,w:'The solution holds more ions than it can, so solid comes out.'},
+        {q:'Adding NaCl to a saturated AgCl solution makes AgCl…',o:['more soluble','less soluble','unchanged'],a:1,w:'Extra {Cl^-} pushes the equilibrium left: the common ion effect.'}]}
+]},
+{id:'x',sym:'Cu',z:29,c:'#1B8FA3',name:'Electrochemistry',flame:'copper · blue-green',
+ blurb:'Redox reactions, batteries, and using electricity to drive chemistry.',lessons:[
+ {id:'x1',title:'Oxidation and reduction',sub:'Electron transfer and oxidation numbers',
+  lede:'<b>Redox</b> reactions move electrons from one substance to another. Remember <b>OIL RIG</b>: Oxidation Is Loss, Reduction Is Gain (of electrons).',
+  body:`<p>Drop zinc into copper(II) sulfate: {Zn + Cu^2+ → Zn^2+ + Cu}. Zinc loses 2 electrons (oxidized). Copper ions gain them (reduced) and coat the zinc in copper metal.</p>
+  <p>The substance that gets reduced is the <b>oxidizing agent</b> ({Cu^2+}); the one that gets oxidized is the <b>reducing agent</b> (Zn).</p>
+  <p><b>Oxidation numbers</b> track electrons. Rules: elements alone = 0; a simple ion = its charge; O is usually −2; H is usually +1; the numbers add to the overall charge.</p>`,
+  points:['Oxidation number goes up → oxidized. Goes down → reduced.','Oxidation and reduction always happen together.'],
+  example:{q:'Find the oxidation number of S in {SO4^2-}.',steps:['4 O × (−2) = −8.','S + (−8) = −2 (the ion’s charge).','S = <b>+6</b>']},
+  quiz:[{q:'In {Zn + Cu^2+ → Zn^2+ + Cu}, zinc is…',o:['reduced','oxidized','a catalyst','unchanged'],a:1,w:'Zn goes from 0 to +2: it lost electrons.'},
+        {q:'What is the oxidation number of Mn in {KMnO4}?',o:['+1','+4','+7','−1'],a:2,w:'K = +1, 4 O = −8, so Mn = +7 for a total of 0.'}]},
+ {id:'x2',title:'Balancing redox equations',sub:'The half-reaction method',
+  lede:'Split the reaction into an oxidation half and a reduction half, balance each, then make the electrons match.',
+  body:`<p>In acidic solution:</p>
+  <ol><li>Write the two half-reactions.</li><li>Balance atoms other than O and H.</li><li>Balance O by adding {H2O}.</li><li>Balance H by adding {H^+}.</li><li>Balance charge by adding electrons (e⁻).</li><li>Multiply so both halves have the same number of electrons, then add and cancel.</li></ol>
+  <p>For basic solution, finish in acid, then add {OH^-} to both sides to cancel each {H^+} (they form water).</p>`,
+  example:{q:'Balance the reduction half: {MnO4^- → Mn^2+} (acidic).',steps:['Mn is balanced.','Add 4 {H2O} to the right for oxygen.','Add 8 {H^+} to the left for hydrogen.','Charge: left +7, right +2 → add 5 e⁻ to the left.','<b>{MnO4^- + 8H^+ + 5e^- → Mn^2+ + 4H2O}</b>']},
+  quiz:[{q:'In acidic solution, oxygen atoms are balanced by adding…',o:['{O2}','{H2O}','{OH^-}','{H^+}'],a:1,w:'Water supplies O atoms; then {H^+} fixes hydrogen.'},
+        {q:'Before adding two half-reactions you must…',o:['equalize the electrons','remove all water','double both','reverse one'],a:0,w:'Electrons lost must equal electrons gained.'}]},
+ {id:'x3',title:'Galvanic cells',sub:'Batteries from redox reactions',
+  lede:'A <b>galvanic cell</b> separates the two halves of a spontaneous redox reaction so the electrons have to flow through a wire. That flow is electricity.',
+  diagram:'cell',
+  body:`<p>Oxidation happens at the <b>anode</b> and reduction at the <b>cathode</b> (“An Ox, Red Cat”). Electrons flow through the wire from anode to cathode. A <b>salt bridge</b> lets ions move between the beakers to keep both sides electrically neutral.</p>
+  <p>Cell voltage comes from a table of standard reduction potentials: <span class="f">E°<sub>cell</sub> = E°<sub>cathode</sub> − E°<sub>anode</sub></span>. A positive E°<sub>cell</sub> means the reaction is spontaneous.</p>`,
+  example:{q:'Find E°<sub>cell</sub> for the zinc–copper cell. E°({Cu^2+}/Cu) = +0.34 V, E°({Zn^2+}/Zn) = −0.76 V.',steps:['The higher E° is reduced: copper is the cathode.','E°<sub>cell</sub> = 0.34 − (−0.76)','E°<sub>cell</sub> = <b>+1.10 V</b>, spontaneous.']},
+  quiz:[{q:'Oxidation takes place at the…',o:['cathode','anode','salt bridge','voltmeter'],a:1,w:'An Ox: anode, oxidation.'},
+        {q:'Electrons flow through the external wire from…',o:['cathode to anode','anode to cathode','salt bridge to anode','they do not flow'],a:1,w:'The anode releases electrons, the cathode consumes them.'}]},
+ {id:'x4',title:'Electrolytic cells and applications',sub:'Electroplating, Faraday, corrosion',
+  lede:'An <b>electrolytic cell</b> uses an outside power source to force a non-spontaneous reaction. It is a galvanic cell run backwards.',
+  body:`<p>Uses include <b>electroplating</b> (coating jewellery or car parts with a metal), refining copper, and producing aluminium and chlorine. Recharging a phone battery is electrolysis too.</p>
+  <p>The amount of product depends on charge. <span class="f">Q = I·t</span> (coulombs = amps × seconds). Moles of electrons = Q / F, where <b>F = 96 485 C/mol</b> (Faraday’s constant). Then use the half-reaction ratio.</p>
+  <p><b>Corrosion</b> (rusting) is unwanted redox: iron is oxidized by oxygen and water. It is prevented by paint, galvanizing with zinc, or a <b>sacrificial anode</b>, a more reactive metal that corrodes instead.</p>`,
+  points:['Anode is still oxidation and cathode still reduction; in electrolysis the anode is the positive terminal.','{Cu^2+ + 2e^- → Cu}: 2 mol of electrons deposit 1 mol of copper.','Fuel cells run continuously as long as fuel is supplied, e.g. hydrogen + oxygen → water.'],
+  example:{q:'A current of 2.00 A runs for 965 s through {Cu^2+}. What mass of copper is plated?',steps:['Q = 2.00 × 965 = 1930 C','n(e⁻) = 1930 ÷ 96 485 = 0.0200 mol','n(Cu) = 0.0200 ÷ 2 = 0.0100 mol','m = 0.0100 × 63.55 = <b>0.636 g</b>']},
+  quiz:[{q:'How much charge passes when 2.0 A flows for 100 s?',o:['50 C','102 C','200 C','2.0 C'],a:2,w:'Q = I × t = 2.0 × 100 = 200 C.'},
+        {q:'A sacrificial anode protects iron because it…',o:['is less reactive','is more easily oxidized','is a catalyst','blocks light'],a:1,w:'It gives up electrons before iron does, so it corrodes instead.'}]}
+]}
+];
+/* ===== SCH4C course map (Ontario Science 11–12, 2008 rev.) ===== */
+const OLD={};OLDUNITS.forEach(u=>u.lessons.forEach(l=>OLD[l.id]=l));
+const R=(id,patch)=>Object.assign(OLD[id],patch||{});
+const UNITS=[
+{id:'r',sym:'Na',z:11,c:'#E3A008',light:true,name:'Grade 10 Review',flame:'sodium · yellow',strand:'Prerequisite review',
+ blurb:'The SNC2D/SNC2P ideas SCH4C builds on. Start here if chemistry is new to you.',lessons:[
+ R('f1'),
+ R('f2',{title:'Ionic and covalent bonding'})
+]},
+{id:'m',sym:'Sr',z:38,c:'#D2334C',name:'Matter and Qualitative Analysis',flame:'strontium · crimson',strand:'Strand B',
+ blurb:'Periodic trends, naming compounds, reactions, and identifying unknown substances.',lessons:[
+ {id:'m1',title:'Periodic trends',sub:'Why the table is shaped the way it is',
+  lede:'The periodic table is organized so that properties change in a predictable way as you move across a row or down a column.',
+  body:`<p>Two ideas explain almost every trend. Moving <b>across a period</b>, each atom has one more proton but the same number of shells, so the nucleus pulls the electrons in tighter. Moving <b>down a group</b>, each row adds a whole new shell, so the outer electrons sit farther from the nucleus.</p>`,
+  table:{head:['Property','Across a period →','Down a group ↓'],rows:[['Atomic radius (size)','gets smaller','gets bigger'],['Ionization energy (energy to remove an electron)','increases','decreases'],['Electronegativity (pull on shared electrons)','increases','decreases'],['Metal reactivity','decreases','increases'],['Non-metal reactivity','increases','decreases']]},
+  points:['Group 1 metals get more reactive going down: lithium fizzes in water, potassium bursts into flame.','Group 17 non-metals (halogens) get more reactive going up: fluorine is the most reactive non-metal.','Metals form positive ions by losing electrons; non-metals form negative ions by gaining them.','The charge an element usually forms is set by its group: group 1 → 1+, group 2 → 2+, group 16 → 2−, group 17 → 1−.'],
+  analogy:'Think of the outer electrons as a dog on a leash. More protons is a stronger owner; more shells is a longer leash.',
+  quiz:[{q:'Which atom is largest?',o:['Li','Na','K','Rb'],a:3,w:'Size increases down a group because each row adds a shell. Rb is lowest.'},
+        {q:'Which is the most reactive metal?',o:['Mg','Na','K','Ca'],a:2,w:'Reactivity of metals increases down and to the left. K is lowest and farthest left of these.'},
+        {q:'What charge does an oxygen ion usually have?',o:['2+','1−','2−','6+'],a:2,w:'O is in group 16, so it gains 2 electrons to fill its outer shell: {O^2-}.'}]},
+ {id:'m2',title:'Naming compounds',sub:'Ionic, covalent and acids',
+  lede:'Every compound has a systematic name. The rules depend on whether it is ionic (metal + non-metal) or molecular (non-metals only).',
+  body:`<h2>Ionic compounds</h2><p>Name the metal, then the non-metal with its ending changed to <b>-ide</b>: {NaCl} is sodium chloride, {MgO} is magnesium oxide. To write the formula, balance the charges so they add to zero: {Al^3+} and {O^2-} give {Al2O3}.</p>
+  <p>Some metals can form more than one ion. Use a Roman numeral for the charge: {FeCl2} is iron(II) chloride and {FeCl3} is iron(III) chloride.</p>
+  <h2>Polyatomic ions</h2><p>Some ions are groups of atoms with an overall charge. Learn these common ones:</p>`,
+  table:{head:['Ion','Formula','Ion','Formula'],rows:[['nitrate','{NO3^-}','hydroxide','{OH^-}'],['sulfate','{SO4^2-}','carbonate','{CO3^2-}'],['phosphate','{PO4^3-}','ammonium','{NH4^+}'],['hydrogen carbonate','{HCO3^-}','chlorate','{ClO3^-}']]},
+  points:['Molecular compounds use prefixes: mono-, di-, tri-, tetra-, penta-. {CO2} is carbon dioxide, {N2O4} is dinitrogen tetroxide. Drop “mono” on the first element.','Use brackets for more than one polyatomic ion: {Ca(OH)2} is calcium hydroxide.','Common acids: HCl hydrochloric acid, {H2SO4} sulfuric acid, {HNO3} nitric acid.'],
+  example:{q:'Write the formula for calcium phosphate.',steps:['Ions: {Ca^2+} and {PO4^3-}.','Find the lowest common multiple of 2 and 3: 6.','3 Ca (6+) and 2 phosphate (6−).','<b>{Ca3(PO4)2}</b>']},
+  quiz:[{q:'What is the name of {CaCl2}?',o:['calcium dichloride','calcium chloride','calcium chlorine','chlorine calcide'],a:1,w:'Ionic compounds don’t use prefixes. Metal name + non-metal with -ide.'},
+        {q:'What is the formula for dinitrogen trioxide?',o:['{N2O3}','{N3O2}','{NO3}','{2NO3}'],a:0,w:'di = 2 nitrogen, tri = 3 oxygen.'},
+        {q:'What is the formula for aluminium sulfate? ({Al^3+}, {SO4^2-})',o:['{AlSO4}','{Al2SO4}','{Al2(SO4)3}','{Al3(SO4)2}'],a:2,w:'2 × 3+ = 6+ and 3 × 2− = 6−, so {Al2(SO4)3}.'}]},
+ R('f4',{title:'Equations and reaction types'}),
+ {id:'m3',title:'The activity series',sub:'Predicting single displacement',
+  lede:'In a single displacement reaction, a more reactive element pushes a less reactive one out of a compound. The <b>activity series</b> ranks metals so you can predict whether it will happen.',
+  body:`<p>A metal can replace any metal <b>below</b> it in the series. Zinc is above copper, so zinc in copper(II) sulfate reacts: {Zn + CuSO4 → ZnSO4 + Cu}. Copper is below zinc, so copper in zinc sulfate does nothing.</p>
+  <p>Hydrogen sits in the list too. Metals above hydrogen react with acids to make hydrogen gas. Metals below it, like copper, silver and gold, don’t react with ordinary acids, which is why they are used for coins and jewellery.</p>`,
+  table:{head:['Most reactive at top','Reacts with'],rows:[['lithium, potassium, calcium, sodium','cold water'],['magnesium, aluminium, zinc, iron','acids (and steam)'],['nickel, tin, lead','acids, slowly'],['hydrogen','(reference point)'],['copper, silver, mercury, gold','none of the above']]},
+  points:['Halogens have their own series: {F2} > {Cl2} > {Br2} > {I2}. Chlorine can replace bromide, but iodine can’t replace chloride.','If the free element is lower than the one in the compound, write “no reaction”.'],
+  quiz:[{q:'Will iron react with copper(II) chloride solution?',o:['Yes, iron is above copper','No, iron is below copper','Only if heated'],a:0,w:'Iron is more reactive, so it replaces copper: {Fe + CuCl2 → FeCl2 + Cu}.'},
+        {q:'Which metal will NOT react with hydrochloric acid?',o:['Mg','Zn','Fe','Ag'],a:3,w:'Silver is below hydrogen in the activity series.'}]},
+ {id:'m4',title:'Qualitative analysis',sub:'Identifying unknown substances',
+  lede:'<b>Qualitative analysis</b> means figuring out what is in a sample (not how much). You use the clues a substance gives off: colour, a precipitate, a gas, or a flame colour.',
+  body:`<h2>Flame tests</h2><p>Heat a metal ion in a flame and its electrons jump to higher energy levels, then fall back and give off light of a specific colour. That is where this app’s colours come from.</p>`,
+  table:{head:['Ion','Flame colour'],rows:[['lithium {Li^+}','red'],['sodium {Na^+}','bright yellow'],['potassium {K^+}','lilac'],['calcium {Ca^2+}','orange-red'],['strontium {Sr^2+}','crimson'],['barium {Ba^2+}','pale green'],['copper {Cu^2+}','blue-green']]},
+  points:['<b>Precipitate tests</b>: adding silver nitrate to a chloride gives a white precipitate (AgCl). Adding barium chloride to a sulfate gives a white precipitate ({BaSO4}).','<b>Gas tests</b>: hydrogen makes a “pop” with a burning splint; oxygen relights a glowing splint; carbon dioxide turns limewater cloudy.','<b>Indicators</b>: litmus turns red in acid and blue in base.','Solution colours help too: {Cu^2+} is blue, {Fe^3+} is yellow-brown, {MnO4^-} is purple.','Always do one test at a time and compare against a known sample.'],
+  quiz:[{q:'A sample burns with a crimson flame. Which ion is it most likely?',o:['{Na^+}','{Sr^2+}','{Cu^2+}','{K^+}'],a:1,w:'Strontium gives crimson. It’s also used in red fireworks.'},
+        {q:'A gas turns limewater cloudy. What is it?',o:['oxygen','hydrogen','carbon dioxide','nitrogen'],a:2,w:'{CO2} reacts with limewater to form a cloudy calcium carbonate precipitate.'},
+        {q:'Adding silver nitrate gives a white precipitate. The sample probably contains…',o:['chloride ions','sodium ions','sulfate ions','hydrogen gas'],a:0,w:'{Ag^+} and {Cl^-} form insoluble white AgCl.'}]}
+]},
+{id:'k',sym:'K',z:19,c:'#8A63D2',name:'Chemical Calculations',flame:'potassium · lilac',strand:'Strand E',
+ blurb:'Moles, percent composition, formulas, stoichiometry and yield.',lessons:[
+ R('f3',{title:'The mole and molar mass'}),
+ {id:'k1',title:'Percent composition',sub:'What fraction of a compound each element is',
+  lede:'<b>Percent composition</b> tells you what percentage of a compound’s mass comes from each element.',
+  body:`<p>Use the molar mass. For each element: <span class="f">% = (mass of element in 1 mol ÷ molar mass) × 100</span>. The percentages should add up to about 100%.</p>`,
+  example:{q:'What is the percent composition of water, {H2O}?',steps:['Molar mass = 2(1.01) + 16.00 = 18.02 g/mol.','% H = 2.02 ÷ 18.02 × 100 = <b>11.2%</b>','% O = 16.00 ÷ 18.02 × 100 = <b>88.8%</b>','Check: 11.2 + 88.8 = 100.0 ✓']},
+  points:['Percent composition is the same for any sample size. A drop of water and an ocean are both 11.2% hydrogen by mass.','In a lab, % = mass of element ÷ mass of sample × 100.','Fertilizer bags list percent nitrogen, phosphorus and potassium this way.'],
+  quiz:[{q:'{CO2} has a molar mass of 44.01 g/mol. What percent of it is carbon (12.01)?',o:['12.0%','27.3%','50.0%','72.7%'],a:1,w:'12.01 ÷ 44.01 × 100 = 27.3%.'},
+        {q:'A 50.0 g sample contains 20.0 g of calcium. What percent is calcium?',o:['20%','40%','50%','60%'],a:1,w:'20.0 ÷ 50.0 × 100 = 40%.'}]},
+ {id:'k2',title:'Empirical and molecular formulas',sub:'Working backwards from percentages',
+  lede:'The <b>empirical formula</b> is the simplest whole-number ratio of atoms. The <b>molecular formula</b> is the actual number of atoms in one molecule.',
+  body:`<p>Glucose is {C6H12O6} (molecular). Divide everything by 6 and you get {CH2O} (empirical). You can find the empirical formula from lab data in four steps:</p>
+  <ol><li>Assume 100 g, so percentages become grams.</li><li>Convert each mass to moles (divide by molar mass).</li><li>Divide every mole value by the smallest one.</li><li>Round to whole numbers (multiply all by 2 or 3 if you get .5 or .33).</li></ol>
+  <p>To get the molecular formula, divide the real molar mass by the empirical formula’s mass. Multiply the subscripts by that whole number.</p>`,
+  example:{q:'A compound is 40.0% C, 6.7% H and 53.3% O. Find its empirical formula.',steps:['In 100 g: 40.0 g C, 6.7 g H, 53.3 g O.','Moles: C 40.0 ÷ 12.01 = 3.33; H 6.7 ÷ 1.01 = 6.63; O 53.3 ÷ 16.00 = 3.33.','Divide by 3.33: C 1, H 2, O 1.','Empirical formula: <b>{CH2O}</b>']},
+  quiz:[{q:'What is the empirical formula of {C2H6}?',o:['{CH3}','{C2H6}','{CH2}','{C2H3}'],a:0,w:'Divide both subscripts by 2.'},
+        {q:'Empirical formula {CH2} (14 g/mol), molar mass 42 g/mol. Molecular formula?',o:['{CH2}','{C2H4}','{C3H6}','{C4H8}'],a:2,w:'42 ÷ 14 = 3, so multiply by 3: {C3H6}.'}]},
+ {id:'k3',title:'Stoichiometry',sub:'How much product from how much reactant',
+  lede:'The coefficients in a balanced equation are a recipe in moles. Stoichiometry uses that recipe to predict masses.',
+  body:`<p>Every stoichiometry question follows the same path: <b>grams of A → moles of A → (mole ratio) → moles of B → grams of B</b>.</p>
+  <p>In {2H2 + O2 → 2H2O}, the ratio is 2 mol {H2} : 1 mol {O2} : 2 mol {H2O}.</p>`,
+  example:{q:'How many grams of water form when 4.04 g of {H2} burns completely? {2H2 + O2 → 2H2O}',steps:['Moles of {H2} = 4.04 ÷ 2.02 = 2.00 mol.','Ratio {H2} : {H2O} = 2 : 2, so 2.00 mol of water.','Mass = 2.00 × 18.02 = <b>36.0 g</b>']},
+  points:['Always balance the equation first.','Never compare grams directly. Only moles follow the ratio.','Write units on every number. They show you when a step is missing.'],
+  quiz:[{q:'In {N2 + 3H2 → 2NH3}, how many moles of {NH3} form from 6 mol of {H2}?',o:['2','3','4','6'],a:2,w:'Ratio 3 : 2, so 6 × 2/3 = 4 mol.'},
+        {q:'What is the correct order of steps?',o:['grams → grams','grams → moles → ratio → moles → grams','moles → grams → ratio','ratio → grams → moles'],a:1,w:'The mole ratio only works on moles.'}]},
+ {id:'k4',title:'Limiting reagent and percent yield',sub:'What runs out, and how close you got',
+  lede:'Reactions rarely start with perfect amounts. The <b>limiting reagent</b> runs out first and decides how much product you can make. The other one is <b>in excess</b>.',
+  body:`<p>To find it, work out how much product each reactant could make on its own. The one that gives <b>less</b> product is limiting. That smaller amount is the <b>theoretical yield</b>.</p>
+  <p>In a real lab you get less: some product sticks to glassware, some reactions don’t finish. <span class="f">Percent yield = actual ÷ theoretical × 100</span>.</p>`,
+  analogy:'Making sandwiches with 10 slices of bread and 3 slices of cheese: you can only make 3 cheese sandwiches. Cheese is limiting; bread is in excess.',
+  example:{q:'Theoretical yield is 36.0 g and you collected 30.6 g. What is the percent yield?',steps:['Percent yield = 30.6 ÷ 36.0 × 100','= <b>85.0%</b>']},
+  quiz:[{q:'In {2H2 + O2 → 2H2O}, you have 4 mol {H2} and 1 mol {O2}. Which is limiting?',o:['{H2}','{O2}','neither'],a:1,w:'4 mol {H2} needs 2 mol {O2}, but only 1 mol is there. {O2} runs out first.'},
+        {q:'Theoretical yield 50.0 g, actual 40.0 g. Percent yield?',o:['40%','80%','125%','90%'],a:1,w:'40.0 ÷ 50.0 × 100 = 80%.'}]}
+]},
+{id:'o',sym:'Ba',z:56,c:'#3E9B4F',name:'Organic Chemistry',flame:'barium · green',strand:'Strand C',
+ blurb:'Hydrocarbons, isomers, functional groups, polarity, and organic chemistry in everyday life.',lessons:[
+ R('b1'),
+ R('b2'),
+ R('b3'),
+ {id:'o1',title:'Polarity and intermolecular forces',sub:'Why some things boil and dissolve easily',
+  lede:'<b>Electronegativity</b> is how hard an atom pulls on shared electrons. When two bonded atoms pull unequally, the bond is <b>polar</b>, and that changes how molecules attract each other.',
+  body:`<p>In an O–H bond, oxygen pulls harder, so it gets a small negative charge (δ−) and hydrogen a small positive charge (δ+). A C–H bond is nearly even, so hydrocarbons are <b>non-polar</b>.</p>
+  <p>Forces <i>between</i> molecules are called <b>intermolecular forces</b>. Stronger forces mean a higher boiling point.</p>`,
+  table:{head:['Force','Found in','Strength'],rows:[['London dispersion','all molecules; bigger molecules have more','weakest'],['Dipole–dipole','polar molecules','medium'],['Hydrogen bonding','molecules with O–H or N–H','strongest']]},
+  points:['Ethanol ({C2H5OH}) boils at 78 °C, but ethane ({C2H6}) boils at −89 °C. The –OH group allows hydrogen bonding.','“Like dissolves like”: polar dissolves in polar (sugar in water); non-polar in non-polar (grease in gasoline).','That’s why oil and water don’t mix, and why soap (one polar end, one non-polar end) can wash grease away.','Longer hydrocarbon chains have higher boiling points: more surface for London forces.'],
+  quiz:[{q:'Which has the highest boiling point?',o:['methane','ethane','ethanol','propane'],a:2,w:'Ethanol can hydrogen bond through its –OH group.'},
+        {q:'Why doesn’t oil dissolve in water?',o:['Oil is too heavy','Oil is non-polar and water is polar','Water is non-polar','Oil is ionic'],a:1,w:'Like dissolves like.'}]},
+ R('b5',{title:'Organic chemistry in society',sub:'Fuels, plastics and their impact',
+  body:`<p><b>Addition polymers</b> form when alkene monomers open their double bonds and link up. Ethene becomes polyethylene (grocery bags). <b>Condensation polymers</b> like nylon and polyester join while releasing water.</p>
+  <p>Organic compounds are everywhere in daily life: fuels (propane, gasoline), solvents (acetone in nail polish remover), flavours (esters), medicines (aspirin) and plastics.</p>
+  <p>SCH4C asks you to weigh impacts. Plastics are cheap and durable, but that durability means they last for centuries in landfills and oceans. Burning fossil fuels releases {CO2}. Options include recycling, bioplastics, and using less.</p>`})
+]},
+{id:'v',sym:'Ca',z:20,c:'#DE6A1F',light:true,name:'Chemistry in the Environment',flame:'calcium · orange',strand:'Strand F',
+ blurb:'Solutions, acids and bases, titration, fuels, and air and water quality.',lessons:[
+ {id:'v1',title:'Solutions and solubility',sub:'What dissolves, and why',
+  lede:'A <b>solution</b> is a mixture where one substance (the <b>solute</b>) is spread evenly through another (the <b>solvent</b>). Water dissolves so many things it’s called the universal solvent.',
+  body:`<p>Ionic compounds dissolve when water molecules pull their ions apart. The ions then conduct electricity, so these are called <b>electrolytes</b>. Polar covalent compounds like sugar dissolve too, but as whole molecules, so they don’t conduct.</p>
+  <p>Not every ionic compound dissolves. Use a solubility table to predict whether a <b>precipitate</b> (an insoluble solid) will form when two solutions are mixed.</p>`,
+  table:{head:['Usually soluble','Exceptions'],rows:[['Group 1 ions, {NH4^+}, nitrates {NO3^-}','none'],['chlorides, bromides, iodides','with {Ag^+}, {Pb^2+}'],['sulfates {SO4^2-}','with {Ba^2+}, {Ca^2+}, {Pb^2+}'],['<b>Usually insoluble</b>: carbonates, phosphates, hydroxides','except with group 1 and {NH4^+}']]},
+  points:['A saturated solution holds as much solute as it can at that temperature.','Most solids dissolve better in hot water; gases dissolve better in cold water. Warm lakes hold less oxygen, which stresses fish.'],
+  quiz:[{q:'Which compound is insoluble in water?',o:['NaCl','{KNO3}','AgCl','{Na2SO4}'],a:2,w:'Chlorides are soluble except with {Ag^+} and {Pb^2+}.'},
+        {q:'Why does salt water conduct electricity?',o:['It contains free ions','Water is a metal','Salt is covalent','It contains free electrons'],a:0,w:'Dissolved {Na^+} and {Cl^-} ions carry charge.'}]},
+ R('f5',{title:'Concentration and dilution',sub:'mol/L, ppm and making solutions',
+  body:`<p><b>Concentration</b> is how much solute is in a volume of solution. The main unit is mol/L: <span class="f">c = n / V</span>.</p>
+  <p>For very dilute solutions, like pollutants in drinking water, chemists use <b>parts per million (ppm)</b>. 1 ppm is 1 mg of solute per litre of water. Health Canada sets limits in ppm, for example for lead and nitrates.</p>
+  <p>To <b>dilute</b> a solution, add water. The moles of solute stay the same, so <span class="f">c<sub>1</sub>V<sub>1</sub> = c<sub>2</sub>V<sub>2</sub></span>.</p>`,
+  points:['Convert mL to L by dividing by 1000.','Rearrange as needed: n = c × V.','Dilution example: 100 mL of 2.0 mol/L diluted to 400 mL gives 0.50 mol/L.'],
+  quiz:[{q:'How many moles are in 2.0 L of a 0.50 mol/L solution?',o:['0.25 mol','1.0 mol','2.5 mol','4.0 mol'],a:1,w:'n = c × V = 0.50 × 2.0 = 1.0 mol.'},
+        {q:'50 mL of 4.0 mol/L acid is diluted to 200 mL. New concentration?',o:['1.0 mol/L','2.0 mol/L','8.0 mol/L','16 mol/L'],a:0,w:'c₂ = c₁V₁ ÷ V₂ = 4.0 × 50 ÷ 200 = 1.0 mol/L.'}]}),
+ R('f6'),
+ {id:'v2',title:'Titration',sub:'Measuring an unknown concentration',
+  lede:'A <b>titration</b> finds the concentration of an acid or base by slowly adding a solution of known concentration until they exactly neutralize each other.',
+  body:`<p>Set-up: the known solution (the <b>titrant</b>) goes in a <b>burette</b>. A measured volume of the unknown goes in a flask with a few drops of <b>indicator</b>. Add titrant drop by drop and swirl until the indicator changes colour permanently. That is the <b>endpoint</b>.</p>
+  <p>Then calculate: moles of titrant used → mole ratio from the balanced equation → moles of unknown → concentration of unknown.</p>`,
+  example:{q:'25.0 mL of HCl is neutralized by 20.0 mL of 0.100 mol/L NaOH. Find [HCl]. ({HCl + NaOH → NaCl + H2O})',steps:['n(NaOH) = 0.100 × 0.0200 = 0.00200 mol.','Ratio 1 : 1, so n(HCl) = 0.00200 mol.','c(HCl) = 0.00200 ÷ 0.0250 = <b>0.0800 mol/L</b>']},
+  points:['Phenolphthalein is colourless in acid and pink in base. It’s the most common indicator.','Do at least three trials and average the ones that agree within 0.1 mL.','Read the burette at the bottom of the curved meniscus, at eye level.'],
+  quiz:[{q:'What is the piece of glassware used to add the titrant?',o:['beaker','burette','graduated cylinder','test tube'],a:1,w:'A burette delivers precise, measurable volumes drop by drop.'},
+        {q:'10.0 mL of 0.20 mol/L NaOH neutralizes 20.0 mL of HCl. [HCl] is…',o:['0.050','0.10','0.20','0.40 mol/L'],a:1,w:'n = 0.0020 mol; c = 0.0020 ÷ 0.0200 = 0.10 mol/L.'}]},
+ {id:'v3',title:'Crude oil and fuels',sub:'Fractional distillation',
+  lede:'Crude oil is a thick mixture of thousands of hydrocarbons. <b>Fractional distillation</b> separates it into useful <b>fractions</b> by boiling point.',
+  body:`<p>Crude oil is heated until most of it vaporizes, then fed into a tall column that is hot at the bottom and cool at the top. Small molecules (low boiling points) rise to the top before condensing. Large molecules condense near the bottom.</p>`,
+  table:{head:['Fraction','Carbons','Use'],rows:[['refinery gas','1–4','propane, butane for heating'],['gasoline','5–10','car fuel'],['kerosene','10–16','jet fuel'],['diesel','14–20','trucks, trains'],['lubricating oil','20–50','motor oil, wax'],['residue (bitumen)','50+','asphalt roads']]},
+  points:['<b>Cracking</b> breaks large, less useful molecules into smaller ones like gasoline.','Burning hydrocarbons releases energy, {CO2} and water. Too little oxygen makes toxic carbon monoxide (CO) and soot.','Alberta’s oil sands contain bitumen, which needs extra processing before refining.'],
+  quiz:[{q:'Where in the column do the smallest molecules come out?',o:['bottom','middle','top'],a:2,w:'They have the lowest boiling points, so they rise farthest before condensing.'},
+        {q:'Incomplete combustion produces which toxic gas?',o:['{CO2}','CO','{O2}','{H2}'],a:1,w:'Without enough oxygen, carbon only gets one O: carbon monoxide.'}]},
+ {id:'v4',title:'Air and water quality',sub:'How chemistry affects the environment',
+  lede:'Natural processes and human activity both change the chemistry of air and water. Knowing the reactions helps you understand the problems and the fixes.',
+  table:{head:['Issue','Chemistry','Effects'],rows:[['Acid rain','{SO2} and {NOx} from burning fuel react with water to form {H2SO4} and {HNO3}','damages lakes, forests, buildings'],['Smog','{NOx} and hydrocarbons + sunlight → ground-level ozone ({O3})','breathing problems'],['Greenhouse effect','{CO2}, {CH4} and water vapour trap heat','climate change'],['Ozone depletion','CFCs break down {O3} in the upper atmosphere','more UV radiation'],['Heavy metals','mercury, lead dissolve in water and build up in food chains','nerve and organ damage'],['Excess nutrients','fertilizer nitrates and phosphates run into lakes','algae blooms, low oxygen']]},
+  points:['Limestone ({CaCO3}) naturally neutralizes acid, so lakes on limestone resist acid rain better than lakes on the Canadian Shield.','Catalytic converters change CO and {NOx} into {CO2} and {N2}.','Water treatment: screening, coagulation, filtration, then chlorine to kill microbes.','Mercury from industry built up in fish near Grassy Narrows, Ontario, a well-known Canadian case.'],
+  quiz:[{q:'Which gas is mainly responsible for acid rain from coal burning?',o:['{CO2}','{SO2}','{O2}','{CH4}'],a:1,w:'Sulfur dioxide reacts with water to form sulfuric acid.'},
+        {q:'Why are lakes on limestone less affected by acid rain?',o:['Limestone is acidic','Limestone neutralizes acid','Limestone blocks rain','They are colder'],a:1,w:'Calcium carbonate reacts with and neutralizes acids.'}]}
+]},
+{id:'x',sym:'Cu',z:29,c:'#1B8FA3',name:'Electrochemistry',flame:'copper · blue-green',strand:'Strand D',
+ blurb:'Oxidation numbers, redox reactions, batteries, corrosion and electroplating.',lessons:[
+ R('x1'),
+ {id:'x5',title:'Half-reactions and agents',sub:'Splitting a redox reaction in two',
+  lede:'Every redox reaction can be split into two <b>half-reactions</b>: one that shows the loss of electrons and one that shows the gain.',
+  body:`<p>Take {Zn + Cu^2+ → Zn^2+ + Cu}.</p>
+  <p><b>Oxidation</b> (loses e⁻): {Zn → Zn^2+ + 2e^-}<br><b>Reduction</b> (gains e⁻): {Cu^2+ + 2e^- → Cu}</p>
+  <p>The electrons cancel when you add them back together. The number lost must equal the number gained.</p>
+  <p>The substance that gets <b>reduced</b> is the <b>oxidizing agent</b>, because it causes the other one to be oxidized. The substance that gets <b>oxidized</b> is the <b>reducing agent</b>.</p>`,
+  points:['Remember OIL RIG: Oxidation Is Loss, Reduction Is Gain.','In an oxidation half-reaction, electrons appear on the right. In a reduction, on the left.','If one half loses 2 e⁻ and the other gains 1 e⁻, double the second half before adding.'],
+  example:{q:'Identify the agents in {Mg + 2Ag^+ → Mg^2+ + 2Ag}.',steps:['Mg goes 0 → +2: oxidized, so Mg is the <b>reducing agent</b>.','{Ag^+} goes +1 → 0: reduced, so {Ag^+} is the <b>oxidizing agent</b>.','Halves: {Mg → Mg^2+ + 2e^-} and {Ag^+ + e^- → Ag} (× 2).']},
+  quiz:[{q:'In {Cu^2+ + 2e^- → Cu}, copper is being…',o:['oxidized','reduced','neither'],a:1,w:'It gains electrons: reduction.'},
+        {q:'The oxidizing agent is the substance that is…',o:['oxidized','reduced','a catalyst','unchanged'],a:1,w:'It takes electrons, so it gets reduced, causing the other to be oxidized.'}]},
+ R('x3'),
+ {id:'x6',title:'Batteries, corrosion and electroplating',sub:'Electrochemistry in real life',
+  lede:'The redox ideas from this unit explain the batteries in your phone, the rust on a car and the gold layer on cheap jewellery.',
+  body:`<p><b>Batteries</b> are galvanic cells packaged to be portable. Alkaline batteries use zinc and manganese dioxide. Lithium-ion batteries are rechargeable: charging runs the reaction backwards with outside power.</p>
+  <p><b>Electrolysis</b> uses electricity to force a reaction that wouldn’t happen on its own. In <b>electroplating</b>, the object to coat is the cathode. Metal ions in the solution are reduced and form a thin layer on it, such as chrome on car parts or silver on cutlery.</p>
+  <p><b>Corrosion</b> is unwanted oxidation. Iron rusts when it reacts with oxygen and water, and road salt speeds it up, which is why cars rust faster in Canadian winters.</p>`,
+  points:['Prevent corrosion with paint, oil or plastic coatings that keep water and oxygen out.','<b>Galvanizing</b> coats iron with zinc.','A <b>sacrificial anode</b> is a more reactive metal (like magnesium or zinc) attached to iron. It corrodes instead, protecting ship hulls and pipelines.','Fuel cells combine hydrogen and oxygen to make electricity, with only water as a by-product.'],
+  quiz:[{q:'In electroplating, the object being coated is the…',o:['anode','cathode','salt bridge','electrolyte'],a:1,w:'Reduction happens at the cathode, where metal ions become solid metal.'},
+        {q:'Why does zinc protect iron from rusting?',o:['It is less reactive','It is more easily oxidized, so it corrodes first','It is a catalyst','It blocks light'],a:1,w:'Zinc is above iron in the activity series, so it gives up electrons first.'},
+        {q:'Why do cars rust faster in Canadian winters?',o:['Cold speeds up rusting','Road salt helps electrons move','Snow is acidic','Less oxygen'],a:1,w:'Salt water is an electrolyte, which speeds up the redox reaction.'}]}
+]}
+];
+const LESSONS=[];UNITS.forEach(u=>u.lessons.forEach((l,i)=>{l.unit=u;l.n=i+1;LESSONS.push(l)}));
+const byId=id=>LESSONS.find(l=>l.id===id);
+
+/* ---------- elements ---------- */
+const EL=`H,Hydrogen,1.008,2.20,nm|He,Helium,4.003,,ng|Li,Lithium,6.94,0.98,am|Be,Beryllium,9.012,1.57,ae|B,Boron,10.81,2.04,md|C,Carbon,12.01,2.55,nm|N,Nitrogen,14.01,3.04,nm|O,Oxygen,16.00,3.44,nm|F,Fluorine,19.00,3.98,ha|Ne,Neon,20.18,,ng|Na,Sodium,22.99,0.93,am|Mg,Magnesium,24.31,1.31,ae|Al,Aluminium,26.98,1.61,pt|Si,Silicon,28.09,1.90,md|P,Phosphorus,30.97,2.19,nm|S,Sulfur,32.06,2.58,nm|Cl,Chlorine,35.45,3.16,ha|Ar,Argon,39.95,,ng|K,Potassium,39.10,0.82,am|Ca,Calcium,40.08,1.00,ae|Sc,Scandium,44.96,1.36,tm|Ti,Titanium,47.87,1.54,tm|V,Vanadium,50.94,1.63,tm|Cr,Chromium,52.00,1.66,tm|Mn,Manganese,54.94,1.55,tm|Fe,Iron,55.85,1.83,tm|Co,Cobalt,58.93,1.88,tm|Ni,Nickel,58.69,1.91,tm|Cu,Copper,63.55,1.90,tm|Zn,Zinc,65.38,1.65,tm|Ga,Gallium,69.72,1.81,pt|Ge,Germanium,72.63,2.01,md|As,Arsenic,74.92,2.18,md|Se,Selenium,78.97,2.55,nm|Br,Bromine,79.90,2.96,ha|Kr,Krypton,83.80,3.00,ng`
+ .split('|').map((r,i)=>{const[s,n,m,en,k]=r.split(',');return{z:i+1,s,n,m:+m,en:en?+en:null,k}});
+const MASS={};EL.forEach(e=>MASS[e.s]=e.m);
+Object.assign(MASS,{Rb:85.47,Sr:87.62,Ag:107.87,Sn:118.71,I:126.90,Cs:132.91,Ba:137.33,Pt:195.08,Au:196.97,Hg:200.59,Pb:207.2});
+const KIND={am:['Alkali metal','#F2B36B'],ae:['Alkaline earth metal','#EFD27A'],tm:['Transition metal','#A9C9E8'],pt:['Post-transition metal','#B7D7B0'],md:['Metalloid','#C9C0A0'],nm:['Non-metal','#9FDCC6'],ha:['Halogen','#E8B3C8'],ng:['Noble gas','#C9B8EE']};
+function pos(z){if(z===1)return[1,1];if(z===2)return[1,18];if(z<=10)return[2,z<=4?z-2:z+8];if(z<=18)return[3,z<=12?z-10:z];return[4,z-18]}
+const ORD=[['1s',2],['2s',2],['2p',6],['3s',2],['3p',6],['4s',2],['3d',10],['4p',6]];
+function config(z){
+  let left=z,parts=[];for(const[o,c]of ORD){if(left<=0)break;const t=Math.min(c,left);parts.push([o,t]);left-=t}
+  if(z===24||z===29){parts=parts.map(p=>p[0]==='4s'?['4s',1]:p[0]==='3d'?['3d',z===24?5:10]:p)}
+  const full=parts.map(p=>p[0]+'^'+p[1]).join(' ');
+  const gases=[[18,'[Ar]',5],[10,'[Ne]',3],[2,'[He]',1]];
+  let short=full;for(const[g,lab,k]of gases){if(z>g){short=lab+' '+parts.slice(k).map(p=>p[0]+'^'+p[1]).join(' ');break}}
+  return{full,short};
+}
+function valence(z){const[p,g]=pos(z);if(g<=2)return g;if(g>=13)return g===18&&z===2?2:g-10;return null}
+
+/* ---------- molar mass parser ---------- */
+function parseFormula(str){
+  str=str.replace(/\s/g,'').replace(/·/g,'.').replace(/\*/g,'.');
+  const parts=str.split('.');const total={};
+  for(let part of parts){
+    let mult=1;const m=part.match(/^(\d+)(.*)$/);if(m&&parts.length>1){mult=+m[1];part=m[2]}
+    let i=0;
+    function group(){const counts={};
+      while(i<part.length){const ch=part[i];
+        if(ch==='('||ch==='['){i++;const inner=group();if(part[i]!==')'&&part[i]!==']')throw'Missing a closing bracket';i++;const n=num();for(const k in inner)counts[k]=(counts[k]||0)+inner[k]*n}
+        else if(ch===')'||ch===']'){return counts}
+        else if(/[A-Z]/.test(ch)){let s=ch;i++;while(i<part.length&&/[a-z]/.test(part[i])){s+=part[i];i++}
+          if(!(s in MASS))throw'“'+s+'” isn’t an element in this calculator';const n=num();counts[s]=(counts[s]||0)+n}
+        else throw'Unexpected “'+ch+'”. Element symbols start with a capital letter';}
+      return counts}
+    function num(){let d='';while(i<part.length&&/\d/.test(part[i])){d+=part[i];i++}return d?+d:1}
+    const c=group();if(i<part.length)throw'Unmatched closing bracket';
+    for(const k in c)total[k]=(total[k]||0)+c[k]*mult;
+  }
+  if(!Object.keys(total).length)throw'Type a formula';
+  return total;
+}
+
+
+const UNITLABEL=u=>{const i=UNITS.indexOf(u);return i===0?'Start here':'Unit '+i+' · '+u.strand};
+
+/* ---------- icons ---------- */
+const ICONS={
+lock:'<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+star:'<path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/>',
+flame:'<path d="M12 3c1 4 6 6 6 11a6 6 0 0 1-12 0c0-3 1.5-4.5 3-6 0 2 .8 3.5 2.2 3.5C10.5 8 11 6 12 3z"/>',
+heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+bolt:'<path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/>',
+x:'<path d="M6 6l12 12M18 6L6 18"/>',
+book:'<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>',
+trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v3M9 20h6M10 16h4v4h-4z"/>',
+path:'<circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.5"/>',
+dumbbell:'<path d="M3 9v6M6.5 6.5v11M17.5 6.5v11M21 9v6M6.5 12h11"/>',
+flask:'<path d="M9 3h6M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/><path d="M7.4 15h9.2"/>',
+user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+chest:'<rect x="3" y="9" width="18" height="11" rx="2"/><path d="M3 9a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5M3 13h18M11 13v3h2v-3"/>',
+target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/>',
+cloud:'<path d="M7 18a4 4 0 0 1-.5-8 6 6 0 0 1 11.5 1.5A3.5 3.5 0 0 1 17.5 18z"/>',
+arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+repeat:'<path d="M4 11V9a3 3 0 0 1 3-3h12l-3-3M20 13v2a3 3 0 0 1-3 3H5l3 3"/>',
+moon:'<path d="M19 14.5A7.5 7.5 0 1 1 9.5 5a6 6 0 0 0 9.5 9.5z"/>',
+chat:'<path d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-7l-5 4v-4H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/><path d="M8 10h8M8 13h5"/>',
+camera:'<path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>',
+send:'<path d="M4 12l16-8-6 16-2.5-6.5z"/><path d="M11.5 13.5L20 4"/>',
+stop:'<rect x="6" y="6" width="12" height="12" rx="2"/>',
+crown:'<path d="M4 18h16M5 15L3.5 7l5 4L12 5l3.5 6 5-4L19 15z"/>'};
+const ic=(n,s=24,solid)=>`<svg class="ic${solid?' solid':''}" width="${s}" height="${s}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
+const TABS={learn:['path','Learn'],practice:['dumbbell','Practice'],ask:['chat','Ask Fizz'],tools:['flask','Tools'],profile:['user','Profile']};
+document.querySelectorAll('[data-tab]').forEach(a=>{const[i,t]=TABS[a.dataset.tab],mob=!!a.closest('.btabs');a.innerHTML=ic(i,mob?24:26)+'<span>'+(mob&&a.dataset.tab==='ask'?'Ask':t)+'</span>'});
+
+/* ---------- Fizz the flask ---------- */
+let fzN=0;
+const MOUTH={idle:'<path d="M52 101 q8 6 16 0" fill="none"/>',happy:'<path d="M49 98 q11 15 22 0 z" fill="var(--fzink)"/>',sad:'<path d="M52 106 q8 -7 16 0" fill="none"/>',think:'<path d="M54 103 h12" fill="none"/>',wow:'<ellipse cx="60" cy="103" rx="5" ry="6" fill="var(--fzink)"/>'};
+function fizz({mood='idle',size=96,fill=.6,cls=''}={}){
+  const id='fz'+(++fzN),lvl=118-Math.max(.08,Math.min(1,fill))*64;
+  const body='M48 12h24v32l29 54a15 15 0 0 1-13 22H32a15 15 0 0 1-13-22l29-54z';
+  const pupY=mood==='sad'?92:mood==='think'?87:89,pupX=mood==='think'?3:0;
+  return `<svg class="fizz ${mood} ${cls}" style="--fzink:#14181F" width="${size}" height="${size*140/120}" viewBox="0 0 120 140" role="img" aria-label="Fizz the flask, ${mood}">
+  <defs><clipPath id="${id}"><path d="${body}"/></clipPath></defs>
+  <ellipse cx="60" cy="134" rx="32" ry="4" fill="var(--ink)" opacity=".12"/>
+  <g class="fz-all">
+   <path class="fz-arm fz-armL" d="M26 92 q-12 2 -16 -10" fill="none" stroke="var(--fzink)" stroke-width="4.5" stroke-linecap="round"/>
+   <path class="fz-arm fz-armR" d="M94 92 q12 2 16 -10" fill="none" stroke="var(--fzink)" stroke-width="4.5" stroke-linecap="round"/>
+   <g clip-path="url(#${id})">
+    <rect width="120" height="140" fill="var(--glass)"/>
+    <g class="fz-liq"><path d="M-60 ${lvl} q15 -7 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 V140 H-60z" fill="var(--c)"/></g>
+    <path d="M-60 ${lvl+4} q15 -5 30 0 t30 0 t30 0 t30 0 t30 0 t30 0 V140 H-60z" fill="#000" opacity=".08"/>
+    <circle class="fz-b" cx="44" cy="122" r="3" fill="#fff"/><circle class="fz-b" cx="74" cy="124" r="2.4" fill="#fff"/><circle class="fz-b" cx="60" cy="126" r="2" fill="#fff"/>
+    <path d="M40 60 q-8 20 -12 40" stroke="#fff" stroke-width="4" opacity=".55" fill="none" stroke-linecap="round"/>
+   </g>
+   <path d="${body}" fill="none" stroke="var(--fzink)" stroke-width="4.5" stroke-linejoin="round"/>
+   <rect x="43" y="6" width="34" height="9" rx="4.5" fill="var(--glass)" stroke="var(--fzink)" stroke-width="4"/>
+   <g class="fz-eyes">
+    <ellipse cx="48" cy="88" rx="8" ry="${mood==='sad'?7:9}" fill="#fff" stroke="var(--fzink)" stroke-width="2.5"/>
+    <ellipse cx="72" cy="88" rx="8" ry="${mood==='sad'?7:9}" fill="#fff" stroke="var(--fzink)" stroke-width="2.5"/>
+    ${mood==='happy'?'<path d="M42 89 q6 -7 12 0M66 89 q6 -7 12 0" fill="none" stroke="var(--fzink)" stroke-width="3" stroke-linecap="round"/><rect x="39" y="89" width="42" height="9" fill="#fff" opacity="0"/>':`<circle cx="${49+pupX}" cy="${pupY}" r="4" fill="var(--fzink)"/><circle cx="${73+pupX}" cy="${pupY}" r="4" fill="var(--fzink)"/><circle cx="${50.5+pupX}" cy="${pupY-1.5}" r="1.3" fill="#fff"/><circle cx="${74.5+pupX}" cy="${pupY-1.5}" r="1.3" fill="#fff"/>`}
+    ${mood==='sad'?'<path d="M40 79 l14 4M80 79 l-14 4" stroke="var(--fzink)" stroke-width="3" stroke-linecap="round"/>':''}
+   </g>
+   <ellipse cx="38" cy="100" rx="5" ry="3" fill="#FF7A8A" opacity=".55"/><ellipse cx="82" cy="100" rx="5" ry="3" fill="#FF7A8A" opacity=".55"/>
+   <g stroke="var(--fzink)" stroke-width="3.2" stroke-linecap="round">${MOUTH[mood]||MOUTH.idle}</g>
+  </g></svg>`;
+}
+
+/* ---------- state ---------- */
+const KEY='flametest-sch4u-v2';/* key kept so existing progress carries over */
+const ds=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const dayOff=n=>{const d=new Date();d.setDate(d.getDate()+n);return ds(d)};
+function blank(){return{v:2,xp:0,done:{},cp:{},days:{},streak:{count:0,best:0,last:''},goal:30,badges:{},miss:{},sound:true,unlockAll:false,theme:'system',chat:[],updated:0}}
+function normalize(o){const b=blank();o=o&&typeof o==='object'?o:{};for(const k in b){if(o[k]===undefined||o[k]===null)o[k]=b[k]}o.streak=Object.assign(b.streak,o.streak);return o}
+let S=blank();
+try{const raw=localStorage.getItem(KEY);if(raw)S=normalize(JSON.parse(raw));
+  else{const old=JSON.parse(localStorage.getItem('flametest-sch4u-v1')||'null');
+    if(old&&old.done){for(const id in old.done)if(old.done[id]){S.done[id]={best:100,n:1};S.xp+=10}}}}catch(e){}
+
+let syncState='local',docRef=null,writing=false,pending=false,saveT;
+function setSync(s){syncState=s;const el=$('#syncEl');if(el)el.outerHTML=syncHTML()}
+const syncHTML=()=>`<span class="sync ${syncState}" id="syncEl"><i></i>${{local:'Saved on this device',syncing:'Saving to your account…',cloud:'Synced to your Claude account',error:'Couldn’t reach your account. Saved on this device'}[syncState]}</span>`;
+function save(){S.updated=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}clearTimeout(saveT);saveT=setTimeout(push,700)}
+async function push(){if(!docRef)return;if(writing){pending=true;return}writing=true;setSync('syncing');
+  try{await docRef.set(JSON.parse(JSON.stringify(S)));setSync('cloud')}catch(e){setSync('error')}
+  writing=false;if(pending){pending=false;push()}}
+async function initCloud(){
+  if(!window.claude||typeof window.claude.use!=='function')return;
+  try{const[db,u]=await Promise.all([claude.use('db'),claude.use('user')]);if(!db||!u)return;
+    const id=await u.id();if(!id)return;
+    docRef=db.collection('data/users/'+id).doc('progress');
+    const snap=await Promise.race([docRef.get(),new Promise((_,r)=>setTimeout(()=>r('timeout'),10000))]);
+    const remote=snap&&snap.exists?snap.data():null;
+    if(remote&&(remote.updated||0)>(S.updated||0)){S=normalize(remote);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}applyTheme();if(!SES)route();setSync('cloud')}
+    else if(S.updated||Object.keys(S.done).length){push()}else setSync('cloud');
+  }catch(e){setSync(docRef?'error':'local')}
+}
+
+/* ---------- progress logic ---------- */
+const isDone=l=>!!S.done[l.id];
+function unlocked(l){if(S.unlockAll)return true;const i=LESSONS.indexOf(l);return i===0||isDone(l)||isDone(LESSONS[i-1])}
+function current(){return LESSONS.find(l=>!isDone(l)&&unlocked(l))||null}
+const unitDone=u=>u.lessons.filter(isDone).length;
+const todayXP=()=>S.days[ds()]||0;
+function streakNow(){const l=S.streak.last;return(l===ds()||l===dayOff(-1))?S.streak.count:0}
+const lvlXP=L=>25*L*(L-1);
+function level(xp=S.xp){let L=1;while(xp>=lvlXP(L+1))L++;return L}
+const RANKS=['Lab Rookie','Beaker Wrangler','Mole Counter','Bond Builder','Reaction Runner','Equilibrium Keeper','Redox Wizard','Element Master','Nobel Nominee'];
+const rank=L=>RANKS[Math.min(L,RANKS.length)-1];
+const BADGES=[
+ {id:'first',name:'First spark',desc:'Finish your first lesson',icon:'flame',c:'#E8691C'},
+ {id:'perfect',name:'Flawless',desc:'Finish a lesson with no mistakes',icon:'star',c:'#E9A800'},
+ {id:'combo5',name:'Chain reaction',desc:'5 correct answers in a row',icon:'bolt',c:'#8A63D2'},
+ {id:'streak3',name:'Kindling',desc:'3-day streak',icon:'flame',c:'#D2334C'},
+ {id:'streak7',name:'Bunsen burner',desc:'7-day streak',icon:'flame',c:'#B3261E'},
+ {id:'xp100',name:'100 XP',desc:'Earn 100 XP',icon:'bolt',c:'#1B8FA3'},
+ {id:'xp500',name:'500 XP',desc:'Earn 500 XP',icon:'trophy',c:'#3E9B4F'},
+ {id:'goal',name:'Goal getter',desc:'Hit your daily goal',icon:'target',c:'#E9A800'},
+ {id:'night',name:'Night owl',desc:'Finish a lesson after 10 pm',icon:'moon',c:'#2D4A8A'},
+ ...UNITS.map(u=>({id:'unit-'+u.id,name:u.name,desc:'Finish every lesson in '+u.name,sym:u.sym,c:u.c}))];
+
+function award(xp,ctx={}){
+  const before={lvl:level(),goal:todayXP()>=S.goal,badges:{...S.badges}};
+  S.xp+=xp;const t=ds();S.days[t]=(S.days[t]||0)+xp;
+  if(ctx.lesson||ctx.cp){const l=S.streak.last;if(l!==t){S.streak.count=(l===dayOff(-1))?S.streak.count+1:1;S.streak.last=t}S.streak.best=Math.max(S.streak.best,S.streak.count)}
+  const give=id=>{if(!S.badges[id])S.badges[id]=t};
+  if(ctx.lesson)give('first');
+  if(ctx.perfect)give('perfect');
+  if(ctx.bestCombo>=5)give('combo5');
+  if(S.streak.count>=3)give('streak3');if(S.streak.count>=7)give('streak7');
+  if(S.xp>=100)give('xp100');if(S.xp>=500)give('xp500');
+  if(todayXP()>=S.goal)give('goal');
+  if(ctx.lesson&&new Date().getHours()>=22)give('night');
+  UNITS.forEach(u=>{if(unitDone(u)===u.lessons.length)give('unit-'+u.id)});
+  save();
+  return{lvlUp:level()>before.lvl?level():0,goalHit:!before.goal&&todayXP()>=S.goal,newBadges:BADGES.filter(b=>S.badges[b.id]&&!before.badges[b.id])};
+}
+
+/* ---------- sound ---------- */
+let AC=null;
+function tone(seq){if(!S.sound)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const t0=AC.currentTime;
+  seq.forEach(([f,at,d,type='sine',v=.12])=>{const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;o.connect(g);g.connect(AC.destination);
+    g.gain.setValueAtTime(0,t0+at);g.gain.linearRampToValueAtTime(v,t0+at+.01);g.gain.exponentialRampToValueAtTime(.0001,t0+at+d);o.start(t0+at);o.stop(t0+at+d+.02)})}catch(e){}}
+const SND={ok:()=>tone([[660,0,.12],[990,.09,.22]]),no:()=>tone([[180,0,.25,'square',.06],[140,.12,.3,'square',.05]]),win:()=>tone([[523,0,.15],[659,.12,.15],[784,.24,.15],[1047,.36,.4]]),tap:()=>tone([[440,0,.05,'sine',.05]])};
+
+/* ---------- confetti ---------- */
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function confetti(){if(RM)return;const cv=$('#confetti');cv.hidden=false;const dpr=Math.min(2,devicePixelRatio||1);cv.width=innerWidth*dpr;cv.height=innerHeight*dpr;const x=cv.getContext('2d');if(!x){cv.hidden=true;return}x.scale(dpr,dpr);
+  const cols=UNITS.map(u=>u.c).concat(['#E9A800']);const P=Array.from({length:140},()=>({x:innerWidth/2+(Math.random()-.5)*120,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-4,r:Math.random()*6+4,c:cols[Math.random()*cols.length|0],a:Math.random()*6,va:(Math.random()-.5)*.3}));
+  const t0=performance.now();(function f(t){x.clearRect(0,0,innerWidth,innerHeight);P.forEach(p=>{p.vy+=.35;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.a+=p.va;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});
+    if(t-t0<2800)requestAnimationFrame(f);else{x.clearRect(0,0,innerWidth,innerHeight);cv.hidden=true}})(t0)}
+function toast(msg){const d=document.createElement('div');d.className='toast';d.setAttribute('role','status');d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
+
+/* ---------- theme / accent ---------- */
+function applyTheme(){if(S.theme==='system')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',S.theme)}
+function setAccent(u){const r=document.documentElement.style;r.setProperty('--c',u?u.c:'#E3A008');r.setProperty('--on',(!u||u.light)?'#1a1405':'#fff')}
+const accentUnit=()=>(current()||LESSONS[LESSONS.length-1]).unit;
+const pick=a=>a[Math.random()*a.length|0];
+const SAY={
+ hello:['Ready to mix something up?','Let’s get bubbling.','A little chemistry a day keeps the confusion away.','I’m running on empty. Fill me up with XP!'],
+ almost:['Almost full! One more lesson?','So close to your daily goal.'],
+ full:['I’m full! Daily goal done.','Goal reached. Anything extra is bonus.'],
+ right:['Nice!','Correct!','Exactly!','You nailed it.','Great work!','Brilliant!'],
+ wrong:['Not quite.','Close, but no.','Here’s the right one.'],
+ combo:['in a row! You’re on fire.','in a row! Chain reaction!']};
+
+/* ---------- side panel + top stats ---------- */
+function goalCard(compact){const t=todayXP(),pct=Math.min(1,t/S.goal),u=accentUnit();
+  const msg=pct>=1?pick(SAY.full):pct>=.6?pick(SAY.almost):pick(SAY.hello);
+  return `<div class="card ${compact?'mgoal':''}" style="--c:${u.c}"><div class="fizzline">${fizz({mood:pct>=1?'happy':'idle',size:compact?66:84,fill:pct})}<div style="flex:1;display:flex;flex-direction:column;gap:10px"><div class="say">${msg}</div>
+  <div><div style="display:flex;justify-content:space-between;font:800 14px var(--display)"><span>Daily goal</span><span class="small" style="color:var(--ink)">${t} / ${S.goal} XP</span></div><div class="goaltrack" style="margin-top:6px"><span style="width:${pct*100}%"></span></div></div></div></div></div>`}
+function renderAside(){const L=level(),nx=lvlXP(L+1),pv=lvlXP(L);
+  $('#aside').innerHTML=`${goalCard(false)}
+  <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><h3>Level ${L}</h3><span class="small">${rank(L)}</span></div>
+   <div class="lvbar" style="--c:#E9A800"><span style="width:${(S.xp-pv)/(nx-pv)*100}%"></span></div><p class="small" style="margin:8px 0 0">${nx-S.xp} XP to level ${L+1}</p></div>
+  <div class="card"><h3 style="margin-bottom:10px">Badges</h3><div class="badges" style="grid-template-columns:repeat(4,1fr)">${BADGES.filter(b=>S.badges[b.id]).slice(-8).map(b=>badgeImg(b,true,48)).join('')||'<p class="small" style="grid-column:1/-1;margin:0">Finish your first lesson to earn one.</p>'}</div></div>`}
+function topStats(){const s=streakNow(),L=level();
+  return `<div class="topstats"><a class="lvl" href="#profile"><i>${L}</i>${rank(L)}</a><div style="display:flex;gap:2px">
+  <a class="stat streak ${S.streak.last===ds()?'':'cold'}" href="#profile" title="Day streak">${ic('flame',22,true)}${s}</a>
+  <a class="stat xp" href="#profile" title="Total XP">${ic('bolt',22,true)}${S.xp}</a></div></div>`}
+function badgeImg(b,on,sz=64){return `<div class="badge ${on?'':'off'}" title="${b.name}: ${b.desc}"><div class="bimg" style="--bc:${b.c};width:${sz}px;height:${sz}px">${b.sym?`<b style="font-size:${sz*.34}px">${b.sym}</b>`:ic(b.icon,sz*.45,true)}</div>${sz>=60?`<span><b>${b.name}</b><br>${b.desc}</span>`:''}</div>`}
+
+/* ---------- views ---------- */
+const OFF=[0,46,70,46,0,-46,-70,-46];
+function viewLearn(){
+  const cur=current();let k=0,h=topStats()+'<div class="col">'+goalCard(true);
+  UNITS.forEach(u=>{const d=unitDone(u),all=d===u.lessons.length;
+    h+=`<section class="unit" style="--c:${u.c};--on:${u.light?'#1a1405':'#fff'}" id="u-${u.id}"><div class="ubanner"><div><div class="lbl">${UNITLABEL(u)} · ${d}/${u.lessons.length}</div><h2>${u.name}</h2><p>${u.blurb}</p>${S.cp[u.id]?`<span class="crown">${ic('crown',15,true)} Checkpoint cleared</span>`:''}</div><a class="notes" href="#notes-${u.lessons[0].id}" aria-label="${u.name} notes">${ic('book',24)}</a></div>`;
+    u.lessons.forEach(l=>{const off=OFF[k++%8],st=isDone(l)?'done':unlocked(l)?'avail':'locked',isCur=cur===l;
+      const icon=st==='done'?ic('check',32):st==='locked'?ic('lock',28):ic('star',32,true);
+      h+=`<div class="prow" style="--off:${off}px">${isCur?'<div class="startbub">Start</div>':''}<button class="node ${st}${isCur?' current':''}" data-l="${l.id}" aria-label="${l.title}${st==='locked'?' (locked)':st==='done'?' (done)':''}">${icon}</button>${isCur?`<div class="peek" style="transform:translateX(${off>=0?-138:138}px)">${fizz({mood:'idle',size:78,fill:Math.min(1,todayXP()/S.goal)})}</div>`:''}</div>`});
+    const cpOpen=all||S.unlockAll,off=OFF[k++%8];
+    h+=`<div class="prow" style="--off:${off}px"><button class="node chest ${S.cp[u.id]?'done':cpOpen?'avail':'locked'}" data-cp="${u.id}" aria-label="${u.name} checkpoint">${ic(S.cp[u.id]?'trophy':'chest',34)}</button></div></section>`});
+  return h+`<div class="card" style="text-align:center"><h3>That’s the whole course</h3><p class="small" style="margin:6px 0 0">Finish every checkpoint to earn all six element badges.</p></div></div>`;
+}
+function bindLearn(){
+  document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{SND.tap();openLessonSheet(byId(b.dataset.l))});
+  document.querySelectorAll('[data-cp]').forEach(b=>b.onclick=()=>{SND.tap();openCpSheet(UNITS.find(u=>u.id===b.dataset.cp))});
+  if(justDone){const i=LESSONS.indexOf(byId(justDone)),n=LESSONS[i+1];const el=n&&document.querySelector(`[data-l="${n.id}"]`);if(el){el.classList.add('pop');el.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'})}justDone=null}
+  else{const c=document.querySelector('.node.current');if(c&&scrollToCur){c.scrollIntoView({block:'center'});scrollToCur=false}}
+}
+let justDone=null,scrollToCur=true;
+
+function sheet(html){$('#sheetHost').innerHTML=`<div class="scrim" data-close></div><div class="sheet" role="dialog" aria-modal="true">${html}</div>`;
+  $('#sheetHost').querySelectorAll('[data-close]').forEach(e=>e.onclick=closeSheet);const f=$('.sheet .b3');f&&f.focus()}
+function closeSheet(){$('#sheetHost').innerHTML=''}
+function openLessonSheet(l){const u=l.unit;
+  if(!unlocked(l)){const prev=LESSONS[LESSONS.indexOf(l)-1];sheet(`<div class="fizzline" style="--c:${u.c}">${fizz({mood:'think',size:70,fill:.4})}<div style="flex:1"><h3>${l.title}</h3><p>Locked. Finish <b>${prev.title}</b> first, or turn on “Unlock all lessons” in Profile.</p></div></div><div class="btns"><button class="b3 ghost" data-close>Got it</button></div>`);return}
+  const d=S.done[l.id];
+  sheet(`<div style="--c:${u.c};--on:${u.light?'#1a1405':'#fff'};display:flex;flex-direction:column;gap:14px"><div><div class="small">${u.name} · lesson ${l.n} of ${u.lessons.length}</div><h3>${l.title}</h3><p>${l.sub}${d?` · best score ${d.best}%`:''}</p></div>
+  <div class="btns"><button class="b3 wide" id="goL">${d?'Practise again · +5 XP':'Start lesson · +10 XP'}</button><a class="b3 ghost wide" href="#notes-${l.id}" data-close>${ic('book',20)} Read notes</a></div></div>`);
+  $('#goL').onclick=()=>{closeSheet();startLesson(l)}}
+function openCpSheet(u){const open=unitDone(u)===u.lessons.length||S.unlockAll;
+  sheet(`<div style="--c:${u.c};--on:${u.light?'#1a1405':'#fff'};display:flex;flex-direction:column;gap:14px"><div class="fizzline">${fizz({mood:open?'happy':'think',size:70,fill:.8})}<div style="flex:1"><h3>${u.name} checkpoint</h3><p>${open?`8 mixed questions from the whole unit. Clear it for ${S.cp[u.id]?'+2 XP per correct answer':'+20 XP and a crown'}.`:'Finish every lesson in this unit to open the checkpoint.'}</p></div></div>
+  <div class="btns">${open?'<button class="b3 wide" id="goC">Start checkpoint</button>':''}<button class="b3 ghost wide" data-close>${open?'Not now':'Got it'}</button></div></div>`);
+  const g=$('#goC');if(g)g.onclick=()=>{closeSheet();startQuiz('cp',u)}}
+
+function viewNotes(l){const u=l.unit,idx=LESSONS.indexOf(l),prev=LESSONS[idx-1],next=LESSONS[idx+1];
+  return `<div class="col" style="--c:${u.c};--on:${u.light?'#1a1405':'#fff'}"><div class="crumb"><a href="#learn">Learn</a><span>/</span><span class="ctext" style="font-weight:700">${u.name}</span><span>/</span><span>Notes ${l.n} of ${u.lessons.length}</span></div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap">${u.lessons.map(x=>`<a href="#notes-${x.id}" class="b3 ${x===l?'':'ghost'}" style="padding:8px 12px;font-size:13px">${x.n}${isDone(x)?' '+ic('check',14):''}</a>`).join('')}</div>
+  <h1 style="font-size:clamp(28px,4.2vw,40px);letter-spacing:-.02em">${l.title}</h1><div class="prose">${learnHTML(l,'all')}</div>
+  <button class="b3 ghost" id="notesAsk">${ic('chat',20)} Ask Fizz about this lesson</button>
+  <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:2px solid var(--line);padding-top:20px">
+  ${prev?`<a class="b3 ghost" href="#notes-${prev.id}">← ${prev.n===prev.unit.lessons.length&&prev.unit!==u?'Previous unit':'Previous'}</a>`:'<span></span>'}
+  ${unlocked(l)?`<button class="b3" id="notesGo">${isDone(l)?'Practise this lesson':'Start this lesson'}</button>`:''}
+  ${next?`<a class="b3 ghost" href="#notes-${next.id}">Next →</a>`:''}</div></div>`}
+function learnHTML(l,part){let h='';
+  const A=()=>{let s=`<p class="lede">${chem(l.lede)}</p>`;if(l.diagram==='pe')s+=peDiagram();if(l.body)s+=chem(l.body);return s};
+  const B=()=>{let s='';if(l.table)s+=`<div class="tbl"><table><thead><tr>${l.table.head.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${l.table.rows.map(r=>`<tr>${r.map((c,i)=>`<td${i===0&&/^[\d.×°≈]+$/.test(c)?' class="num"':''}>${chem(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+    if(l.diagram==='cell')s+=cellDiagram();if(l.sim)s+=simHTML();
+    if(l.points)s+=`<h2>Key points</h2><ul class="points">${l.points.map(p=>`<li>${chem(p)}</li>`).join('')}</ul>`;
+    if(l.analogy)s+=`<div class="analogy"><b>Way to think about it</b>${chem(l.analogy)}</div>`;return s};
+  const C=()=>l.example?`<h2>Worked example</h2><div class="ex"><div class="q">${chem(l.example.q)}</div><ol>${l.example.steps.map(s=>`<li>${chem(s)}</li>`).join('')}</ol></div>`:'';
+  if(part==='all')return A()+B()+C();return {A,B,C}[part]()}
+
+function viewPractice(){const u=accentUnit(),miss=Object.keys(S.miss).filter(q=>byId(q.split('-')[0]));
+  return topStats()+`<div class="col"><div class="fizzline" style="--c:${u.c}">${fizz({mood:'happy',size:96,fill:.7})}<div style="flex:1;display:flex;flex-direction:column;gap:10px"><h1 style="font-size:clamp(28px,4vw,38px)">Practice</h1><div class="say">Every correct answer here is +2 XP. No hearts to lose.</div></div></div>
+  <div class="card" style="display:flex;flex-direction:column;gap:14px"><h3>Mistakes review</h3><p class="small" style="margin:0">${miss.length?`${miss.length} question${miss.length>1?'s':''} you got wrong before. Get them right to clear them.`:'Nothing here yet. Questions you miss in lessons show up here.'}</p>${miss.length?'<button class="b3" id="pMiss">Fix my mistakes</button>':''}</div>
+  <div class="card" style="display:flex;flex-direction:column;gap:14px"><h3>Quick 10</h3><label for="pUnit" class="small">Questions from</label><select id="pUnit" style="font:inherit;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--ink)"><option value="done">Lessons I’ve finished</option><option value="all">All units</option>${UNITS.map(x=>`<option value="${x.id}">${x.name}</option>`).join('')}</select><button class="b3 ghost" id="pGo">Start 10 questions</button></div></div>`}
+function bindPractice(){const m=$('#pMiss');if(m)m.onclick=()=>startQuiz('miss');
+  $('#pGo').onclick=()=>{const v=$('#pUnit').value;if(v==='done'&&!LESSONS.some(isDone)){toast('Finish a lesson first, or pick a unit.');return}startQuiz('practice',v)}}
+
+function viewTools(){return topStats()+`<div class="col"><h1 style="font-size:clamp(28px,4vw,38px)">Lab tools</h1>
+  <section class="tool"><h2>Molar mass calculator</h2><p>Type any formula. Brackets and hydrates work: Ca(OH)2, CuSO4*5H2O.</p>
+  <div class="inrow"><label for="mmIn" class="small" style="align-self:center">Formula</label><input type="text" id="mmIn" value="C6H12O6" autocomplete="off" spellcheck="false"></div>
+  <div class="chips">${['H2O','NaCl','CO2','C6H12O6','Ca(OH)2','H2SO4','CuSO4*5H2O','C2H5OH','NH3'].map(x=>`<button data-f="${x}">${x}</button>`).join('')}</div>
+  <div id="mmOut" aria-live="polite"></div></section>
+  <section class="tool"><h2>Periodic table, elements 1–36</h2><p>Tap an element for its mass, electronegativity and electron configuration.</p>
+  <div class="ptwrap"><div class="pt" id="pt">${ptCells()}</div></div>
+  <div class="legend">${Object.values(KIND).map(([n,c])=>`<span style="--k:${c}"><i></i>${n}</span>`).join('')}</div><div id="elOut"></div></section></div>`}
+
+function viewProfile(){const L=level(),nx=lvlXP(L+1),pv=lvlXP(L),u=accentUnit();
+  const days=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);return{d,x:S.days[ds(d)]||0}});const mx=Math.max(S.goal,...days.map(d=>d.x));
+  const lessonsDone=LESSONS.filter(isDone).length;
+  return topStats()+`<div class="col"><div class="phead" style="--c:${u.c}">${fizz({mood:'happy',size:100,fill:Math.min(1,todayXP()/S.goal)})}<div style="flex:1"><div class="small">Level ${L}</div><h1>${rank(L)}</h1>
+   <div class="lvbar" style="--c:#E9A800"><span style="width:${(S.xp-pv)/(nx-pv)*100}%"></span></div><p class="small" style="margin:6px 0 0">${S.xp-pv} / ${nx-pv} XP · next: ${rank(L+1)}</p></div></div>
+  <div class="sgrid">
+   <div class="sbox"><span style="color:#E8691C">${ic('flame',28,true)}</span><div><b>${streakNow()}</b><span>day streak</span></div></div>
+   <div class="sbox"><span style="color:#C98A06">${ic('bolt',28,true)}</span><div><b>${S.xp}</b><span>total XP</span></div></div>
+   <div class="sbox"><span style="color:var(--good)">${ic('check',28)}</span><div><b>${lessonsDone}/${LESSONS.length}</b><span>lessons done</span></div></div>
+   <div class="sbox"><span style="color:#D2334C">${ic('trophy',28)}</span><div><b>${S.streak.best}</b><span>best streak</span></div></div></div>
+  <div class="card"><h3 style="margin-bottom:14px">Last 7 days</h3><div class="week">${days.map(d=>`<div><span class="v">${d.x||''}</span><i class="${d.x?'':'zero'}" style="height:${Math.max(3,d.x/mx*90)}px"></i><small>${'SMTWTFS'[d.d.getDay()]}</small></div>`).join('')}</div></div>
+  <div class="card"><h3 style="margin-bottom:14px">Badges · ${BADGES.filter(b=>S.badges[b.id]).length}/${BADGES.length}</h3><div class="badges">${BADGES.map(b=>badgeImg(b,!!S.badges[b.id])).join('')}</div></div>
+  <div class="card"><h3>Settings</h3>
+   <div class="setrow"><span>Daily goal</span><div class="seg" id="goalSeg">${[10,20,30,50].map(g=>`<button data-g="${g}" aria-pressed="${S.goal===g}">${g} XP</button>`).join('')}</div></div>
+   <div class="setrow"><span>Sound effects</span><div class="seg"><button id="sndT" aria-pressed="${S.sound}">${S.sound?'On':'Off'}</button></div></div>
+   <div class="setrow"><span>Unlock all lessons<br><span class="small">Skip ahead without finishing earlier ones</span></span><div class="seg"><button id="unlT" aria-pressed="${S.unlockAll}">${S.unlockAll?'On':'Off'}</button></div></div>
+   <div class="setrow"><span>Theme</span><div class="seg" id="thSeg">${['system','light','dark'].map(t=>`<button data-t="${t}" aria-pressed="${S.theme===t}">${t==='system'?'Auto':t[0].toUpperCase()+t.slice(1)}</button>`).join('')}</div></div>
+   <div class="setrow"><span>Claude API key<br><span class="small">${getKey()?'Saved · ends in '+esc(getKey().slice(-4)):'Not set'}</span></span><div class="seg">${getKey()?'<button id="keyRm">Remove</button>':'<button id="keyAdd">Add</button>'}</div></div>
+   <div class="setrow"><span>Fizz’s brain<br><span class="small">Haiku is cheapest, Sonnet is smartest</span></span><div class="seg" id="mdlSeg">${[['claude-haiku-5-5','Haiku'],['claude-sonnet-5-5','Sonnet']].map(([m,n])=>`<button data-m="${m}" aria-pressed="${getModel()===m}">${n}</button>`).join('')}</div></div>
+   <div class="setrow"><span>Progress</span>${syncHTML()}</div>
+   <div class="setrow"><span>Start over</span><button class="b3 ghost" id="resetB" style="padding:10px 14px;font-size:13px">Reset progress</button></div></div></div>`}
+function bindProfile(){
+  const kr=$('#keyRm');if(kr)kr.onclick=()=>{setKey('');toast('Key removed');route()};const ka=$('#keyAdd');if(ka)ka.onclick=()=>{location.hash='ask'};
+  document.querySelectorAll('#mdlSeg [data-m]').forEach(b=>b.onclick=()=>{try{localStorage.setItem(MODELK,b.dataset.m)}catch(e){}route()});
+  document.querySelectorAll('#goalSeg [data-g]').forEach(b=>b.onclick=()=>{S.goal=+b.dataset.g;save();route()});
+  $('#sndT').onclick=()=>{S.sound=!S.sound;save();route();SND.tap()};
+  $('#unlT').onclick=()=>{S.unlockAll=!S.unlockAll;save();route()};
+  document.querySelectorAll('#thSeg [data-t]').forEach(b=>b.onclick=()=>{S.theme=b.dataset.t;applyTheme();save();route()});
+  let armed=false;$('#resetB').onclick=e=>{if(!armed){armed=true;e.target.textContent='Tap again to erase everything';e.target.classList.remove('ghost');e.target.classList.add('nob');return}
+    const keep={goal:S.goal,sound:S.sound,theme:S.theme};S=Object.assign(blank(),keep);save();toast('Progress reset');route()}}
+
+/* ---------- sessions ---------- */
+let SES=null;
+function startLesson(l){const u=l.unit;setAccent(u);
+  const steps=[{t:'learn',p:'A',say:'New idea: '+l.title}];
+  if(l.table||l.points||l.sim||l.diagram==='cell')steps.push({t:'learn',p:'B',say:l.sim?'Try the simulator, then read the key points.':'Here are the key points.'});
+  if(l.example)steps.push({t:'learn',p:'C',say:'Watch me work one out.'});
+  const qs=l.quiz.map((q,i)=>({t:'q',qid:l.id+'-'+i}));
+  const pool=[];LESSONS.forEach(x=>{if(x!==l&&isDone(x))x.quiz.forEach((q,i)=>pool.push(x.id+'-'+i))});
+  if(pool.length)qs.splice(1,0,{t:'q',qid:pick(pool),review:true});
+  SES={kind:'lesson',l,u,steps:steps.concat(qs),i:0,hearts:3,right:0,wrong:0,combo:0,best:0,start:Date.now(),requeued:{},sel:null,checked:false,replay:isDone(l)};
+  openSession()}
+function startQuiz(kind,arg){let pool=[],u=null;
+  if(kind==='cp'){u=arg;u.lessons.forEach(l=>l.quiz.forEach((q,i)=>pool.push(l.id+'-'+i)))}
+  else if(kind==='miss')pool=Object.keys(S.miss).filter(q=>byId(q.split('-')[0]));
+  else LESSONS.forEach(l=>{if(arg==='all'||l.unit.id===arg||(arg==='done'&&isDone(l)))l.quiz.forEach((q,i)=>pool.push(l.id+'-'+i))});
+  pool.sort(()=>Math.random()-.5);pool=pool.slice(0,kind==='cp'?8:10);
+  if(!pool.length){toast('No questions there yet.');return}
+  u=u||byId(pool[0].split('-')[0]).unit;setAccent(u);
+  SES={kind,u,steps:pool.map(q=>({t:'q',qid:q})),i:0,hearts:kind==='cp'?3:null,right:0,wrong:0,combo:0,best:0,start:Date.now(),requeued:{},sel:null,checked:false};
+  openSession()}
+function openSession(){const s=$('#session');s.hidden=false;document.body.style.overflow='hidden';renderStep()}
+function closeSession(){$('#session').hidden=true;$('#session').innerHTML='';document.body.style.overflow='';SES=null;closeSheet();setAccent(accentUnit());route()}
+const getQ=qid=>{const[l,i]=qid.split('-');return byId(l).quiz[+i]};
+
+function shead(){const pct=SES.i/SES.steps.length*100;
+  return `<div class="shead"><button class="xbtn" id="sx" aria-label="Quit">${ic('x',28)}</button><div class="sbar" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%"></span></div>
+  ${SES.hearts!==null?`<div class="hearts" id="hearts">${ic('heart',26,true)}${SES.hearts}</div>`:`<div class="hearts" style="color:#C98A06">${ic('bolt',24,true)}${SES.right*2}</div>`}</div>`}
+function renderStep(){const s=$('#session'),st=SES.steps[SES.i];SES.sel=null;SES.checked=false;
+  if(st.t==='learn'){const l=SES.l;
+    s.innerHTML=shead()+`<div class="sbody"><div class="sinner"><div class="fizzline">${fizz({mood:st.p==='C'?'think':'idle',size:70,fill:.65})}<div class="say" style="flex:1">${st.say}</div></div>
+      ${st.p==='A'?`<h1 style="font-size:clamp(26px,4vw,36px);letter-spacing:-.02em">${l.title}</h1>`:''}<div class="prose">${learnHTML(l,st.p)}</div></div></div>
+      <div class="sfoot"><div class="sfin">${SES.replay&&SES.steps.findIndex(x=>x.t==='q')>SES.i?'<button class="b3 ghost" id="skip">Skip to questions</button>':'<span></span>'}<button class="b3" id="go">Continue</button></div></div>`;
+    $('#go').onclick=next;const sk=$('#skip');if(sk)sk.onclick=()=>{SES.i=SES.steps.findIndex(x=>x.t==='q');renderStep()};
+    if(st.p==='B')bindSim();
+  }else{const q=getQ(st.qid),src=byId(st.qid.split('-')[0]);
+    s.innerHTML=shead()+`<div class="sbody"><div class="sinner">${st.review||SES.kind!=='lesson'?`<span class="review">${ic('repeat',16)} ${st.review?'Review · ':''}${src.unit.name}: ${src.title}</span>`:''}${st.again?`<span class="review" style="color:var(--bad)">${ic('repeat',16)} Previous mistake</span>`:''}
+      <div class="fizzline">${fizz({mood:'think',size:62,fill:.65})}<div class="say qprompt" style="flex:1;font-size:19px">${chem(q.q)}</div></div>
+      <div class="opts" role="group" aria-label="Answers">${q.o.map((o,i)=>`<button class="opt" data-i="${i}" aria-pressed="false"><span class="k">${i+1}</span><span>${chem(o)}</span></button>`).join('')}</div></div></div>
+      <div class="sfoot" id="sf"><div class="sfin"><span class="small">Press 1–${q.o.length}, then Enter</span><button class="b3" id="go" disabled>Check</button></div></div>`;
+    s.querySelectorAll('.opt').forEach(b=>b.onclick=()=>selectOpt(+b.dataset.i));
+    $('#go').onclick=check}
+  $('#sx').onclick=quitAsk;
+  const body=s.querySelector('.sbody');body&&(body.scrollTop=0)}
+function selectOpt(i){if(SES.checked)return;SES.sel=i;SND.tap();document.querySelectorAll('.opt').forEach((b,j)=>b.setAttribute('aria-pressed',j===i));$('#go').disabled=false}
+function check(){if(SES.sel===null||SES.checked)return;SES.checked=true;const st=SES.steps[SES.i],q=getQ(st.qid),ok=SES.sel===q.a;
+  document.querySelectorAll('.opt').forEach((b,j)=>{b.disabled=true;if(j===q.a)b.classList.add('right');else if(j===SES.sel)b.classList.add('wrong')});
+  let head;
+  if(ok){SES.right++;SES.combo++;SES.best=Math.max(SES.best,SES.combo);delete S.miss[st.qid];SND.ok();head=pick(SAY.right);
+    if(SES.combo>=3&&SES.combo%3===0)head=SES.combo+' '+pick(SAY.combo)}
+  else{SES.wrong++;SES.combo=0;S.miss[st.qid]=1;SND.no();head=pick(SAY.wrong);
+    if(SES.hearts!==null){SES.hearts--;const h=$('#hearts');h.innerHTML=ic('heart',26,true)+SES.hearts;h.classList.remove('shake');void h.offsetWidth;h.classList.add('shake')}
+    if(SES.kind!=='miss'&&!SES.requeued[st.qid]){SES.requeued[st.qid]=1;SES.steps.push({t:'q',qid:st.qid,again:true})}}
+  const sf=$('#sf');sf.className='sfoot '+(ok?'ok':'no');
+  sf.innerHTML=`<div class="sfin"><div class="msg"><span class="ico">${ic(ok?'check':'x',26)}</span><div><h3>${head}</h3><p>${ok?'':'<b>Answer:</b> '+chem(q.o[q.a])+'. '}${chem(q.w)}</p>${ok?'':'<button class="whyb" id="whyB" type="button">'+ic('chat',16)+' Still confused? Ask Fizz why</button>'}</div></div><button class="b3 ${ok?'okb':'nob'}" id="go">Continue</button></div>`;
+  const g=$('#go');g.onclick=next;g.focus();
+  if(!ok){const chosen=SES.sel,wb=$('#whyB');wb.onclick=()=>explainWhy(wb,q,chosen)}
+  if(ok){const sv=document.querySelector('.sinner .fizz');if(sv)sv.outerHTML=fizz({mood:'happy',size:62,fill:.65})}
+  else{const sv=document.querySelector('.sinner .fizz');if(sv)sv.outerHTML=fizz({mood:'sad',size:62,fill:.65})}
+  try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function next(){if(SES.hearts!==null&&SES.hearts<=0){failScreen();return}SES.i++;if(SES.i>=SES.steps.length){finish();return}renderStep()}
+function quitAsk(){sheet(`<div class="fizzline">${fizz({mood:'sad',size:70,fill:.5})}<div style="flex:1"><h3>Leaving already?</h3><p>You’ll lose your progress in this ${SES.kind==='lesson'?'lesson':'session'}.</p></div></div><div class="btns"><button class="b3 wide" data-close>Keep learning</button><button class="b3 ghost wide" id="quitY">Quit</button></div>`);
+  $('#sheetHost').querySelector('.sheet').style.zIndex=70;$('#sheetHost').querySelector('.scrim').style.zIndex=69;$('#quitY').onclick=closeSession}
+function failScreen(){const s=$('#session');SND.no();
+  s.innerHTML=`<div class="sbody" style="display:grid;place-items:center"><div class="sinner result" style="align-items:center">${fizz({mood:'sad',size:140,fill:.15})}<h1>Out of hearts</h1><p style="max-width:44ch;margin:0;color:var(--muted)">Mistakes are part of it. Read the notes again, then have another go. The questions you missed are saved in Practice.</p></div></div>
+  <div class="sfoot"><div class="sfin">${SES.l?`<a class="b3 ghost" href="#notes-${SES.l.id}" id="fN">Read notes</a>`:'<span></span>'}<button class="b3" id="fR">Try again</button></div></div>`;
+  save();const k=SES.kind,l=SES.l,u=SES.u;
+  $('#fR').onclick=()=>{k==='lesson'?startLesson(l):startQuiz(k,u)};
+  const fn=$('#fN');if(fn)fn.onclick=()=>{$('#session').hidden=true;$('#session').innerHTML='';document.body.style.overflow='';SES=null;setAccent(accentUnit())}}
+function finish(){const sec=Math.round((Date.now()-SES.start)/1000),total=SES.right+SES.wrong,acc=total?Math.round(SES.right/total*100):100,perfect=SES.wrong===0;
+  let xp=0,ctx={bestCombo:SES.best},title='Lesson complete!';
+  if(SES.kind==='lesson'){const l=SES.l,prev=S.done[l.id];xp=(prev?5:10)+(perfect?5:0);S.done[l.id]={best:Math.max(acc,prev?prev.best:0),n:(prev?prev.n:0)+1};ctx.lesson=true;ctx.perfect=perfect;justDone=prev?null:l.id}
+  else if(SES.kind==='cp'){const first=!S.cp[SES.u.id];xp=first?20:SES.right*2;S.cp[SES.u.id]=1;ctx.cp=true;title='Checkpoint cleared!'}
+  else{xp=SES.right*2;title=SES.kind==='miss'?'Mistakes reviewed!':'Practice complete!'}
+  const r=award(xp,ctx);SND.win();
+  const s=$('#session');const mood=acc>=60?'happy':'idle';
+  const tiles=[['Total XP','#E9A800','bolt',`<span id="xpCount">0</span>`],['Accuracy',acc>=80?'#3E9B4F':'#DE6A1F','target',acc+'%'],['Time','#1B8FA3','clock',Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0')]];
+  s.innerHTML=`<div class="sbody" style="display:grid;place-items:center"><div class="sinner result" style="align-items:center;gap:22px">${fizz({mood,size:150,fill:Math.min(1,todayXP()/S.goal)})}
+   <h1>${perfect&&total?'Perfect '+(SES.kind==='lesson'?'lesson':'run')+'!':title}</h1>
+   <div class="rtiles">${tiles.map(([n,c,i,v])=>`<div class="rtile" style="--rc:${c}"><div class="rl">${n}</div><div class="rv">${ic(i,20,i==='bolt')}${v}</div></div>`).join('')}</div>
+   <div class="ribbon">${r.goalHit?`<span class="pill" style="color:#C98A06">${ic('target',20)} Daily goal reached</span>`:''}${SES.best>=3?`<span class="pill" style="color:#E8691C">${ic('bolt',20,true)} Best combo ${SES.best}</span>`:''}${ctx.lesson||ctx.cp?`<span class="pill" style="color:#E8691C">${ic('flame',20,true)} ${streakNow()} day streak</span>`:''}</div>
+   ${r.newBadges.length?`<div style="display:flex;flex-direction:column;gap:10px;align-items:center"><b style="font-family:var(--display)">New badge${r.newBadges.length>1?'s':''}!</b><div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">${r.newBadges.map(b=>badgeImg(b,true).replace('class="badge ','class="badge new ')).join('')}</div></div>`:''}
+  </div></div><div class="sfoot"><div class="sfin"><span></span><button class="b3" id="go">Continue</button></div></div>`;
+  confetti();
+  let n=0;const el=$('#xpCount'),step=()=>{n=Math.min(xp,n+1);el.textContent='+'+n;if(n<xp)setTimeout(step,RM?0:Math.max(25,600/xp))};step();
+  $('#go').focus();
+  $('#go').onclick=()=>r.lvlUp?levelUp(r.lvlUp):closeSession()}
+function levelUp(L){const s=$('#session');SND.win();confetti();
+  s.innerHTML=`<div class="sbody" style="display:grid;place-items:center"><div class="sinner result" style="align-items:center;gap:18px">${fizz({mood:'happy',size:150,fill:1})}
+  <div class="small">Level up</div><h1>Level ${L}: ${rank(L)}</h1><p style="margin:0;color:var(--muted);max-width:40ch">${lvlXP(L+1)-S.xp} XP until ${rank(L+1)}.</p></div></div>
+  <div class="sfoot"><div class="sfin"><span></span><button class="b3" id="go">Continue</button></div></div>`;$('#go').focus();$('#go').onclick=closeSession}
+
+document.addEventListener('keydown',e=>{if(!SES||$('#session').hidden||$('#sheetHost').innerHTML)return;
+  if(/^[1-4]$/.test(e.key)&&!SES.checked&&SES.steps[SES.i]&&SES.steps[SES.i].t==='q'){const b=document.querySelector(`.opt[data-i="${+e.key-1}"]`);if(b){e.preventDefault();selectOpt(+e.key-1)}}
+  else if(e.key==='Enter'&&document.activeElement.tagName!=='BUTTON'){const g=$('#go');if(g&&!g.disabled){e.preventDefault();g.click()}}
+  else if(e.key==='Escape')quitAsk()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#sheetHost').innerHTML&&!SES)closeSheet()});
+
+/* ---------- diagrams + simulator ---------- */
+
+function peDiagram(){
+  const curve=(x0,y0,y1,peak)=>`M${x0} ${y0} L${x0+40} ${y0} C${x0+80} ${y0},${x0+90} ${peak},${x0+120} ${peak} C${x0+150} ${peak},${x0+160} ${y1},${x0+200} ${y1} L${x0+240} ${y1}`;
+  return `<figure><svg viewBox="0 0 600 250" role="img" aria-label="Potential energy diagrams for an exothermic and an endothermic reaction">
+  <style>.ax{stroke:var(--muted);stroke-width:1.5;fill:none}.cv{stroke:var(--c);stroke-width:3;fill:none}.tx{fill:var(--ink);font:13px var(--body)}.sm{fill:var(--muted);font:12px var(--mono)}.ar{stroke:var(--ink);stroke-width:1.3;fill:none}.dsh{stroke:var(--muted);stroke-dasharray:4 4}</style>
+  <defs><marker id="ah" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L8 4L0 8z" fill="var(--ink)"/></marker></defs>
+  <g><path class="ax" d="M30 20 V210 H280"/><text class="tx" x="150" y="236" text-anchor="middle" font-weight="700">Exothermic (ΔH &lt; 0)</text>
+  <path class="cv" d="${curve(30,110,170,40)}"/><text class="sm" x="40" y="102">reactants</text><text class="sm" x="230" y="162">products</text>
+  <line class="dsh" x1="70" y1="110" x2="150" y2="110"/><line class="ar" x1="140" y1="108" x2="140" y2="44" marker-end="url(#ah)"/><text class="tx" x="104" y="80">Eₐ</text>
+  <line class="dsh" x1="70" y1="170" x2="230" y2="170"/><line class="ar" x1="62" y1="112" x2="62" y2="166" marker-end="url(#ah)"/><text class="tx" x="36" y="146" font-size="12">ΔH</text></g>
+  <g transform="translate(300 0)"><path class="ax" d="M30 20 V210 H280"/><text class="tx" x="150" y="236" text-anchor="middle" font-weight="700">Endothermic (ΔH &gt; 0)</text>
+  <path class="cv" d="${curve(30,170,100,40)}"/><text class="sm" x="40" y="162">reactants</text><text class="sm" x="230" y="92">products</text>
+  <line class="dsh" x1="70" y1="170" x2="150" y2="170"/><line class="ar" x1="140" y1="168" x2="140" y2="44" marker-end="url(#ah)"/><text class="tx" x="104" y="110">Eₐ</text>
+  <line class="dsh" x1="230" y1="100" x2="270" y2="100"/><line class="ar" x1="262" y1="168" x2="262" y2="104" marker-end="url(#ah)"/><text class="tx" x="232" y="140" font-size="12">ΔH</text></g>
+  </svg><figcaption>Energy (vertical) along the reaction path (horizontal). The hump is the activation energy; a catalyst lowers the hump but leaves ΔH unchanged.</figcaption></figure>`;
+}
+function cellDiagram(){
+  return `<figure><svg viewBox="0 0 560 270" role="img" aria-label="Zinc–copper galvanic cell">
+  <style>.bk{stroke:var(--muted);stroke-width:2;fill:none}.liq1{fill:color-mix(in oklab,var(--muted) 18%,transparent)}.liq2{fill:color-mix(in oklab,#1B8FA3 30%,transparent)}.tx{fill:var(--ink);font:13px var(--body)}.sm{fill:var(--muted);font:12px var(--mono)}.w{stroke:var(--ink);stroke-width:2;fill:none}</style>
+  <defs><marker id="ah2" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--c)"/></marker></defs>
+  <rect class="liq1" x="62" y="150" width="136" height="90"/><path class="bk" d="M60 110 V242 H200 V110"/>
+  <rect class="liq2" x="362" y="150" width="136" height="90"/><path class="bk" d="M360 110 V242 H500 V110"/>
+  <rect x="112" y="80" width="18" height="140" fill="#9AA3AD"/><rect x="430" y="80" width="18" height="140" fill="#C26A3A"/>
+  <path d="M170 182 V120 Q170 96 194 96 H366 Q390 96 390 120 V182" stroke="var(--muted)" stroke-width="16" fill="none" opacity=".45"/>
+  <text class="sm" x="280" y="88" text-anchor="middle">salt bridge (KNO₃)</text>
+  <path class="w" d="M121 80 V36 H250"/><path class="w" d="M310 36 H439 V80"/>
+  <circle cx="280" cy="36" r="26" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text class="tx" x="280" y="41" text-anchor="middle" font-weight="700">1.10 V</text>
+  <path d="M160 22 H230" stroke="var(--c)" stroke-width="2.5" marker-end="url(#ah2)"/><text class="tx" x="180" y="16" fill="var(--c)">e⁻</text>
+  <path d="M330 22 H400" stroke="var(--c)" stroke-width="2.5" marker-end="url(#ah2)"/><text class="tx" x="360" y="16">e⁻</text>
+  <text class="tx" x="130" y="262" text-anchor="middle" font-weight="700">Anode (−): Zn → Zn²⁺ + 2e⁻</text>
+  <text class="tx" x="430" y="262" text-anchor="middle" font-weight="700">Cathode (+): Cu²⁺ + 2e⁻ → Cu</text>
+  <text class="sm" x="74" y="232">Zn²⁺(aq)</text><text class="sm" x="372" y="232">Cu²⁺(aq)</text>
+  </svg><figcaption>Zinc is oxidized and dissolves; copper ions are reduced and plate onto the copper electrode. Electrons travel through the wire, ions through the salt bridge.</figcaption></figure>`;
+}
+
+/* ---------- Le Châtelier simulator: N2 + 3H2 ⇌ 2NH3, ΔH = −92 kJ ---------- */
+const KS=[2.5,0.5,0.1],TL=['Cool','Room temperature','Hot'];
+let sim={a:1,h:3,n:0,t:1};
+function equil(s){const K=KS[s.t];const Q=x=>(s.n+2*x)**2/((s.a-x)*(s.h-3*x)**3);
+  let lo=-s.n/2+1e-9,hi=Math.min(s.a,s.h/3)-1e-9;
+  for(let i=0;i<200;i++){const m=(lo+hi)/2;if(Q(m)<K)lo=m;else hi=m}
+  const x=(lo+hi)/2;return{x,a:s.a-x,h:s.h-3*x,n:s.n+2*x}}
+function simHTML(){return `<div class="sim" id="sim"><div class="eq f">N<sub>2</sub>(g) + 3H<sub>2</sub>(g) ⇌ 2NH<sub>3</sub>(g) &nbsp; ΔH = −92 kJ</div>
+  <div class="bars"><div class="bar"><span class="v" id="vA"></span><div class="fill" id="bA"></div></div><div class="bar"><span class="v" id="vH"></span><div class="fill" id="bH"></div></div><div class="bar"><span class="v" id="vN"></span><div class="fill" id="bN"></div></div></div>
+  <div class="barlabels f"><span>[N<sub>2</sub>]</span><span>[H<sub>2</sub>]</span><span>[NH<sub>3</sub>]</span></div>
+  <div class="controls"><button data-s="addA">Add N₂</button><button data-s="addH">Add H₂</button><button data-s="remN">Remove NH₃</button><button data-s="addN">Add NH₃</button><button data-s="press">Squeeze (½ volume)</button><button data-s="heat">Heat up</button><button data-s="cool">Cool down</button><button data-s="cat">Add catalyst</button><button data-s="reset">Reset</button></div>
+  <div class="status" id="simStatus" aria-live="polite">Pick a change and watch the system respond. Values are illustrative, in mol/L.</div>
+  <div class="readout" id="simRead"></div></div>`}
+function bindSim(){
+  const el=$('#sim');if(!el)return;
+  let cur=equil(sim);sim={a:cur.a,h:cur.h,n:cur.n,t:sim.t};
+  const draw=s=>{const mx=Math.max(4,s.a,s.h,s.n)*1.05;[['A','a'],['H','h'],['N','n']].forEach(([k,f])=>{$('#b'+k).style.height=(s[f]/mx*100)+'%';$('#v'+k).textContent=s[f].toFixed(2)});
+    const Q=s.n**2/(s.a*s.h**3);$('#simRead').innerHTML=`<span>Q = ${Q.toFixed(3)}</span><span>K = ${KS[s.t]}</span><span>${TL[s.t]}</span>`};
+  draw(sim);
+  let timer;
+  el.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{
+    clearTimeout(timer);const s=b.dataset.s;let msg='',dir=null;
+    if(s==='reset'){sim={a:1,h:3,n:0,t:1};const e=equil(sim);sim={...sim,a:e.a,h:e.h,n:e.n};draw(sim);$('#simStatus').textContent='Reset to equilibrium at room temperature.';return}
+    if(s==='cat'){$('#simStatus').innerHTML='<b>No shift.</b> A catalyst speeds up the forward and reverse reactions equally. Equilibrium is reached sooner, but the amounts stay the same.';return}
+    if(s==='addA'){sim.a+=1;msg='You added N₂. The system uses some up'}
+    if(s==='addH'){sim.h+=1.5;msg='You added H₂. The system uses some up'}
+    if(s==='addN'){sim.n+=1;msg='You added NH₃. The system uses some up'}
+    if(s==='remN'){sim.n=sim.n*0.3;msg='You removed NH₃. The system makes more to replace it'}
+    if(s==='press'){sim.a*=2;sim.h*=2;sim.n*=2;msg='All concentrations doubled. The side with fewer gas molecules is favoured (2 vs 4)'}
+    if(s==='heat'){if(sim.t===2){$('#simStatus').textContent='Already at the hottest setting.';return}sim.t++;msg='Heat is a product here, so adding heat favours the reverse reaction. K gets smaller'}
+    if(s==='cool'){if(sim.t===0){$('#simStatus').textContent='Already at the coolest setting.';return}sim.t--;msg='Removing heat favours the exothermic forward reaction. K gets bigger'}
+    draw(sim);
+    const e=equil(sim);dir=e.x>1e-6?'right → more NH₃':e.x<-1e-6?'left → more N₂ and H₂':'nowhere';
+    $('#simStatus').innerHTML=`${msg}. <b>Shifts ${dir}.</b>`;
+    timer=setTimeout(()=>{sim={a:e.a,h:e.h,n:e.n,t:sim.t};draw(sim)},700);
+  });
+}
+
+
+/* ---------- tools ---------- */
+function ptCells(){const cells=[];for(let p=1;p<=4;p++)for(let g=1;g<=18;g++){const e=EL.find(x=>{const[pp,gg]=pos(x.z);return pp===p&&gg===g});
+  cells.push(e?`<button style="--k:${KIND[e.k][1]}" data-z="${e.z}" aria-pressed="false" aria-label="${e.n}"><small>${e.z}</small><b>${e.s}</b></button>`:'<span></span>')}return cells.join('')}
+function showEl(z){const e=EL[z-1],c=config(z),[p,g]=pos(z),v=valence(z);
+  document.querySelectorAll('#pt button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.z===z));
+  $('#elOut').innerHTML=`<div class="eldetail"><div class="elbig" style="--k:${KIND[e.k][1]}"><i>${z}</i><b>${e.s}</b></div><div><h3 style="font-size:24px;margin-bottom:8px">${e.n}</h3><dl>
+  <dt>Type</dt><dd>${KIND[e.k][0]}</dd><dt>Molar mass</dt><dd class="f">${e.m} g/mol</dd><dt>Position</dt><dd>Period ${p}, group ${g}</dd>
+  <dt>Valence e⁻</dt><dd>${v===null?'varies (d-block)':v}</dd><dt>Electronegativity</dt><dd class="f">${e.en??'not assigned'}</dd>
+  <dt>Configuration</dt><dd>${chem('{'+c.full+'}')}</dd><dt>Shorthand</dt><dd>${chem('{'+c.short+'}')}</dd></dl>
+  ${z===24||z===29?'<p class="small" style="margin-top:8px">An exception: a half-full or full 3d set is more stable, so one 4s electron moves to 3d.</p>':''}</div></div>`}
+function bindTools(){
+  const inp=$('#mmIn');
+  const run=()=>{try{const t=parseFormula(inp.value);let sum=0;const rows=Object.entries(t).map(([s,n])=>{const m=MASS[s]*n;sum+=m;return `<tr><td class="f">${s}</td><td class="num">${n}</td><td class="num">${MASS[s].toFixed(2)}</td><td class="num">${m.toFixed(2)}</td></tr>`}).join('');
+    $('#mmOut').innerHTML=`<div class="big">${sum.toFixed(2)} <span style="font-size:18px;color:var(--muted)">g/mol</span></div><div class="tbl" style="margin-top:10px"><table><thead><tr><th>Element</th><th>Atoms</th><th>g/mol each</th><th>Subtotal</th></tr></thead><tbody>${rows}</tbody></table></div>`}
+    catch(err){$('#mmOut').innerHTML=`<p style="color:var(--bad)">${typeof err==='string'?err:'Couldn’t read that formula'}. Check capitals, e.g. Co is cobalt but CO is carbon monoxide.</p>`}};
+  inp.oninput=run;document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{inp.value=b.dataset.f;run()});run();
+  document.querySelectorAll('#pt button').forEach(b=>b.onclick=()=>showEl(+b.dataset.z));showEl(6);
+}
+
+
+
+/* ---------- Ask Fizz (chat via the viewer's Claude account) ---------- */
+/* ---------- Claude API adapter (standalone build) ---------- */
+const KEYK='flametest-api-key',MODELK='flametest-model';
+const getKey=()=>{try{return localStorage.getItem(KEYK)||''}catch(e){return''}};
+const setKey=k=>{try{k?localStorage.setItem(KEYK,k):localStorage.removeItem(KEYK)}catch(e){}};
+const getModel=()=>{try{return localStorage.getItem(MODELK)||'claude-sonnet-5-5'}catch(e){return'claude-sonnet-5-5'}};
+async function toB64(file){
+  try{const bmp=await createImageBitmap(file);const sc=Math.min(1,1568/Math.max(bmp.width,bmp.height));const cv=document.createElement('canvas');cv.width=Math.round(bmp.width*sc);cv.height=Math.round(bmp.height*sc);
+    cv.getContext('2d').drawImage(bmp,0,0,cv.width,cv.height);return{type:'image/jpeg',data:cv.toDataURL('image/jpeg',.85).split(',')[1]}}
+  catch(e){return await new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res({type:file.type||'image/jpeg',data:String(fr.result).split(',')[1]});fr.onerror=()=>rej({code:'image_rejected'});fr.readAsDataURL(file)})}}
+async function apiSample(input,opts={}){
+  const key=getKey();if(!key)throw{code:'no_key'};
+  const messages=(typeof input==='string'?[{role:'user',content:input}]:input).map(m=>({role:m.role,content:m.content}));
+  if(opts.images&&opts.images.length){const last=messages[messages.length-1],blocks=[];
+    for(const f of opts.images){const b=await toB64(f);blocks.push({type:'image',source:{type:'base64',media_type:b.type,data:b.data}})}
+    blocks.push({type:'text',text:last.content});last.content=blocks}
+  let res;
+  try{res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',signal:opts.signal,headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:opts.modelTier==='quick'?'claude-haiku-5-5':getModel(),max_tokens:1200,stream:true,messages})})}
+  catch(e){throw{code:e&&e.name==='AbortError'?'cancelled':'network'}}
+  if(!res.ok){let msg='';try{const j=await res.json();msg=(j.error&&j.error.message)||''}catch(e){}
+    const st=res.status;throw{code:st===401||st===403?'bad_key':st===429?'rate_limited':/credit|balance|billing/i.test(msg)?'no_credit':/image/i.test(msg)?'image_rejected':/too long|too large/i.test(msg)||st===413?'prompt_too_large':st===404&&/model/i.test(msg)?'bad_model':'upstream_error',message:msg}}
+  const rd=res.body.getReader(),dec=new TextDecoder();let buf='',text='';
+  try{for(;;){const{done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let i;
+    while((i=buf.indexOf('\n'))>=0){const line=buf.slice(0,i).trim();buf=buf.slice(i+1);if(!line.startsWith('data:'))continue;
+      let ev;try{ev=JSON.parse(line.slice(5))}catch(e){continue}
+      if(ev.type==='content_block_delta'&&ev.delta&&ev.delta.type==='text_delta'){text+=ev.delta.text;opts.onText&&opts.onText({text,delta:ev.delta.text})}
+      else if(ev.type==='error')throw{code:/overloaded/i.test(ev.error&&ev.error.type||'')?'rate_limited':'upstream_error',text}}}}
+  catch(e){if(e&&e.code)throw e;throw{code:e&&e.name==='AbortError'?'cancelled':'network',text}}
+  if(!text)throw{code:'empty_completion'};return{text,truncated:false}}
+apiSample.limits=async()=>({images:true});
+function keyCard(){return `<div class="card keycard"><h3>Connect Fizz to Claude</h3><p class="small" style="font-family:var(--body);margin:6px 0 12px">Paste your Anthropic API key. It’s saved only on this phone and sent only to Anthropic.</p>
+  <label for="keyIn" class="sr">API key</label><div class="crow"><input type="password" id="keyIn" placeholder="sk-ant-…" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="b3" id="keySave" type="button" style="padding:11px 16px">Save</button></div>
+  <p class="small" id="keyErr" style="color:var(--bad);margin:8px 0 0" hidden></p><p class="small" style="margin:10px 0 0">Get a key at <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a></p></div>`}
+function bindKeyCard(){const b=$('#keySave');if(!b)return;b.onclick=()=>{const k=$('#keyIn').value.trim();const er=$('#keyErr');
+  if(!/^sk-ant-/.test(k)){er.hidden=false;er.textContent='That doesn’t look like an Anthropic key. It should start with sk-ant-.';return}setKey(k);toast('Key saved');route()}}
+let SAMPLE=apiSample,SAMPLE_READY=true,IMG_OK=true,CHAT_CTL=null,CHAT_BUSY=false,CHAT_IMG=null,CHAT_PREFILL='';
+const COURSE_BRIEF=UNITS.map(u=>u.name+' ('+u.lessons.map(l=>l.title).join(', ')+')').join('; ');
+function tutorBrief(extra){const cur=current();return `You are Fizz, a cheerful cartoon flask who tutors a high school student in Ontario Grade 12 College Chemistry (SCH4C). He never took Grade 11 chemistry, so explain from the ground up in plain, friendly language.
+Rules: keep answers short (under 150 words) unless he asks for more. For calculations, go step by step and show units. Write formulas with Unicode subscripts and superscripts (H₂O, SO₄²⁻, Na⁺). Use **bold** for key terms and short "- " bullet lists when helpful; no tables, no headings. End with a quick check-for-understanding question only when it helps. If he shares a homework photo, help him understand the method rather than only giving the final answer. If a question is not about chemistry, answer briefly and kindly steer back. Never make up facts; say so if unsure.
+Course units: ${COURSE_BRIEF}.
+${cur?`He is currently on the lesson "${cur.title}" in ${cur.unit.name}.`:''}${extra?'\n'+extra:''}`}
+function sampleErr(e){const c=e&&e.code;
+  if(c==='no_key')return'Add your Anthropic API key first.';
+  if(c==='bad_key')return'That API key didn’t work. Check it in Profile → Claude API key.';
+  if(c==='no_credit')return'Your Anthropic account is out of credit. Top up at console.anthropic.com.';
+  if(c==='bad_model')return'That Claude model isn’t available on your key. Switch Fizz’s brain in Profile.';
+  if(c==='network')return'You’re offline. Fizz needs internet; lessons still work offline.';
+  if(['not_granted','not_declared','capability_disabled','capability_removed','sampling_disabled'].includes(c))return'Fizz needs permission to use Claude. Open this page’s Permissions menu and allow it, then try again.';
+  if(c==='rate_limited'||c==='queue_overflow')return'Lots of questions at once. Wait a minute, then ask again.';
+  if(c==='session_expired')return'Your Claude sign-in expired. Reload the page and try again.';
+  if(c==='prompt_too_large')return'This chat got too long for me. Tap “New chat” and ask again.';
+  if(c==='images_unavailable'||c==='image_rejected')return'I couldn’t read that photo. Try a clearer picture, or type the question.';
+  if(c==='refused')return'I can’t help with that one. Try asking it another way.';
+  return'I couldn’t reach Claude just now. Check your connection and try again.'}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function md(t){let s=esc(t);
+  s=s.replace(/```[a-z]*\n?([\s\S]*?)```/g,(m,c)=>'<pre>'+c.replace(/\n$/,'')+'</pre>');
+  s=s.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<i>$2</i>').replace(/`([^`\n]+)`/g,'<code>$1</code>');
+  const out=[];let list=null;
+  s.split('\n').forEach(line=>{const ul=line.match(/^\s*[-•*]\s+(.*)/),ol=line.match(/^\s*\d+[.)]\s+(.*)/),hd=line.match(/^#{1,4}\s+(.*)/);
+    if(ul||ol){const tag=ul?'ul':'ol';if(!list||list.tag!==tag){list&&out.push('</'+list.tag+'>');list={tag};out.push('<'+tag+'>')}out.push('<li>'+(ul||ol)[1]+'</li>');return}
+    if(list){out.push('</'+list.tag+'>');list=null}
+    if(hd)out.push('<p><b>'+hd[1]+'</b></p>');else if(line.trim())out.push('<p>'+line+'</p>')});
+  list&&out.push('</'+list.tag+'>');return out.join('')}
+
+function chatSuggestions(){const cur=current(),l=cur||LESSONS[0];const base=[`Explain ${l.title.toLowerCase()} like I’m new to chemistry`,'Quiz me with one question on what I’m learning','How do I balance Fe + O₂ → Fe₂O₃?','What’s the difference between a mole and molar mass?'];
+  return base}
+function viewAsk(){const u=accentUnit();
+  if(!S.chat)S.chat=[];
+  const avail=!!getKey();
+  return `<div class="col chat" style="--c:${u.c};--on:${u.light?'#1a1405':'#fff'}">
+  <div class="chathead"><div class="fizzline" style="align-items:center">${fizz({mood:'happy',size:64,fill:.7})}<div style="flex:1"><h1 style="font-size:clamp(24px,4vw,32px)">Ask Fizz</h1><p class="small" style="margin:2px 0 0;font-family:var(--body)">Any chemistry question${IMG_OK?', or snap your homework':''}. Powered by Claude.</p></div>
+  ${S.chat.length?'<button class="b3 ghost" id="newChat" style="padding:9px 12px;font-size:12px">New chat</button>':''}</div></div>
+  ${!avail?keyCard():''}
+  <div class="msgs" id="msgs" aria-live="polite">${S.chat.length?S.chat.map(msgHTML).join(''):`<div class="m a">${fizz({mood:'idle',size:40,fill:.6})}<div class="bub"><p>Hi! I’m Fizz. Ask me anything from SCH4C: naming compounds, mole calculations, organic structures, redox… I’ll keep it simple.</p></div></div>
+   <div class="sugg">${chatSuggestions().map(s=>`<button data-s="${esc(s)}">${esc(s)}</button>`).join('')}</div>`}</div>
+  <form class="composer" id="composer" autocomplete="off">
+   <div id="imgPrev" hidden></div>
+   <div class="crow">
+    ${IMG_OK?`<label class="cbtn" for="chatImg" title="Add a photo">${ic('camera',24)}<span class="sr">Add a photo</span></label><input type="file" id="chatImg" accept="image/*" hidden>`:''}
+    <label for="chatIn" class="sr">Your question</label>
+    <textarea id="chatIn" rows="1" placeholder="Ask a chemistry question" ${avail?'':'disabled'}>${esc(CHAT_PREFILL)}</textarea>
+    <button class="cbtn send" id="chatSend" type="submit" aria-label="Send" ${avail?'':'disabled'}>${ic('send',22)}</button>
+   </div></form></div>`}
+function msgHTML(m){if(m.r==='u')return `<div class="m u">${m.img?`<span class="imgtag">${ic('camera',16)} Photo</span>`:''}${esc(m.t).replace(/\n/g,'<br>')}</div>`;
+  return `<div class="m a">${fizz({mood:m.err?'sad':'idle',size:40,fill:.6})}<div class="bub${m.err?' err':''}">${md(m.t)}</div></div>`}
+function bindAsk(){bindKeyCard();CHAT_PREFILL='';
+  const ta=$('#chatIn'),msgs=$('#msgs');if(!ta)return;
+  const grow=()=>{ta.style.height='auto';ta.style.height=Math.min(140,ta.scrollHeight)+'px'};grow();ta.oninput=grow;
+  ta.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&matchMedia('(pointer:fine)').matches){e.preventDefault();$('#composer').requestSubmit()}};
+  document.querySelectorAll('.sugg [data-s]').forEach(b=>b.onclick=()=>{ta.value=b.dataset.s;$('#composer').requestSubmit()});
+  const nc=$('#newChat');if(nc)nc.onclick=()=>{if(CHAT_CTL)CHAT_CTL.abort();S.chat=[];save();route()};
+  const fi=$('#chatImg');if(fi)fi.onchange=()=>{const f=fi.files[0];if(!f)return;CHAT_IMG=f;const url=URL.createObjectURL(f);const p=$('#imgPrev');p.hidden=false;
+    p.innerHTML=`<div class="thumb"><img src="${url}" alt="Your photo"><button type="button" id="rmImg" aria-label="Remove photo">${ic('x',16)}</button></div>`;$('#rmImg').onclick=()=>{CHAT_IMG=null;fi.value='';p.hidden=true;p.innerHTML=''}};
+  $('#composer').onsubmit=e=>{e.preventDefault();if(CHAT_BUSY){if(CHAT_CTL)CHAT_CTL.abort();return}const q=ta.value.trim();if(!q&&!CHAT_IMG)return;sendChat(q||'Can you help me with this?')};
+  scrollChat(true);if(!S.chat.length&&!('ontouchstart' in window))ta.focus()}
+function scrollChat(instant){const last=$('#msgs')&&$('#msgs').lastElementChild;if(last)last.scrollIntoView({block:'end',behavior:instant||RM?'auto':'smooth'})}
+async function sendChat(q){if(!SAMPLE)return;const img=CHAT_IMG;CHAT_IMG=null;
+  S.chat.push({r:'u',t:q,img:!!img});
+  const hist=S.chat.filter(m=>!m.err).slice(-12);
+  const input=hist.map((m,i)=>({role:m.r==='u'?'user':'assistant',content:(i===0&&m.r==='u'?tutorBrief()+'\n\nStudent: ':'')+(m.img?'[shared a photo] ':'')+m.t}));
+  if(input[0].role!=='user'){input.shift();input[0].content=tutorBrief()+'\n\nStudent: '+input[0].content}
+  route();const msgs=$('#msgs');
+  msgs.insertAdjacentHTML('beforeend',`<div class="m a" id="live">${fizz({mood:'think',size:40,fill:.6})}<div class="bub"><p class="typing"><span></span><span></span><span></span></p></div></div>`);scrollChat();
+  const bub=$('#live .bub'),send=$('#chatSend');CHAT_BUSY=true;send.innerHTML=ic('stop',20,true);send.setAttribute('aria-label','Stop');send.classList.add('stop');$('#chatIn').value='';
+  CHAT_CTL=new AbortController();let text='',err=null,lastPaint=0;
+  try{const r=await SAMPLE(input,{cache:false,signal:CHAT_CTL.signal,images:img?[img]:undefined,onText:({text:t})=>{text=t;const n=performance.now();if(n-lastPaint>60){lastPaint=n;bub.innerHTML=md(t);scrollChat(true)}}});text=r.text}
+  catch(e){if(e&&e.text)text=e.text;if(!(e&&e.code==='cancelled'))err=e}
+  CHAT_BUSY=false;CHAT_CTL=null;
+  if(text)S.chat.push({r:'a',t:text});
+  if(err)S.chat.push({r:'a',t:sampleErr(err),err:true});
+  if(S.chat.length>40)S.chat=S.chat.slice(-40);save();
+  if(location.hash==='#ask'&&!SES){route()}}
+function askAbout(q){CHAT_PREFILL=q;if(location.hash==='#ask')route();else location.hash='ask'}
+
+/* explain-why inside a lesson */
+async function explainWhy(btn,q,chosen){if(!getKey()){btn.textContent='Add your API key in the Ask tab first';btn.disabled=true;return}
+  btn.disabled=true;const box=document.createElement('div');box.className='whybox';box.innerHTML='<p class="typing"><span></span><span></span><span></span></p>';btn.replaceWith(box);
+  const strip=s=>s.replace(/<[^>]+>/g,'').replace(/[{}]/g,'');
+  const prompt=tutorBrief()+`\n\nThe student just answered a quiz question wrong. In 2–4 short sentences, explain why his choice is wrong and why the correct one is right. Speak to him directly and kindly.\nQuestion: ${strip(chem(q.q))}\nOptions: ${q.o.map((o,i)=>(i+1)+') '+strip(chem(o))).join('  ')}\nHe chose: ${strip(chem(q.o[chosen]))}\nCorrect: ${strip(chem(q.o[q.a]))}`;
+  try{const r=await SAMPLE(prompt,{modelTier:'quick',onText:({text})=>{box.innerHTML=md(text)}});box.innerHTML=md(r.text)}
+  catch(e){box.innerHTML=e&&e.text?md(e.text):'<p>'+sampleErr(e)+'</p>'}}
+
+/* ---------- router ---------- */
+function route(){
+  const h=location.hash.slice(1)||'learn',m=$('#main');let html,after,tab=h;
+  if(h.startsWith('notes-')&&byId(h.slice(6))){const l=byId(h.slice(6));setAccent(l.unit);html=viewNotes(l);tab='learn';
+    after=()=>{bindSim();const g=$('#notesGo');if(g)g.onclick=()=>startLesson(l);$('#notesAsk').onclick=()=>askAbout(`I’m reading the notes on “${l.title}”. Can you explain the main idea a different way, with an everyday example?`)}}
+  else{setAccent(accentUnit());
+    if(h==='practice'){html=viewPractice();after=bindPractice}
+    else if(h==='tools'){html=viewTools();after=bindTools}
+    else if(h==='ask'){html=viewAsk();after=bindAsk}
+    else if(h==='profile'){html=viewProfile();after=bindProfile}
+    else{html=viewLearn();after=bindLearn;tab='learn'}}
+  m.innerHTML=html;after&&after();
+  document.querySelectorAll('[data-tab]').forEach(a=>a.setAttribute('aria-current',a.dataset.tab===tab));
+  renderAside();$('#brandFizz').innerHTML=fizz({size:34,fill:Math.min(1,todayXP()/S.goal)});
+}
+let lastHash=location.hash;
+addEventListener('hashchange',()=>{closeSheet();if(location.hash==='#learn'||!location.hash)scrollToCur=true;route();if(lastHash!==location.hash&&!location.hash.startsWith('#learn')){scrollTo(0,0)}lastHash=location.hash});
+applyTheme();route();initCloud();
+</script>
+
+<script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script>
+</body></html>
