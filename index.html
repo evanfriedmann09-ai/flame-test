@@ -353,6 +353,18 @@ dt{color:var(--muted)} dd{margin:0}
 .idk .msg .ico{color:color-mix(in oklab,var(--c) 70%,var(--ink))}
 .idk .msg h3{color:color-mix(in oklab,var(--c) 70%,var(--ink))}
 .tgcard .fizz{flex:none}
+
+/* Saturday intensive */
+.intcard{border-color:color-mix(in oklab,#5B5BD6 45%,var(--line));background:color-mix(in oklab,#5B5BD6 7%,var(--surface))}
+.intcard.soon{background:var(--surface);border-color:var(--line)}
+.intcard h3{font-size:19px}.intcard .fizz{flex:none}
+.ilabel{display:inline-flex;gap:4px;align-items:center;font:800 12px var(--display);letter-spacing:.06em;text-transform:uppercase;color:#5B5BD6}
+.itiles{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.itile{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:10px 12px}
+.itile b{display:block;font-family:var(--display);font-size:16px}.itile span{font-size:13.5px;color:var(--muted)}
+.itile .b3{background:#5B5BD6;color:#fff;box-shadow:0 4px 0 #3a3aa8}
+.itile.done{border-color:color-mix(in oklab,var(--good) 45%,var(--line))}.ichk{color:var(--good)}
+.intclock{color:#5B5BD6;font-variant-numeric:tabular-nums}
 /* bottom tabs (mobile) */
 .btabs{display:none}
 @media (max-width:1180px){.app{grid-template-columns:220px minmax(0,1fr)}.aside{display:none}}
@@ -954,6 +966,1557 @@ const ZERO={id:'z',sym:'Cs',z:55,c:'#5B5BD6',name:'Chemistry from Zero',flame:'c
 ]};
 ZERO.lessons.forEach(l=>{l.quiz=l.bites.map(b=>b.q);l.lede=l.sub});
 UNITS.unshift(ZERO);
+const UNIT_R = {name:'Grade 10 Review', lessons:[
+ {id:'f1', title:'Atoms and the periodic table', sub:'A quick recap of the basics', bites:[
+  B('Quick warm-up first.',
+   '<p>An atom has a tiny <b>nucleus</b> of protons (+) and neutrons (no charge), with electrons (−) around it in shells.</p><p>The <b>atomic number</b> is the number of protons. It decides which element the atom is.</p>',
+   'What decides which element an atom is?', ['Its number of neutrons','Its number of protons','Its number of shells'], 1,
+   'The atomic number, the number of protons, sets the element. Change the protons and you have a different element.'),
+  B('Columns are families.',
+   '<p>A column on the periodic table is a <b>group</b>. Elements in the same group have the same number of <b>valence electrons</b> (outer-shell electrons), so they behave alike.</p><p>Group 1 atoms have 1 valence electron. Group 17 atoms have 7.</p>',
+   'Why do sodium and potassium behave alike?', ['They have the same mass','They are in the same row','They have the same number of valence electrons'], 2,
+   'Both are in group 1, so each has 1 valence electron. Same outer electrons, similar behaviour.'),
+  B('Left side, right side.',
+   '<p><b>Metals</b> sit on the left and middle of the table. <b>Non-metals</b> sit on the upper right. The staircase line between them separates the two.</p><p>Metals tend to <b>lose</b> electrons. Non-metals tend to <b>gain</b> them.</p>',
+   'Chlorine is on the upper right. What does it tend to do with electrons?', ['Gain them','Lose them','Ignore them'], 0,
+   'Chlorine is a non-metal, and non-metals tend to gain electrons.'),
+  B('Here’s the charge pattern.',
+   '<p>Atoms gain or lose electrons to get a full outer shell like a noble gas. The group tells you the usual ion charge:</p><ul><li>Group 1: 1+, group 2: 2+, group 13: 3+</li><li>Group 15: 3−, group 16: 2−, group 17: 1−</li><li>Group 18: no ion</li></ul>',
+   'What ion does magnesium (group 2) usually form?', ['{Mg^-}','{Mg^2-}','{Mg^2+}'], 2,
+   'Group 2 metals lose 2 electrons, giving a 2+ charge: {Mg^2+}.')
+ ]},
+ {id:'f2', title:'Ionic and covalent bonding', sub:'Giving electrons vs sharing them', bites:[
+  B('Two ways atoms stick together.',
+   '<p>Atoms bond to get full outer shells. There are two main ways.</p><p>An <b>ionic bond</b> forms when a metal <b>gives</b> electrons to a non-metal. The ions that form have opposite charges and attract.</p>',
+   'In an ionic bond, what happens to electrons?', ['They are shared equally','They are transferred from metal to non-metal','They are destroyed'], 1,
+   'Ionic bonding is a transfer: the metal gives electrons to the non-metal, making + and − ions that attract.'),
+  B('Watch me do one.',
+   '<p>Sodium has 1 valence electron. Chlorine has 7. Sodium hands its electron to chlorine.</p><p>Now sodium is {Na^+} and chlorine is {Cl^-}. Both have full outer shells, and the opposite charges hold them together as {NaCl}.</p>',
+   'After the transfer, what charge does chlorine have?', ['1−','1+','0'], 0,
+   'Chlorine gained one electron, so it has one extra negative charge: {Cl^-}.'),
+  B('Now the sharing kind.',
+   '<p>A <b>covalent bond</b> forms when two <b>non-metals share</b> a pair of electrons. Neither atom wants to give electrons away, so they share.</p><p>Covalent bonds make <b>molecules</b>, like {H2O} and {CO2}.</p>',
+   'Which pair of elements would form a covalent bond?', ['Sodium and oxygen','Calcium and chlorine','Carbon and oxygen'], 2,
+   'Carbon and oxygen are both non-metals, so they share electrons. The other pairs are metal + non-metal (ionic).'),
+  B('Your turn!',
+   '<p>The quick rule:</p><ul><li>Metal + non-metal → <b>ionic</b></li><li>Non-metal + non-metal → <b>covalent</b></li></ul>',
+   'What kind of bonding is in {MgO}?', ['Covalent','Ionic'], 1,
+   'Magnesium is a metal and oxygen is a non-metal, so {MgO} is ionic.')
+ ]},
+ {id:'r20', title:'Lewis dot diagrams', sub:'Drawing valence electrons as dots', bites:[
+  B('Let’s draw electrons as dots.',
+   '<p>A <b>Lewis dot diagram</b> shows an element’s symbol with its <b>valence electrons</b> as dots around it. Inner electrons are left out.</p><p>Place dots one per side (top, right, bottom, left) before pairing any up.</p>',
+   'Which electrons appear in a Lewis dot diagram?', ['All electrons','Only valence electrons','Only protons'], 1,
+   'Lewis diagrams show only the outer (valence) electrons, because those are the ones used in bonding.'),
+  B('Count from the group.',
+   '<p>For main groups, the number of dots comes from the group. Group 1 gets 1 dot, group 2 gets 2, then groups 13 to 18 get 3 to 8.</p><p>Oxygen is in group 16, so it gets 6 dots: two single dots and two pairs.</p>',
+   'How many dots go around nitrogen (group 15)?', ['3','5','7'], 1,
+   'Group 15 elements have 5 valence electrons, so nitrogen gets 5 dots.'),
+  B('Here’s water.',
+   '<p>In {H2O}, oxygen sits in the middle. It shares one pair of electrons with each hydrogen. Each shared pair is a <b>single bond</b>, drawn as a line.</p><p>Oxygen also keeps <b>two lone pairs</b> (unshared pairs). That gives oxygen 8 electrons around it.</p>',
+   'How many lone pairs does oxygen have in water?', ['None','One','Two'], 2,
+   'Oxygen shares two pairs (one with each H) and keeps two lone pairs, for 8 electrons total.'),
+  B('Now carbon dioxide.',
+   '<p>In {CO2}, carbon is in the middle. It shares <b>two pairs</b> with each oxygen. Two shared pairs is a <b>double bond</b>, drawn as two lines: O=C=O.</p><p>Each oxygen also has two lone pairs. Carbon has no lone pairs.</p>',
+   'What kind of bond joins carbon to each oxygen in {CO2}?', ['A double bond','A single bond','An ionic bond'], 0,
+   'Carbon shares two pairs of electrons with each oxygen. Two shared pairs is a double bond.')
+ ]},
+ {id:'r21', title:'Bonding and properties', sub:'Why salt and sugar act so differently', bites:[
+  B('Bond type shows up in real life.',
+   '<p>Ionic compounds are huge grids of + and − ions locked together. Those strong attractions take a lot of heat to break.</p><p>So ionic compounds have <b>high melting points</b>. Table salt melts at about 801 °C.</p>',
+   'Why does table salt have a high melting point?', ['Its ions attract strongly','It has no bonds','It is a gas at room temperature'], 0,
+   'The + and − ions hold each other tightly, so a lot of heat is needed to pull them apart.'),
+  B('Molecules are different.',
+   '<p>In molecular (covalent) compounds, the bonds inside each molecule are strong. But the molecules barely stick to each other.</p><p>So molecular compounds usually have <b>low melting points</b>. Many are liquids or gases at room temperature, like water and {CO2}.</p>',
+   'Which is most likely to have a low melting point?', ['{KCl}','{CaO}','{CH4}'], 2,
+   '{CH4} is made of non-metals only, so it is molecular. {KCl} and {CaO} are ionic and melt at high temperatures.'),
+  B('Who conducts electricity?',
+   '<p>To conduct electricity, charged particles must be free to move.</p><p>Solid ionic compounds <b>don’t</b> conduct, because the ions are locked in place. Melted or dissolved in water, they <b>do</b>, because the ions can move. Molecular compounds have no ions, so they don’t conduct.</p>',
+   'When does salt conduct electricity?', ['As a dry solid','Dissolved in water','Never'], 1,
+   'Dissolved in water, the {Na^+} and {Cl^-} ions are free to move and carry charge.'),
+  B('One more test: dissolving.',
+   '<p>Many ionic compounds <b>dissolve in water</b>, which pulls the ions apart. Some molecular compounds dissolve too (like sugar), but their solutions don’t conduct.</p><p>This is a handy lab test: dissolve it, then check if it conducts.</p>',
+   'A white solid dissolves and the solution conducts. It’s probably…', ['molecular','ionic'], 1,
+   'A conducting solution means ions are present, so the solid is most likely ionic.')
+ ]}
+]};
+
+const UNIT_M = {name:'Matter and Qualitative Analysis', lessons:[
+ {id:'m1', title:'Atomic radius', sub:'Why some atoms are bigger', bites:[
+  B('Let’s look at atom size.',
+   '<p><b>Atomic radius</b> is the size of an atom, from the nucleus to the outer electrons.</p><p>Going <b>down a group</b>, each row adds a new electron shell. More shells means a bigger atom.</p>',
+   'Which is bigger, lithium or potassium?', ['Lithium','Potassium','They are the same'], 1,
+   'Potassium is lower in group 1, so it has more shells and a bigger radius.'),
+  B('Across a row is the surprise.',
+   '<p>Going <b>across a period</b> (left to right), atoms get <b>smaller</b>.</p><p>Each step adds one proton, but no new shell. The extra positive charge pulls the same shells in tighter.</p>',
+   'Why does size shrink across a period?', ['More shells are added','More protons pull the electrons closer','Electrons are lost'], 1,
+   'Each element has one more proton but the same number of shells, so the pull is stronger and the atom shrinks.'),
+  B('Here’s the trick to remember it.',
+   '<p>Biggest atoms are at the <b>bottom left</b>. Smallest are at the <b>top right</b>.</p><p>Think of the outer electrons as a dog on a leash. More shells is a longer leash. More protons is a stronger owner pulling in.</p>',
+   'Where are the biggest atoms?', ['Top right','Bottom left','Top left'], 1,
+   'Size grows going down and going left, so the biggest atoms are bottom left.'),
+  B('Your turn!',
+   '<p>Use both rules. Sodium and chlorine are in the same row (period 3). Sodium is on the left, chlorine on the right.</p>',
+   'Which atom is smaller, sodium or chlorine?', ['Sodium','Chlorine'], 1,
+   'Chlorine is farther right in the same row, so its extra protons pull its electrons in tighter.')
+ ]},
+ {id:'m20', title:'Ionization energy', sub:'How hard it is to pull an electron off', bites:[
+  B('New term coming up.',
+   '<p><b>Ionization energy</b> is the energy needed to remove one electron from an atom.</p><p>High ionization energy means the atom holds its electrons tightly. Low means an electron comes off easily.</p>',
+   'An atom with low ionization energy…', ['loses an electron easily','never loses electrons','has no electrons'], 0,
+   'Low ionization energy means little energy is needed, so an electron comes off easily.'),
+  B('Down a group, it drops.',
+   '<p>Going <b>down a group</b>, the outer electron is farther from the nucleus, so it’s held more weakly.</p><p>So ionization energy <b>decreases</b> going down.</p>',
+   'Which has the lower ionization energy, sodium or caesium?', ['Sodium','Caesium'], 1,
+   'Caesium is much lower in group 1. Its outer electron is far away and easy to remove.'),
+  B('Across a row, it rises.',
+   '<p>Going <b>across a period</b>, atoms get smaller and the nucleus pulls harder. So ionization energy <b>increases</b>.</p><p>Noble gases at the far right have the highest values in each row. That’s why they don’t form ions.</p>',
+   'Which has the highest ionization energy in period 3?', ['Sodium','Silicon','Argon'], 2,
+   'Ionization energy rises across a period, and argon is the noble gas at the right end.'),
+  B('This explains metals.',
+   '<p>Metals on the left have <b>low</b> ionization energies. That’s why they lose electrons and form positive ions so easily.</p>',
+   'Why does potassium form {K^+} so easily?', ['It has high ionization energy','It has low ionization energy','It gains electrons'], 1,
+   'Potassium’s single outer electron takes little energy to remove, so it readily becomes {K^+}.')
+ ]},
+ {id:'m21', title:'Electronegativity', sub:'Who pulls shared electrons harder', bites:[
+  B('Here’s a tug-of-war idea.',
+   '<p><b>Electronegativity</b> is how strongly an atom pulls on electrons it shares in a bond.</p><p>When two atoms share electrons, the more electronegative one pulls them closer to itself.</p>',
+   'Electronegativity measures…', ['an atom’s size','how hard an atom pulls on shared electrons','how many protons an atom has'], 1,
+   'It’s the pull an atom has on shared electrons in a bond.'),
+  B('Same pattern as ionization energy.',
+   '<p>Electronegativity <b>increases across</b> a period and <b>decreases down</b> a group.</p><p>Small atoms with lots of protons pull hardest. <b>Fluorine</b>, at the top right, is the most electronegative element.</p>',
+   'Which element is the most electronegative?', ['Caesium','Oxygen','Fluorine'], 2,
+   'Fluorine is the champion. It is small and near the top right of the table.'),
+  B('Your turn!',
+   '<p>Remember: up and to the right means higher electronegativity. Noble gases are usually left out because they rarely bond.</p>',
+   'Which is more electronegative, chlorine or iodine?', ['Chlorine','Iodine'], 0,
+   'Chlorine is higher in group 17, so it pulls shared electrons harder than iodine.'),
+  B('Why it matters.',
+   '<p>In water, oxygen is more electronegative than hydrogen. The shared electrons sit closer to oxygen, so the oxygen end is slightly negative and the hydrogen ends are slightly positive.</p>',
+   'In {H2O}, which end is slightly negative?', ['The oxygen end','The hydrogen ends','Neither'], 0,
+   'Oxygen pulls the shared electrons closer, so its end of the molecule carries a slight negative charge.')
+ ]},
+ {id:'m22', title:'Reactivity trends', sub:'Which elements react most', bites:[
+  B('Metals first.',
+   '<p>Metals react by <b>losing</b> electrons. The easier that is, the more reactive the metal.</p><p>So metal reactivity <b>increases going down</b> a group. Lithium fizzes in water. Potassium bursts into flame.</p>',
+   'Which group 1 metal is most reactive?', ['Lithium','Sodium','Potassium'], 2,
+   'Potassium is lowest of these, so its outer electron is easiest to lose.'),
+  B('Non-metals flip it.',
+   '<p>Non-metals react by <b>gaining</b> electrons. Small atoms with a strong pull do this best.</p><p>So non-metal reactivity <b>increases going up</b> a group. In group 17, fluorine is more reactive than chlorine, which beats bromine.</p>',
+   'Which halogen is most reactive?', ['Iodine','Bromine','Fluorine'], 2,
+   'Non-metal reactivity rises going up, and fluorine is at the top of group 17.'),
+  B('Put it on the map.',
+   '<p>The most reactive <b>metals</b> are at the <b>bottom left</b>. The most reactive <b>non-metals</b> are at the <b>top right</b> (not counting noble gases, which barely react).</p>',
+   'Where are the most reactive metals?', ['Bottom left','Top right','Middle'], 0,
+   'Metals get more reactive going down and to the left.'),
+  B('Try one.',
+   '<p>Magnesium (group 2) and calcium (group 2) are in the same group. Calcium is one row lower.</p>',
+   'Which reacts more strongly with water?', ['Magnesium','Calcium'], 1,
+   'For metals, lower in the group means more reactive, so calcium wins.')
+ ]},
+ {id:'m2', title:'Naming ionic compounds', sub:'Metal first, then -ide', bites:[
+  B('Naming is just a recipe.',
+   '<p>A <b>binary ionic compound</b> has two elements: a metal and a non-metal.</p><p>To name it, write the <b>metal’s name</b> first, unchanged. Then write the non-metal with its ending changed to <b>-ide</b>.</p>',
+   'What is {NaCl} called?', ['Sodium chlorine','Sodium chloride','Chloride sodium'], 1,
+   'Metal name (sodium) + non-metal with -ide (chloride).'),
+  B('Learn these endings.',
+   '<p>Common -ide names:</p><ul><li>chlorine → chlor<b>ide</b>, fluorine → fluor<b>ide</b></li><li>oxygen → <b>oxide</b>, sulfur → <b>sulfide</b></li><li>nitrogen → <b>nitride</b>, bromine → brom<b>ide</b></li></ul>',
+   'What is {MgO} called?', ['Magnesium oxide','Magnesium oxygen','Magnesium oxygenide'], 0,
+   'Oxygen becomes oxide, so {MgO} is magnesium oxide.'),
+  B('No counting words here.',
+   '<p>Ionic names <b>don’t</b> say how many of each ion there are. {CaCl2} is just calcium chloride, not “calcium dichloride”.</p><p>The charges already tell you the ratio.</p>',
+   'What is {CaCl2} called?', ['Calcium dichloride','Calcium chlorine','Calcium chloride'], 2,
+   'Ionic names skip prefixes. Calcium + chloride.'),
+  B('Your turn!',
+   '<p>Same recipe: metal name, then non-metal with -ide.</p>',
+   'What is {K2S} called?', ['Potassium sulfide','Dipotassium sulfur','Potassium sulfate'], 0,
+   'Potassium is the metal and sulfur becomes sulfide. Sulfate is a different ion.')
+ ]},
+ {id:'m23', title:'Writing ionic formulas', sub:'Balance the charges to zero', bites:[
+  B('The big rule.',
+   '<p>An ionic compound has <b>no overall charge</b>. The positive and negative charges must add to zero.</p><p>{Na^+} and {Cl^-}: 1+ and 1− cancel, so one of each: {NaCl}.</p>',
+   'Why is the formula {NaCl} and not {NaCl2}?', ['Chlorine is bigger','One + and one − already add to zero','Sodium is a metal'], 1,
+   'The charges 1+ and 1− cancel with one of each ion.'),
+  B('Here’s the criss-cross trick.',
+   '<p>Write the ions. Drop the charge numbers (not the signs) and cross them down as subscripts on the <b>other</b> ion.</p><p>{Al^3+} and {O^2-}: the 3 goes to O, the 2 goes to Al. Result: {Al2O3}. Check: 2 × 3+ = 6+, 3 × 2− = 6−.</p>',
+   'Using criss-cross, what formula do {Mg^2+} and {Cl^-} make?', ['{MgCl}','{Mg2Cl}','{MgCl2}'], 2,
+   'The 2 from magnesium goes to chlorine, the 1 from chloride goes to magnesium (and 1 isn’t written): {MgCl2}.'),
+  B('Always simplify.',
+   '<p>After crossing, reduce to the lowest ratio.</p><p>{Ca^2+} and {O^2-} cross to {Ca2O2}. Divide both by 2: <b>{CaO}</b>.</p>',
+   'What is the formula for magnesium oxide ({Mg^2+}, {O^2-})?', ['{MgO}','{Mg2O2}','{MgO2}'], 0,
+   '{Mg2O2} reduces to {MgO}. One 2+ and one 2− already cancel.'),
+  B('Try one.',
+   '<p>Sodium is group 1, so {Na^+}. Oxygen is group 16, so {O^2-}. Cross the charges.</p>',
+   'What is the formula for sodium oxide?', ['{NaO}','{Na2O}','{NaO2}','{Na2O2}'], 1,
+   'The 2 from oxide goes to sodium: {Na2O}. Check: 2 × 1+ = 2+, balancing 2−.')
+ ]},
+ {id:'m24', title:'Multivalent metals', sub:'Roman numerals in names', bites:[
+  B('Some metals have options.',
+   '<p>Many transition metals can form more than one ion. Iron can be {Fe^2+} or {Fe^3+}. Copper can be {Cu^+} or {Cu^2+}.</p><p>These are called <b>multivalent</b> metals.</p>',
+   'Which ions can iron form?', ['Only {Fe^2+}','{Fe^2+} and {Fe^3+}','{Fe^-} and {Fe^2-}'], 1,
+   'Iron is multivalent. It commonly forms {Fe^2+} or {Fe^3+}.'),
+  B('The name shows the charge.',
+   '<p>For a multivalent metal, put the charge in <b>Roman numerals</b> in brackets right after the metal’s name.</p><p>{Fe^2+} is iron(II). {Fe^3+} is iron(III). So {FeCl3} is iron(III) chloride.</p>',
+   'What does the (II) in copper(II) oxide mean?', ['Two copper atoms','Copper has a 2+ charge','Two oxygen atoms'], 1,
+   'The Roman numeral is the metal’s charge, not a count of atoms.'),
+  B('Watch me work backwards.',
+   '<p>To name {CuCl2}: chloride is always 1−. There are 2 of them, so 2− total.</p><p>Copper must be 2+ to cancel. Name: <b>copper(II) chloride</b>.</p>',
+   'Name {FeO}.', ['Iron oxide','Iron(I) oxide','Iron(II) oxide','Iron(III) oxide'], 2,
+   'Oxide is 2−, and there’s one iron, so iron is 2+: iron(II) oxide.'),
+  B('Your turn!',
+   '<p>Same method. Oxide is 2−. Find the total negative charge, then share it out across the metal atoms.</p>',
+   'Name {Fe2O3}.', ['Iron(III) oxide','Iron(II) oxide','Iron(VI) oxide'], 0,
+   '3 oxides = 6−. Two irons share 6+, so each is 3+: iron(III) oxide.')
+ ]},
+ {id:'m25', title:'Polyatomic ions', sub:'Ions made of several atoms', bites:[
+  B('Some ions come as a team.',
+   '<p>A <b>polyatomic ion</b> is a group of atoms bonded together that carries one overall charge.</p><p>Common ones: nitrate {NO3^-}, hydroxide {OH^-}, sulfate {SO4^2-}, carbonate {CO3^2-}, phosphate {PO4^3-}, ammonium {NH4^+}.</p>',
+   'What is the charge on the sulfate ion?', ['1−','2−','3−'], 1,
+   'Sulfate is {SO4^2-}, so it carries a 2− charge.'),
+  B('Name them like any ion.',
+   '<p>Write the positive ion’s name, then the negative ion’s name. Polyatomic names stay as they are, with no -ide change.</p><p>{NaNO3} is sodium nitrate. {NH4Cl} is ammonium chloride.</p>',
+   'What is {K2CO3} called?', ['Potassium carbide','Potassium carbonate','Potassium carbon oxide'], 1,
+   'K is potassium and {CO3^2-} is carbonate, so it’s potassium carbonate.'),
+  B('Brackets keep the team together.',
+   '<p>When you need more than one polyatomic ion, put it in brackets with the number outside.</p><p>{Ca^2+} needs two {OH^-}, so calcium hydroxide is {Ca(OH)2}. Writing {CaOH2} would be wrong.</p>',
+   'Why is calcium hydroxide written {Ca(OH)2}?', ['It has two calcium ions','It has two hydroxide ions','It has two hydrogen atoms only'], 1,
+   'The 2 outside the bracket means two whole {OH^-} ions, balancing the 2+ on calcium.'),
+  B('Try one.',
+   '<p>Criss-cross still works. {Al^3+} and {SO4^2-}: the 2 goes to Al, the 3 goes to the sulfate bracket.</p>',
+   'What is the formula for aluminium sulfate?', ['{AlSO4}','{Al3(SO4)2}','{Al2(SO4)3}'], 2,
+   '2 × 3+ = 6+ and 3 × 2− = 6−, so {Al2(SO4)3}.')
+ ]},
+ {id:'m26', title:'Naming molecular compounds', sub:'Prefixes for non-metal pairs', bites:[
+  B('Different rules for non-metals.',
+   '<p>Molecular compounds are made of <b>non-metals only</b>. They don’t have charges to balance, so the name has to say how many atoms there are.</p><p>We use <b>prefixes</b>: mono = 1, di = 2, tri = 3, tetra = 4, penta = 5, hexa = 6.</p>',
+   'What does the prefix tri- mean?', ['2','3','4'], 1,
+   'Tri- means 3, like a tricycle’s three wheels.'),
+  B('Here’s how it works.',
+   '<p>Name the first element with a prefix, then the second element with a prefix and an -ide ending.</p><p>One exception: don’t use mono- on the <b>first</b> element. {CO2} is carbon dioxide. {CO} is carbon monoxide.</p>',
+   'What is {CO2} called?', ['Monocarbon dioxide','Carbon dioxide','Carbon oxide'], 1,
+   'One carbon (no mono- on the first element) and two oxygens: carbon dioxide.'),
+  B('Watch me do one.',
+   '<p>{N2O4}: two nitrogens = <b>di</b>nitrogen. Four oxygens = <b>tetr</b>oxide. (The “a” is dropped before “oxide” so it’s easier to say.)</p><p>Name: dinitrogen tetroxide.</p>',
+   'What is {PCl5} called?', ['Phosphorus pentachloride','Monophosphorus pentachlorine','Phosphorus chloride'], 0,
+   'One phosphorus (no mono-) and five chlorines (penta-): phosphorus pentachloride.'),
+  B('Now go the other way.',
+   '<p>The prefixes turn straight into subscripts. Sulfur hexafluoride is 1 S and 6 F: {SF6}.</p>',
+   'What is the formula for dinitrogen trioxide?', ['{N3O2}','{NO3}','{N2O3}'], 2,
+   'Di = 2 nitrogen, tri = 3 oxygen: {N2O3}.')
+ ]},
+ {id:'m27', title:'Naming acids', sub:'When hydrogen meets water', bites:[
+  B('Acids have their own names.',
+   '<p>An <b>acid</b> here is a compound that starts with hydrogen and is dissolved in water, like {HCl} in water.</p><p>When the negative part ends in <b>-ide</b>, the acid is named <b>hydro___ic acid</b>. Chloride gives <b>hydrochloric acid</b>.</p>',
+   'What is {HBr} dissolved in water called?', ['Hydrobromic acid','Bromic acid','Hydrogen bromate'], 0,
+   'Bromide ends in -ide, so it becomes hydro + brom + ic: hydrobromic acid.'),
+  B('Polyatomic ions change too.',
+   '<p>When the negative ion ends in <b>-ate</b>, drop “hydro” and change -ate to <b>-ic acid</b>.</p><p>Nitrate {NO3^-} gives {HNO3}, <b>nitric acid</b>. Sulfate gives {H2SO4}, <b>sulfuric acid</b>.</p>',
+   'What is {H2CO3} called? (Hint: {CO3^2-} is carbonate.)', ['Hydrocarbonic acid','Carbonic acid','Carbonous acid'], 1,
+   'Carbonate ends in -ate, so it becomes carbonic acid. No hydro- for -ate ions.'),
+  B('One more ending.',
+   '<p>Some ions end in <b>-ite</b>, with one fewer oxygen. Nitrite is {NO2^-}. These become <b>-ous acid</b>.</p><p>So {HNO2} is <b>nitrous acid</b>.</p>',
+   'An acid made from an -ite ion ends in…', ['-ic acid','-ide acid','-ous acid'], 2,
+   '-ite ions become -ous acids, like nitrite → nitrous acid.'),
+  B('Your turn!',
+   '<p>Quick summary:</p><ul><li>-ide → hydro___ic acid</li><li>-ate → ___ic acid</li><li>-ite → ___ous acid</li></ul><p>Phosphate is {PO4^3-}.</p>',
+   'What is {H3PO4} called?', ['Hydrophosphoric acid','Phosphorous acid','Phosphoric acid'], 2,
+   'Phosphate ends in -ate, so the acid is phosphoric acid.')
+ ]},
+ {id:'m28', title:'Word equations to formulas', sub:'Turning names into symbols', bites:[
+  B('Let’s translate a reaction.',
+   '<p>A <b>word equation</b> names the reactants and products: hydrogen + oxygen → water.</p><p>To write a <b>formula equation</b>, swap each name for its formula: {H2 + O2 → H2O}.</p>',
+   'In “magnesium + oxygen → magnesium oxide”, what is the product?', ['Magnesium','Oxygen','Magnesium oxide'], 2,
+   'Products come after the arrow. Here that’s magnesium oxide.'),
+  B('Watch out for these seven.',
+   '<p>Some elements never exist as single atoms. On their own, they always come in pairs. These are the <b>diatomic elements</b>:</p><p>{H2}, {N2}, {O2}, {F2}, {Cl2}, {Br2}, {I2}</p><p>Other elements on their own are written as one atom, like Na, Mg or Fe.</p>',
+   'How do you write chlorine gas on its own?', ['Cl','{Cl2}','{Cl3}'], 1,
+   'Chlorine is diatomic, so the element is written {Cl2}.'),
+  B('Watch me do one.',
+   '<p>sodium + chlorine → sodium chloride</p><ul><li>Sodium alone: Na</li><li>Chlorine is diatomic: {Cl2}</li><li>Sodium chloride: {Na^+} and {Cl^-} make {NaCl}</li></ul><p>Formula equation: {Na + Cl2 → NaCl}. It isn’t balanced yet. That’s the next lesson.</p>',
+   'Why is chlorine written {Cl2} on the left but just Cl inside {NaCl}?', ['It’s a mistake','Alone it’s diatomic, but in the compound the charges set the ratio','Chlorine loses an atom'], 1,
+   'As an element, chlorine comes in pairs. In a compound, the ratio comes from balancing charges.'),
+  B('Your turn!',
+   '<p>Use your naming skills plus the diatomic list.</p>',
+   'Which is the formula equation for “zinc + oxygen → zinc oxide”? ({Zn^2+}, {O^2-})', ['{Zn + O → ZnO2}','{Zn + O2 → ZnO}','{Zn2 + O2 → Zn2O}'], 1,
+   'Zinc is a single atom, oxygen is diatomic, and {Zn^2+} with {O^2-} gives {ZnO}.')
+ ]},
+ {id:'f4', title:'Balancing equations', sub:'Same atoms on both sides', bites:[
+  B('Remember conservation of mass?',
+   '<p>Atoms aren’t created or destroyed in a reaction. So a <b>balanced equation</b> has the same number of each kind of atom on both sides.</p><p>{H2 + O2 → H2O} isn’t balanced: 2 O on the left, only 1 on the right.</p>',
+   'In {H2 + O2 → H2O}, which atom is unbalanced?', ['Hydrogen','Oxygen'], 1,
+   'There are 2 oxygen atoms on the left and only 1 on the right. Hydrogen has 2 on each side.'),
+  B('The golden rule.',
+   '<p>You balance by adding <b>coefficients</b>, big numbers in front of formulas. A coefficient multiplies the whole formula: 2{H2O} means 4 H and 2 O.</p><p><b>Never change subscripts.</b> That would change the substance itself.</p>',
+   'How many hydrogen atoms are in 3{H2O}?', ['2','3','6'], 2,
+   'The 3 multiplies everything in {H2O}: 3 × 2 = 6 hydrogen atoms.'),
+  B('Watch me balance it.',
+   '<ol><li>Put a 2 in front of {H2O} to get 2 O on the right: {H2 + O2 → 2H2O}</li><li>Now the right has 4 H. Put a 2 in front of {H2}: {2H2 + O2 → 2H2O}</li><li>Check: 4 H and 2 O on each side. Done.</li></ol>',
+   'In the balanced equation, what is the coefficient on {O2}?', ['1 (not written)','2','4'], 0,
+   'The final equation is {2H2 + O2 → 2H2O}. {O2} has a coefficient of 1, which we don’t write.'),
+  B('Your turn!',
+   '<p>Same steps: count atoms, fix one element at a time with coefficients, then recount.</p><p>Unbalanced: {N2 + H2 → NH3}</p>',
+   'Which is balanced?', ['{N2 + H2 → 2NH3}','{N2 + 3H2 → 2NH3}','{N2 + 3H2 → NH3}'], 1,
+   '2 N on each side, and 3 × 2 = 6 H on the left matches 2 × 3 = 6 H on the right.'),
+  B('A trickier one.',
+   '<p>Tip: balance elements that appear in only one place first, and leave lone elements like {O2} for last.</p><p>Unbalanced: {CH4 + O2 → CO2 + H2O}. Carbon is fine. 4 H needs 2{H2O}. Now the right has 4 O, so use 2{O2}.</p>',
+   'What is the balanced equation?', ['{CH4 + 2O2 → CO2 + 2H2O}','{CH4 + O2 → CO2 + 2H2O}','{CH4 + 2O2 → 2CO2 + H2O}'], 0,
+   'Each side has 1 C, 4 H and 4 O.')
+ ]},
+ {id:'m29', title:'The five reaction types', sub:'Spotting patterns in reactions', bites:[
+  B('Most reactions fit a pattern.',
+   '<p><b>Synthesis</b>: two or more substances join into one. A + B → AB.</p><p>Example: {2Mg + O2 → 2MgO}</p>',
+   'Which is a synthesis reaction?', ['{2Na + Cl2 → 2NaCl}','{2H2O → 2H2 + O2}','{CH4 + 2O2 → CO2 + 2H2O}'], 0,
+   'Two elements join to make one product, {NaCl}. That’s synthesis.'),
+  B('Now the reverse.',
+   '<p><b>Decomposition</b>: one substance breaks into two or more. AB → A + B.</p><p>Example: running electricity through water: {2H2O → 2H2 + O2}</p>',
+   'How many reactants does a decomposition reaction have?', ['One','Two','Three'], 0,
+   'Decomposition starts with a single compound that breaks apart.'),
+  B('Swapping partners.',
+   '<p><b>Single displacement</b>: an element replaces another element in a compound. A + BC → AC + B.</p><p>Example: {Zn + CuSO4 → ZnSO4 + Cu}. Zinc kicks copper out.</p>',
+   'In {Fe + CuCl2 → FeCl2 + Cu}, what does iron do?', ['Decomposes','Replaces copper','Combines with copper'], 1,
+   'Iron takes copper’s place with the chloride. That’s single displacement.'),
+  B('Two compounds trade.',
+   '<p><b>Double displacement</b>: two compounds swap partners. AB + CD → AD + CB.</p><p>Example: {AgNO3 + NaCl → AgCl + NaNO3}. Often one product is a solid that falls out, called a <b>precipitate</b>.</p>',
+   'Which pattern is double displacement?', ['A + B → AB','AB + CD → AD + CB','A + BC → AC + B'], 1,
+   'Two compounds trade positive ions, giving AD + CB.'),
+  B('Last one: burning.',
+   '<p><b>Combustion</b>: a fuel reacts with oxygen. When the fuel is a hydrocarbon (only C and H), the products are {CO2} and {H2O}.</p><p>Example: the natural gas in a furnace: {CH4 + 2O2 → CO2 + 2H2O}</p>',
+   'What are the products of burning propane, {C3H8}, in plenty of oxygen?', ['{CO2} and {H2O}','{C} and {H2}','{CO2} and {H2}'], 0,
+   'Propane is a hydrocarbon, so its complete combustion makes carbon dioxide and water.')
+ ]},
+ {id:'m3', title:'The activity series', sub:'Predicting single displacement', bites:[
+  B('Who wins the swap?',
+   '<p>A single displacement only happens if the free element is <b>more reactive</b> than the one it’s replacing.</p><p>The <b>activity series</b> ranks metals from most to least reactive:</p><p>Li, K, Ca, Na, Mg, Al, Zn, Fe, Ni, Sn, Pb, <b>H</b>, Cu, Ag, Au</p>',
+   'Which is more reactive, zinc or copper?', ['Copper','Zinc'], 1,
+   'Zinc is higher in the activity series than copper.'),
+  B('Here’s the rule.',
+   '<p>A metal can replace any metal <b>below</b> it in the series.</p><p>Zinc is above copper, so {Zn + CuSO4 → ZnSO4 + Cu} happens. Copper is below zinc, so copper in zinc sulfate gives <b>no reaction</b>.</p>',
+   'Will silver react with copper(II) nitrate?', ['Yes, silver replaces copper','No reaction','Only in sunlight'], 1,
+   'Silver is below copper, so it can’t push copper out.'),
+  B('Hydrogen is the checkpoint.',
+   '<p>Metals <b>above hydrogen</b> react with acids and release hydrogen gas: {Mg + 2HCl → MgCl2 + H2}.</p><p>Metals below hydrogen, like copper, silver and gold, don’t react with ordinary acids. That’s one reason they’re used for coins and jewellery.</p>',
+   'Which metal will NOT react with hydrochloric acid?', ['Zinc','Iron','Gold','Magnesium'], 2,
+   'Gold is below hydrogen in the activity series, so it doesn’t displace hydrogen from acid.'),
+  B('Halogens have a ladder too.',
+   '<p>For non-metals: {F2} > {Cl2} > {Br2} > {I2}. A halogen replaces any halide below it.</p><p>{Cl2 + 2NaBr → 2NaCl + Br2} works. Iodine added to sodium chloride does nothing.</p>',
+   'Will bromine react with sodium iodide?', ['Yes','No'], 0,
+   'Bromine is above iodine, so it replaces iodide: {Br2 + 2NaI → 2NaBr + I2}.')
+ ]},
+ {id:'m4', title:'Flame tests', sub:'Identifying metals by colour', bites:[
+  B('Chemistry that glows.',
+   '<p><b>Qualitative analysis</b> means figuring out <i>what</i> is in a sample, not how much.</p><p>A <b>flame test</b> is one way: put a little of the sample in a flame and watch the colour. Each metal ion gives its own colour.</p>',
+   'Qualitative analysis tells you…', ['how much of a substance there is','what substance is present','how hot a flame is'], 1,
+   'Qualitative is about identity. Quantitative is about amounts.'),
+  B('Why the colours appear.',
+   '<p>The flame’s heat makes electrons jump up to higher energy levels. When they fall back down, they give off that energy as light.</p><p>Each element has its own energy levels, so each gives a specific colour.</p>',
+   'What releases the light in a flame test?', ['Electrons falling back to lower energy levels','Protons leaving the nucleus','The atoms melting'], 0,
+   'Excited electrons drop back down and release light of a specific colour.'),
+  B('Learn these colours.',
+   '<ul><li>Lithium {Li^+}: red</li><li>Sodium {Na^+}: bright yellow</li><li>Potassium {K^+}: lilac</li><li>Calcium {Ca^2+}: orange-red</li><li>Strontium {Sr^2+}: crimson</li><li>Barium {Ba^2+}: pale green</li><li>Copper {Cu^2+}: blue-green</li></ul>',
+   'A sample burns bright yellow. Which ion is likely present?', ['{K^+}','{Cu^2+}','{Na^+}'], 2,
+   'Sodium gives a strong bright yellow flame.'),
+  B('Your turn!',
+   '<p>Fireworks use these same metal ions to make their colours. Red fireworks often use strontium. Green ones use barium.</p>',
+   'A sample gives a blue-green flame. Which ion is it?', ['{Sr^2+}','{Cu^2+}','{Li^+}'], 1,
+   'Copper ions give a blue-green flame.')
+ ]},
+ {id:'m30', title:'Precipitate and gas tests', sub:'More clues for unknowns', bites:[
+  B('Look for a cloudy solid.',
+   '<p>A <b>precipitate</b> is a solid that forms when two solutions are mixed. Its appearance is a clue to which ions are present.</p><p>Add silver nitrate to a solution with chloride ions and a <b>white precipitate</b> of silver chloride forms.</p>',
+   'Silver nitrate gives a white precipitate. Which ion is likely in the sample?', ['Chloride','Sodium','Potassium'], 0,
+   '{Ag^+} and {Cl^-} form solid white silver chloride.'),
+  B('A test for sulfate.',
+   '<p>Add barium chloride to a solution with sulfate ions. A <b>white precipitate</b> of barium sulfate, {BaSO4}, forms.</p>',
+   'Which reagent tests for sulfate ions?', ['Silver nitrate','Barium chloride','Limewater'], 1,
+   '{Ba^2+} from barium chloride joins {SO4^2-} to form white {BaSO4}.'),
+  B('Now the gas tests.',
+   '<ul><li><b>Hydrogen</b>: a burning splint makes a squeaky <b>pop</b>.</li><li><b>Oxygen</b>: a glowing splint <b>relights</b>.</li><li><b>Carbon dioxide</b>: turns <b>limewater cloudy</b>.</li></ul>',
+   'A gas makes a glowing splint burst back into flame. What gas is it?', ['Hydrogen','Carbon dioxide','Oxygen'], 2,
+   'Oxygen helps things burn, so it relights a glowing splint.'),
+  B('Put the clues together.',
+   '<p>A metal is dropped in acid and bubbles form. A burning splint held at the mouth of the tube gives a pop.</p>',
+   'What gas was made?', ['Oxygen','Hydrogen','Carbon dioxide'], 1,
+   'The pop test identifies hydrogen. Metals above hydrogen in the activity series release it from acids.'),
+  B('One more.',
+   '<p>Breathe out through a straw into limewater, and the limewater goes milky. That tells you your breath contains a certain gas.</p>',
+   'Which gas is in your breath that turns limewater cloudy?', ['Carbon dioxide','Hydrogen','Oxygen'], 0,
+   'Carbon dioxide turns limewater cloudy. You breathe it out as a waste product.')
+ ]}
+]};
+
+const UNIT_K = {name:'Chemical Calculations', lessons:[
+ {id:'k20', title:'Significant figures', sub:'Just enough rounding for this course', bites:[
+   B('Let’s start with the digits that matter.',
+     '<p><b>Significant figures</b> (sig figs) are the digits in a measurement that carry real meaning.</p><p>Rule 1: every non-zero digit counts. Rule 2: zeros <i>between</i> non-zero digits count. So 12.01 has 4 sig figs and 305 has 3.</p>',
+     'How many significant figures are in 305?', ['1','2','3'], 2,
+     'The 3 and 5 count, and the zero between them counts too. That makes 3.'),
+   B('Now the tricky zeros.',
+     '<p>Rule 3: zeros at the <b>front</b> never count. They just hold the decimal place.</p><p>Rule 4: zeros at the <b>end, after a decimal point</b>, do count. So 0.050 has 2 sig figs: the 5 and the last 0.</p>',
+     'How many significant figures are in 0.0250?', ['2','3','4'], 1,
+     'The front zeros don’t count. The 2, the 5 and the final 0 (after the decimal) do. That’s 3.'),
+   B('Rounding is quick.',
+     '<p>To round, look at the digit just after the place you’re keeping. If it’s <b>5 or more</b>, round up. If it’s 4 or less, leave it.</p><p>Example: 18.016 to two decimal places. The next digit is 6, so it becomes 18.02.</p>',
+     'Round 27.29 to one decimal place.', ['27.2','27.3','27.0'], 1,
+     'The digit after the 2 is a 9, which is 5 or more, so the 2 rounds up to 3: 27.3.'),
+   B('Here’s the one rule you’ll use most.',
+     '<p>When you multiply or divide, give the answer the same number of sig figs as the measurement with the <b>fewest</b>.</p><p>Example: 36.0 ÷ 18.02 = 1.99778… The 36.0 has only 3 sig figs, so the answer is <b>2.00</b>. In this unit, most answers end up with 3 sig figs.</p>',
+     'Give 10.0 ÷ 3.00 = 3.3333… with the right number of sig figs.', ['3.3','3.33','3.333'], 1,
+     'Both numbers have 3 sig figs, so the answer gets 3: 3.33.')
+ ]},
+ {id:'k21', title:'What is a mole?', sub:'A counting word for tiny things', bites:[
+   B('You already use counting words.',
+     '<p>A <b>dozen</b> means 12 of anything: 12 eggs, 12 donuts, 12 pencils. It’s just a handy word for a number.</p><p>Chemists have their own counting word for atoms and molecules. It’s called the <b>mole</b>.</p>',
+     'How many eggs are in 2 dozen?', ['12','24','14'], 1,
+     'One dozen is 12, so 2 dozen is 2 × 12 = 24.'),
+   B('Here’s the big number.',
+     '<p>One <b>mole</b> (symbol <b>mol</b>) is 6.02 × 10<sup>23</sup> particles.</p><p>This number is called <b>Avogadro’s number</b>. Written out, it’s 602 000 000 000 000 000 000 000.</p>',
+     'How many particles are in 1 mol?', ['12','6.02 × 10²³','6.02 × 10³'], 1,
+     'One mole is always 6.02 × 10²³ particles. That’s Avogadro’s number.'),
+   B('Why so huge?',
+     '<p>Atoms are unbelievably small. You need a gigantic number of them to get an amount you can see or weigh.</p><p>One mole of water molecules is only about 18 g, roughly a big mouthful.</p>',
+     'Why do chemists count in such a huge unit?', ['Atoms are extremely tiny','Atoms are very heavy','Scientists like big numbers'], 0,
+     'Atoms are so small that even a sip of water holds trillions of trillions of them.'),
+   B('A mole works like a dozen.',
+     '<p>A mole can count any particle: atoms, molecules or ions. 1 mol of {CO2} is 6.02 × 10<sup>23</sup> molecules of {CO2}.</p><p>Like dozens, moles scale. 2 mol is twice as many particles. 0.5 mol is half as many.</p>',
+     'How many atoms are in half a mole (0.5 mol) of carbon?', ['3.01 × 10²³','6.02 × 10²³','12.04 × 10²³'], 0,
+     'Half of 6.02 × 10²³ is 3.01 × 10²³.')
+ ]},
+ {id:'k22', title:'Molar mass of an element', sub:'Reading it off the periodic table', bites:[
+   B('The periodic table does the work.',
+     '<p>Each box on the periodic table shows the element’s atomic mass. Carbon’s is 12.01.</p><p>That same number, in grams, is the mass of <b>one mole</b> of that element. This is the <b>molar mass</b>, with the unit <b>g/mol</b>. So carbon’s molar mass is 12.01 g/mol.</p>',
+     'What is the molar mass of carbon?', ['6.02 g/mol','12.01 g/mol','1.00 g/mol'], 1,
+     'Carbon’s atomic mass is 12.01, so 1 mol of carbon has a mass of 12.01 g.'),
+   B('Every element is different.',
+     '<p>Atoms of different elements have different masses, so a mole of each one weighs a different amount.</p><p>1 mol of sodium (Na) = 22.99 g.<br>1 mol of copper (Cu) = 63.55 g.</p><p>Both contain 6.02 × 10<sup>23</sup> atoms. Copper atoms are just heavier.</p>',
+     'Which has more mass: 1 mol of Na or 1 mol of Cu?', ['1 mol of Na','They’re equal','1 mol of Cu'], 2,
+     'Same number of atoms, but copper atoms are heavier: 63.55 g vs 22.99 g.'),
+   B('Your turn!',
+     '<p>Here are some values from the periodic table:</p><ul><li>O: 16.00</li><li>Mg: 24.31</li><li>Ca: 40.08</li></ul><p>Remember: molar mass = atomic mass, in g/mol.</p>',
+     'What is the mass of 1 mol of calcium (Ca)?', ['24.31 g','16.00 g','40.08 g'], 2,
+     'Calcium’s atomic mass is 40.08, so 1 mol has a mass of 40.08 g.')
+ ]},
+ {id:'f3', title:'Molar mass of a compound', sub:'Add up every atom in the formula', bites:[
+   B('Watch me do one.',
+     '<p>For a compound, add up the molar masses of <b>every atom</b> in the formula.</p><p>Water, {H2O}, has 2 H and 1 O:<br>2 × 1.01 = 2.02<br>1 × 16.00 = 16.00<br>2.02 + 16.00 = <b>18.02 g/mol</b></p>',
+     'What is the molar mass of {H2O}?', ['17.01 g/mol','18.02 g/mol','16.00 g/mol'], 1,
+     'Two hydrogens (2 × 1.01 = 2.02) plus one oxygen (16.00) gives 18.02 g/mol.'),
+   B('The subscript is your multiplier.',
+     '<p>A small number after a symbol tells you how many of that atom there are. No number means 1.</p><p>{CO2} has 1 C and 2 O:<br>1 × 12.01 = 12.01<br>2 × 16.00 = 32.00<br>12.01 + 32.00 = <b>44.01 g/mol</b></p>',
+     'When finding the molar mass of {CO2}, what do you multiply oxygen’s 16.00 by?', ['1','2','3'], 1,
+     'The subscript 2 means there are two oxygen atoms, so you use 2 × 16.00.'),
+   B('Brackets multiply everything inside.',
+     '<p>In {Ca(OH)2}, the 2 outside the bracket doubles the O and the H. So there’s 1 Ca, 2 O and 2 H.</p><p>40.08 + 2(16.00) + 2(1.01)<br>= 40.08 + 32.00 + 2.02<br>= <b>74.10 g/mol</b></p>',
+     'How many hydrogen atoms are in {Ca(OH)2}?', ['1','2','4'], 1,
+     'The 2 outside the bracket doubles the OH group, so there are 2 H atoms.'),
+   B('Your turn!',
+     '<p>Find the molar mass of table salt, {NaCl}.</p><p>Use Na = 22.99 and Cl = 35.45. There’s one of each, so just add them.</p>',
+     'What is the molar mass of {NaCl}?', ['58.44 g/mol','57.44 g/mol','12.54 g/mol'], 0,
+     '22.99 + 35.45 = 58.44 g/mol.'),
+   B('One more, a bit bigger.',
+     '<p>Find the molar mass of calcium carbonate, {CaCO3} (chalk and limestone).</p><p>It has 1 Ca, 1 C and 3 O. Use Ca = 40.08, C = 12.01, O = 16.00.</p>',
+     'What is the molar mass of {CaCO3}?', ['68.09 g/mol','100.09 g/mol','52.09 g/mol'], 1,
+     '40.08 + 12.01 + 3(16.00) = 40.08 + 12.01 + 48.00 = 100.09 g/mol. Don’t forget to triple the oxygen.')
+ ]},
+ {id:'k23', title:'Grams to moles', sub:'Divide by the molar mass', bites:[
+   B('Here’s the key equation.',
+     '<p>To turn grams into moles, use:</p><p><b>n = m ÷ M</b></p><ul><li><b>n</b> = moles (mol)</li><li><b>m</b> = mass (g)</li><li><b>M</b> = molar mass (g/mol)</li></ul>',
+     'In n = m ÷ M, what does <b>m</b> stand for?', ['Molar mass','Moles','Mass in grams'], 2,
+     'Lowercase m is the mass in grams. Capital M is the molar mass.'),
+   B('Watch me do one.',
+     '<p>How many moles are in 24.02 g of carbon?</p><ol><li>Molar mass of C: M = 12.01 g/mol</li><li>n = m ÷ M = 24.02 g ÷ 12.01 g/mol</li><li>n = <b>2.00 mol</b></li></ol>',
+     'How many moles are in 24.02 g of carbon?', ['2.00 mol','12.01 mol','288 mol'], 0,
+     '24.02 ÷ 12.01 = 2.00 mol.'),
+   B('Same steps for a compound.',
+     '<p>How many moles are in 9.01 g of water?</p><ol><li>M of {H2O} = 18.02 g/mol</li><li>n = 9.01 g ÷ 18.02 g/mol</li><li>n = <b>0.500 mol</b></li></ol><p>Less than one molar mass of stuff means less than 1 mol.</p>',
+     'How many moles are in 9.01 g of {H2O}?', ['2.00 mol','0.500 mol','162 mol'], 1,
+     '9.01 ÷ 18.02 = 0.500 mol.'),
+   B('Your turn!',
+     '<p>How many moles are in 116.88 g of {NaCl}?</p><p>You found its molar mass earlier: 58.44 g/mol. Now use n = m ÷ M.</p>',
+     'How many moles are in 116.88 g of {NaCl}?', ['0.500 mol','6830 mol','2.00 mol'], 2,
+     'n = 116.88 ÷ 58.44 = 2.00 mol.'),
+   B('Check your units.',
+     '<p>Units can tell you if you did it right. Grams divided by grams per mole leaves <b>mol</b>:</p><p>g ÷ (g/mol) = mol</p><p>Try one more: 50.0 g of {CaCO3}, where M = 100.09 g/mol.</p>',
+     'About how many moles are in 50.0 g of {CaCO3}?', ['0.500 mol','2.00 mol','5000 mol'], 0,
+     '50.0 ÷ 100.09 = 0.4996, which rounds to 0.500 mol.')
+ ]},
+ {id:'k24', title:'Moles to grams', sub:'Multiply by the molar mass', bites:[
+   B('Just flip it around.',
+     '<p>To go from moles to grams, rearrange the same equation:</p><p><b>m = n × M</b></p><p>Grams → moles: divide by M.<br>Moles → grams: multiply by M.</p>',
+     'To change moles into grams, you…', ['divide by M','multiply by M','multiply by 6.02 × 10²³'], 1,
+     'm = n × M, so you multiply the moles by the molar mass.'),
+   B('Watch me do one.',
+     '<p>What is the mass of 3.00 mol of carbon?</p><ol><li>M of C = 12.01 g/mol</li><li>m = n × M = 3.00 mol × 12.01 g/mol</li><li>m = <b>36.0 g</b> (36.03, rounded to 3 sig figs)</li></ol>',
+     'What is the mass of 3.00 mol of carbon?', ['4.00 g','36.0 g','12.0 g'], 1,
+     '3.00 × 12.01 = 36.03, which is 36.0 g to 3 sig figs.'),
+   B('Now a compound.',
+     '<p>What is the mass of 0.500 mol of water?</p><ol><li>M of {H2O} = 18.02 g/mol</li><li>m = 0.500 mol × 18.02 g/mol</li><li>m = <b>9.01 g</b></li></ol>',
+     'What is the mass of 0.500 mol of {H2O}?', ['36.0 g','18.5 g','9.01 g'], 2,
+     '0.500 × 18.02 = 9.01 g.'),
+   B('Your turn!',
+     '<p>What is the mass of 2.00 mol of {CO2}?</p><p>Its molar mass is 44.01 g/mol. Use m = n × M.</p>',
+     'What is the mass of 2.00 mol of {CO2}?', ['88.0 g','22.0 g','44.0 g'], 0,
+     '2.00 × 44.01 = 88.02, which is 88.0 g.'),
+   B('Pick the right direction.',
+     '<p>Before you calculate, ask: what do I have, and what do I want?</p><ul><li>Have grams, want moles: <b>÷ M</b></li><li>Have moles, want grams: <b>× M</b></li></ul>',
+     'You have 54.06 g of water and want moles. What do you do?', ['Multiply by 18.02','Divide by 18.02','Divide by 6.02 × 10²³'], 1,
+     'Grams to moles means dividing by the molar mass: 54.06 ÷ 18.02 = 3.00 mol.')
+ ]},
+ {id:'k25', title:'Moles to particles', sub:'Using Avogadro’s number', bites:[
+   B('Counting the actual particles.',
+     '<p>To find how many atoms or molecules you have, multiply moles by Avogadro’s number:</p><p><b>particles = n × 6.02 × 10<sup>23</sup></b></p>',
+     'To go from moles to number of particles, you multiply by…', ['the molar mass','6.02 × 10²³','100'], 1,
+     'Each mole holds 6.02 × 10²³ particles, so multiply moles by that number.'),
+   B('Watch me do one.',
+     '<p>How many atoms are in 0.500 mol of iron?</p><p>0.500 × 6.02 × 10<sup>23</sup><br>= <b>3.01 × 10<sup>23</sup> atoms</b></p><p>Only multiply the front numbers. The × 10<sup>23</sup> part rides along.</p>',
+     'How many atoms are in 0.500 mol of iron?', ['3.01 × 10²³','6.02 × 10²³','1.20 × 10²⁴'], 0,
+     '0.500 × 6.02 = 3.01, so the answer is 3.01 × 10²³ atoms.'),
+   B('Tidying up big numbers.',
+     '<p>2.00 mol × 6.02 × 10<sup>23</sup> = 12.04 × 10<sup>23</sup>.</p><p>In scientific notation the front number should be between 1 and 10. Move the decimal one place left and raise the power by 1:</p><p>12.04 × 10<sup>23</sup> = <b>1.20 × 10<sup>24</sup></b></p>',
+     'What is 12.04 × 10²³ written properly?', ['12.0 × 10²⁴','1.20 × 10²²','1.20 × 10²⁴'], 2,
+     'Moving the decimal one place left (12.04 → 1.204) means the power goes up by one, from 23 to 24.'),
+   B('Going backwards.',
+     '<p>To go from particles to moles, <b>divide</b> by Avogadro’s number.</p><p>1.204 × 10<sup>24</sup> ÷ 6.02 × 10<sup>23</sup> = <b>2.00 mol</b></p>',
+     'How many moles are 3.01 × 10²³ atoms?', ['2.00 mol','0.500 mol','3.01 mol'], 1,
+     '3.01 × 10²³ is half of 6.02 × 10²³, so it’s 0.500 mol.'),
+   B('Your turn! Chain two steps.',
+     '<p>Grams → moles → particles.</p><p>Example: 18.02 g of water ÷ 18.02 g/mol = 1.00 mol. Then 1.00 × 6.02 × 10<sup>23</sup> = 6.02 × 10<sup>23</sup> molecules.</p><p>Now try 36.04 g of water.</p>',
+     'How many molecules are in 36.04 g of {H2O}?', ['6.02 × 10²³','3.01 × 10²³','1.20 × 10²⁴'], 2,
+     '36.04 ÷ 18.02 = 2.00 mol. Then 2.00 × 6.02 × 10²³ = 12.04 × 10²³ = 1.20 × 10²⁴ molecules.')
+ ]},
+ {id:'k1', title:'Percent composition', sub:'What share of the mass each element is', bites:[
+   B('What’s in a compound, by mass?',
+     '<p><b>Percent composition</b> tells you what percentage of a compound’s mass comes from each element.</p><p><b>% element = (mass of that element in the formula ÷ molar mass) × 100</b></p>',
+     'In the percent composition formula, what do you divide by?', ['The molar mass of the compound','Avogadro’s number','The number of atoms'], 0,
+     'You divide the element’s mass by the whole compound’s molar mass, then multiply by 100.'),
+   B('Watch me do water.',
+     '<p>{H2O}: molar mass = 18.02 g/mol.</p><ol><li>H: 2 × 1.01 = 2.02. 2.02 ÷ 18.02 × 100 = <b>11.2%</b></li><li>O: 16.00 ÷ 18.02 × 100 = <b>88.8%</b></li></ol>',
+     'What percent of water’s mass is oxygen?', ['11.2%','50.0%','88.8%'], 2,
+     '16.00 ÷ 18.02 × 100 = 88.8%.'),
+   B('A quick check.',
+     '<p>All the percentages in a compound should add up to about <b>100%</b>.</p><p>Water: 11.2% + 88.8% = 100.0%. ✓</p><p>So if you know all but one, subtract from 100 to get the last one.</p>',
+     'A compound of only C and O is 27.3% carbon. What percent is oxygen?', ['27.3%','72.7%','100%'], 1,
+     '100 − 27.3 = 72.7%.'),
+   B('Your turn!',
+     '<p>Find the percent of carbon in {CO2}.</p><p>Molar mass of {CO2} = 44.01 g/mol. Carbon in the formula = 1 × 12.01 = 12.01.</p>',
+     'What percent of {CO2} is carbon?', ['12.0%','72.7%','27.3%'], 2,
+     '12.01 ÷ 44.01 × 100 = 27.3%.'),
+   B('The lab version.',
+     '<p>In a lab you might measure actual masses instead. Same idea:</p><p><b>% = mass of element ÷ mass of sample × 100</b></p><p>Example: a 50.0 g sample contains 20.0 g of calcium.</p>',
+     'What percent of the 50.0 g sample is calcium?', ['20.0%','40.0%','60.0%','250%'], 1,
+     '20.0 ÷ 50.0 × 100 = 40.0%.')
+ ]},
+ {id:'k2', title:'Empirical formulas', sub:'Working backwards from percentages', bites:[
+   B('The simplest ratio.',
+     '<p>The <b>empirical formula</b> is the simplest whole-number ratio of atoms in a compound.</p><p>Glucose is {C6H12O6}. Divide every subscript by 6 and you get {CH2O}. That’s its empirical formula.</p>',
+     'What is the empirical formula of {C2H6}?', ['{C2H6}','{CH3}','{CH2}'], 1,
+     'Divide both subscripts by 2: {C2H6} becomes {CH3}.'),
+   B('Step 1: pretend you have 100 g.',
+     '<p>Lab data usually comes as percentages. Example: a compound is 50.0% S and 50.0% O.</p><p>Assume you have <b>100 g</b>. Then the percentages become grams: 50.0 g S and 50.0 g O.</p>',
+     'A compound is 30.0% nitrogen. In a 100 g sample, how many grams are nitrogen?', ['30.0 g','70.0 g','3.00 g'], 0,
+     'With 100 g, the percent turns straight into grams: 30.0% is 30.0 g.'),
+   B('Step 2: grams to moles.',
+     '<p>Divide each mass by its molar mass (n = m ÷ M):</p><p>S: 50.0 ÷ 32.06 = 1.56 mol<br>O: 50.0 ÷ 16.00 = 3.125 mol</p>',
+     'How many moles of O are in 50.0 g of oxygen atoms?', ['800 mol','3.125 mol','1.56 mol'], 1,
+     '50.0 ÷ 16.00 = 3.125 mol.'),
+   B('Step 3: divide by the smallest.',
+     '<p>Divide every mole value by the smallest one (here 1.56):</p><p>S: 1.56 ÷ 1.56 = 1<br>O: 3.125 ÷ 1.56 = 2.00</p><p>So the ratio is 1 S : 2 O. If you ever get something like 1.5, multiply all of them by 2.</p>',
+     'What is the empirical formula of this compound?', ['{SO}','{S2O}','{SO2}'], 2,
+     'The ratio is 1 S to 2 O, so the formula is {SO2}.'),
+   B('Your turn!',
+     '<p>A compound is 40.0% C, 6.7% H and 53.3% O. Steps 1 and 2 give:</p><p>C: 40.0 ÷ 12.01 = 3.33 mol<br>H: 6.7 ÷ 1.01 = 6.63 mol<br>O: 53.3 ÷ 16.00 = 3.33 mol</p><p>Now do step 3.</p>',
+     'What is the empirical formula?', ['{CH2O}','{C2HO}','{CHO}'], 0,
+     'Divide by 3.33: C = 1, H = 6.63 ÷ 3.33 ≈ 2, O = 1. That gives {CH2O}.')
+ ]},
+ {id:'k26', title:'Molecular formulas', sub:'From empirical formula to the real thing', bites:[
+   B('The real molecule.',
+     '<p>The <b>molecular formula</b> shows the actual number of atoms in one molecule.</p><p>It is always a whole-number multiple of the empirical formula. {CH2O} × 6 = {C6H12O6}.</p>',
+     'Which could be a molecular formula for the empirical formula {CH2}?', ['{CH4}','{C2H4}','{C2H6}'], 1,
+     '{CH2} × 2 = {C2H4}. The other two don’t keep the 1 : 2 ratio.'),
+   B('Find the multiplier.',
+     '<p>Multiplier = molar mass ÷ empirical formula mass.</p><p>Example: empirical formula {CH2}, molar mass 28.06 g/mol.<br>{CH2} mass = 12.01 + 2(1.01) = 14.03<br>28.06 ÷ 14.03 = <b>2</b></p>',
+     'What is the multiplier in this example?', ['2','14','28'], 0,
+     '28.06 ÷ 14.03 = 2, so the molecular formula is {CH2} × 2 = {C2H4}.'),
+   B('Watch me do glucose.',
+     '<p>Empirical formula {CH2O}, molar mass 180.18 g/mol.</p><ol><li>{CH2O} mass = 12.01 + 2.02 + 16.00 = 30.03</li><li>180.18 ÷ 30.03 = 6</li><li>Multiply every subscript by 6</li></ol>',
+     'What is the molecular formula?', ['{CH2O}','{C3H6O3}','{C6H12O6}'], 2,
+     'Multiply each subscript in {CH2O} by 6 to get {C6H12O6}.'),
+   B('Your turn!',
+     '<p>A compound has empirical formula {CH} and a molar mass of 78.12 g/mol.</p><p>{CH} mass = 12.01 + 1.01 = 13.02. Divide, then multiply the subscripts.</p>',
+     'What is the molecular formula?', ['{C3H3}','{C6H6}','{C2H2}'], 1,
+     '78.12 ÷ 13.02 = 6, so {CH} × 6 = {C6H6}.')
+ ]},
+ {id:'k27', title:'Mole ratios', sub:'Balanced equations are recipes', bites:[
+   B('Coefficients are a recipe.',
+     '<p>The big numbers in a balanced equation tell you how many <b>moles</b> react.</p><p>{2H2 + O2 → 2H2O} means: 2 mol of {H2} react with 1 mol of {O2} to make 2 mol of {H2O}.</p>',
+     'In {2H2 + O2 → 2H2O}, how many moles of {O2} react with 2 mol of {H2}?', ['2','1','4'], 1,
+     'The coefficient on {O2} is 1 (no number written), so 1 mol of {O2} reacts with 2 mol of {H2}.'),
+   B('Scale the recipe.',
+     '<p>Write the ratio as a fraction and multiply. Want new ÷ have old:</p><p>4 mol {H2} × (1 mol {O2} / 2 mol {H2}) = <b>2 mol {O2}</b></p><p>Double the {H2}, double the {O2}.</p>',
+     'How many moles of {O2} are needed for 4 mol of {H2}?', ['1 mol','4 mol','2 mol'], 2,
+     '4 × 1/2 = 2 mol of {O2}.'),
+   B('Watch me do one.',
+     '<p>{N2 + 3H2 → 2NH3}</p><p>How much {NH3} comes from 6 mol of {H2}? The ratio is 3 {H2} : 2 {NH3}.</p><p>6 mol {H2} × (2 mol {NH3} / 3 mol {H2}) = <b>4 mol {NH3}</b></p>',
+     'How many moles of {NH3} form from 6 mol of {H2}?', ['4 mol','6 mol','9 mol'], 0,
+     '6 × 2/3 = 4 mol of {NH3}.'),
+   B('Your turn!',
+     '<p>Same reaction: {N2 + 3H2 → 2NH3}.</p><p>You have 2 mol of {N2}. The ratio of {N2} to {H2} is 1 : 3.</p>',
+     'How many moles of {H2} react with 2 mol of {N2}?', ['2 mol','3 mol','6 mol'], 2,
+     '2 mol {N2} × (3 mol {H2} / 1 mol {N2}) = 6 mol {H2}.'),
+   B('Moles only, never grams.',
+     '<p>The recipe counts particles, so it only works with <b>moles</b>. 2 g of {H2} does not react with 1 g of {O2}.</p><p>If you’re given grams, change them to moles first.</p>',
+     'You’re given grams of a reactant. Before using the mole ratio, you should…', ['convert grams to moles','use the grams directly','multiply by 100'], 0,
+     'Mole ratios compare moles. Grams must be turned into moles first.')
+ ]},
+ {id:'k3', title:'Mass-to-mass stoichiometry', sub:'How much product from how much reactant', bites:[
+   B('One path for every question.',
+     '<p><b>Stoichiometry</b> uses a balanced equation to predict masses. It always follows the same path:</p><p><b>grams of A → moles of A → (mole ratio) → moles of B → grams of B</b></p>',
+     'What step sits in the middle of the path?', ['Divide by 100','The mole ratio','Avogadro’s number'], 1,
+     'You switch from moles of A to moles of B using the mole ratio from the equation.'),
+   B('Watch me. Step 1.',
+     '<p>How many grams of water form when 4.04 g of {H2} burns? {2H2 + O2 → 2H2O}</p><p>Step 1, grams → moles:<br>M of {H2} = 2(1.01) = 2.02 g/mol<br>n = 4.04 ÷ 2.02 = <b>2.00 mol {H2}</b></p>',
+     'How many moles of {H2} are in 4.04 g?', ['2.00 mol','8.16 mol','4.04 mol'], 0,
+     '4.04 ÷ 2.02 = 2.00 mol.'),
+   B('Steps 2 and 3.',
+     '<p>Step 2, mole ratio: {H2} : {H2O} = 2 : 2, so 2.00 mol {H2} makes <b>2.00 mol {H2O}</b>.</p><p>Step 3, moles → grams:<br>m = 2.00 × 18.02 = 36.04 g ≈ <b>36.0 g</b> of water</p>',
+     'How many grams of water form?', ['18.0 g','36.0 g','4.04 g'], 1,
+     '2.00 mol × 18.02 g/mol = 36.0 g of water.'),
+   B('Your turn!',
+     '<p>{2Mg + O2 → 2MgO}. You burn 48.62 g of Mg.</p><ol><li>Mg: 48.62 ÷ 24.31 = ? mol</li><li>Ratio Mg : MgO = 2 : 2</li><li>× M of MgO (24.31 + 16.00 = 40.31 g/mol)</li></ol>',
+     'How many grams of MgO form?', ['40.3 g','48.6 g','80.6 g'], 2,
+     '48.62 ÷ 24.31 = 2.00 mol Mg → 2.00 mol MgO → 2.00 × 40.31 = 80.6 g.'),
+   B('One more with a different ratio.',
+     '<p>{CH4 + 2O2 → CO2 + 2H2O}. You burn 16.05 g of methane.</p><ol><li>M of {CH4} = 12.01 + 4(1.01) = 16.05, so 1.00 mol</li><li>Ratio {CH4} : {CO2} = 1 : 1</li><li>× M of {CO2} = 44.01 g/mol</li></ol>',
+     'How many grams of {CO2} form?', ['44.0 g','88.0 g','16.1 g'], 0,
+     '1.00 mol {CH4} → 1.00 mol {CO2} → 1.00 × 44.01 = 44.0 g.')
+ ]},
+ {id:'k4', title:'Limiting reagent', sub:'What runs out first', bites:[
+   B('Think sandwiches.',
+     '<p>Each cheese sandwich needs 2 slices of bread and 1 slice of cheese. You have 10 bread and 3 cheese.</p><p>Bread is enough for 5 sandwiches. Cheese is enough for only 3. So you make <b>3</b>, and the cheese runs out first.</p>',
+     'What limits how many sandwiches you can make?', ['The bread','The cheese','Neither'], 1,
+     'Cheese is enough for only 3 sandwiches, fewer than the bread allows, so cheese runs out first.'),
+   B('The chemistry words.',
+     '<p>The <b>limiting reagent</b> is the reactant that runs out first. It decides how much product you can make.</p><p>The other reactant is <b>in excess</b>. Some of it is left over.</p>',
+     'In the sandwich example, the bread is…', ['the limiting reagent','in excess','the product'], 1,
+     'Bread is left over after the cheese runs out, so it’s in excess.'),
+   B('Watch me find it.',
+     '<p>{2H2 + O2 → 2H2O}. You have 4 mol {H2} and 1 mol {O2}. Work out the product from each one:</p><p>{H2}: 4 × (2/2) = 4 mol {H2O}<br>{O2}: 1 × (2/1) = 2 mol {H2O}</p><p>The <b>smaller</b> answer wins. {O2} is limiting, and you make 2 mol of water.</p>',
+     'Which reactant is limiting here?', ['{H2}','{O2}','Neither'], 1,
+     '{O2} can only make 2 mol of water, less than the 4 mol from {H2}, so {O2} runs out first.'),
+   B('Your turn!',
+     '<p>{N2 + 3H2 → 2NH3}. You have 2 mol {N2} and 3 mol {H2}.</p><p>{N2}: 2 × (2/1) = 4 mol {NH3}<br>{H2}: 3 × (2/3) = ? mol {NH3}</p>',
+     'How many moles of {NH3} can actually form?', ['2 mol','4 mol','6 mol'], 0,
+     '{H2} gives 3 × 2/3 = 2 mol, the smaller amount, so {H2} is limiting and only 2 mol of {NH3} form.'),
+   B('Careful with grams.',
+     '<p>{2Mg + O2 → 2MgO}. You have 24.31 g Mg and 32.00 g {O2}.</p><p>Convert first: Mg = 1.00 mol, {O2} = 1.00 mol.<br>Mg: 1.00 × (2/2) = 1.00 mol MgO<br>{O2}: 1.00 × (2/1) = 2.00 mol MgO</p>',
+     'Which reactant is limiting?', ['{O2}','They run out together','Mg'], 2,
+     'Mg makes only 1.00 mol of MgO, the smaller amount, so Mg is limiting even though the moles started equal.')
+ ]},
+ {id:'k28', title:'Percent yield', sub:'How close you got in the lab', bites:[
+   B('Two kinds of yield.',
+     '<p>The <b>theoretical yield</b> is the most product you could make. It comes from your stoichiometry, using the limiting reagent.</p><p>The <b>actual yield</b> is what you really collect in the lab.</p>',
+     'Which is usually bigger?', ['Actual yield','Theoretical yield','They’re always equal'], 1,
+     'The theoretical yield is the maximum possible, so the actual yield is usually smaller.'),
+   B('Why you get less.',
+     '<p>Real labs lose a little product. Some sticks to the glassware, some spills, and some reactions don’t fully finish.</p>',
+     'Which is a reason the actual yield is lower?', ['Product sticks to glassware','The equation was balanced','The molar mass is too big'], 0,
+     'Product left on beakers and filter paper never gets weighed, so you collect less.'),
+   B('Here’s the formula.',
+     '<p><b>Percent yield = actual ÷ theoretical × 100</b></p><p>Example: theoretical 50.0 g, actual 40.0 g.<br>40.0 ÷ 50.0 × 100 = <b>80.0%</b></p>',
+     'In the percent yield formula, what goes on top?', ['Actual yield','Theoretical yield','Molar mass'], 0,
+     'Actual yield goes on top: actual ÷ theoretical × 100.'),
+   B('Watch me do one.',
+     '<p>You calculated a theoretical yield of 36.0 g of water and collected 30.6 g.</p><p>30.6 ÷ 36.0 = 0.850<br>0.850 × 100 = <b>85.0%</b></p>',
+     'What is the percent yield?', ['118%','85.0%','30.6%'], 1,
+     '30.6 ÷ 36.0 × 100 = 85.0%.'),
+   B('Your turn!',
+     '<p>Your theoretical yield of MgO is 80.62 g. You collect 72.6 g.</p><p>Use actual ÷ theoretical × 100. If you ever get more than 100%, something went wrong, like a wet product.</p>',
+     'What is the percent yield?', ['72.6%','111%','90.1%'], 2,
+     '72.6 ÷ 80.62 × 100 = 90.1%.')
+ ]}
+]};
+
+const UNIT_O = {name:'Organic Chemistry', lessons:[
+ {id:'o20', title:'What is organic chemistry?', sub:'Carbon, the great connector', bites:[
+  B('Welcome to carbon’s world.',
+   '<p><b>Organic chemistry</b> is the chemistry of carbon compounds. Fuels, plastics, medicines, food and your own body are full of them.</p><p>Most organic compounds contain carbon and hydrogen, often with a few other elements like oxygen or nitrogen.</p>',
+   'Organic chemistry is mainly the study of compounds containing…', ['iron','carbon','sodium'], 1,
+   'Organic compounds are built around carbon.'),
+  B('Here’s why carbon is special.',
+   '<p>A <b>covalent bond</b> is a pair of electrons shared between two atoms. We draw it as a line, like C–H.</p><p>Carbon has 4 valence electrons, so it forms <b>4 bonds</b>. Hydrogen forms 1 bond.</p>',
+   'How many bonds does a carbon atom make?', ['2','3','4'], 2,
+   'Carbon has 4 valence electrons and shares each one, making 4 bonds.'),
+  B('Carbon loves other carbons.',
+   '<p>Carbon atoms can bond to each other again and again, making long <b>chains</b> like C–C–C–C. The ends can even join up to make a <b>ring</b>.</p><p>That’s why there are millions of different organic compounds.</p>',
+   'Why are there so many organic compounds?', ['Carbon only bonds to oxygen','Carbon atoms can link into chains and rings','Carbon is a metal'], 1,
+   'Carbon bonds to other carbons, forming chains and rings of any size.'),
+  B('Simplest case first.',
+   '<p>A <b>hydrocarbon</b> contains only carbon and hydrogen. Methane, {CH4}, is the simplest: one carbon with 4 hydrogens, using all 4 of carbon’s bonds.</p>',
+   'Which of these is a hydrocarbon?', ['{CH4}','{CH3OH}','{CO2}'], 0,
+   '{CH4} has only C and H. The others contain oxygen.')
+ ]},
+ {id:'b1', title:'Alkanes', sub:'Single bonds and the prefixes meth- to dec-', bites:[
+  B('Meet the simplest family.',
+   '<p><b>Alkanes</b> are hydrocarbons with only <b>single bonds</b> (C–C and C–H). Their names end in <b>-ane</b>.</p><p>Every carbon is holding as many hydrogens as it can, so alkanes are called <b>saturated</b>.</p>',
+   'What kind of carbon–carbon bonds do alkanes have?', ['Only single bonds','At least one double bond','A triple bond'], 0,
+   'Alkanes have only single bonds, which makes them saturated.'),
+  B('Memorize these ten.',
+   '<p>The prefix tells you how many carbons are in the chain:</p><p>1 <b>meth-</b>, 2 <b>eth-</b>, 3 <b>prop-</b>, 4 <b>but-</b>, 5 <b>pent-</b>, 6 <b>hex-</b>, 7 <b>hept-</b>, 8 <b>oct-</b>, 9 <b>non-</b>, 10 <b>dec-</b></p><p>So propane has 3 carbons and octane has 8.</p>',
+   'How many carbons does pentane have?', ['4','5','6'], 1,
+   'Pent- means 5 carbons.'),
+  B('There’s a formula pattern.',
+   '<p>Alkanes follow <b>C<sub>n</sub>H<sub>2n+2</sub></b>. Double the carbons and add 2 to get the hydrogens.</p><p>Propane: 3 carbons, 2×3+2 = 8 hydrogens, so {C3H8}.</p>',
+   'What is the formula of butane (4 carbons)?', ['{C4H8}','{C4H10}','{C4H12}'], 1,
+   '2×4+2 = 10 hydrogens, so butane is {C4H10}.'),
+  B('Your turn!',
+   '<p>Use the same steps: prefix gives n, then hydrogens = 2n + 2.</p><p>Hexane starts with hex-, so n = 6.</p>',
+   'What is the formula of hexane?', ['{C6H12}','{C6H6}','{C6H14}'], 2,
+   'Hex- is 6 carbons, and 2×6+2 = 14 hydrogens: {C6H14}.')
+ ]},
+ {id:'o21', title:'Structural and condensed formulas', sub:'Different ways to write one molecule', bites:[
+  B('A formula can hide the shape.',
+   '<p>A <b>molecular formula</b> like {C3H8} just counts atoms. It doesn’t show how they connect.</p><p>A <b>structural formula</b> draws every atom and every bond as a line. For propane, three carbons sit in a row, C–C–C, with hydrogens filling the rest of the bonds.</p>',
+   'Which formula shows every bond as a line?', ['Molecular formula','Structural formula'], 1,
+   'A structural formula draws all the atoms and bonds.'),
+  B('Here’s the shortcut.',
+   '<p>A <b>condensed formula</b> writes each carbon with its hydrogens, in order along the chain. Propane is {CH3CH2CH3}.</p><p>End carbons have 3 hydrogens ({CH3}) and middle carbons have 2 ({CH2}). Each still has 4 bonds in total.</p>',
+   'In {CH3CH2CH3}, how many hydrogens does the middle carbon have?', ['1','2','3'], 1,
+   'The middle carbon is {CH2}: 2 hydrogens plus 2 bonds to its carbon neighbours.'),
+  B('Watch me do one.',
+   '<p>Butane is 4 carbons in a row. The two ends are {CH3} and the two middles are {CH2}.</p><p>So butane is {CH3CH2CH2CH3}. Count it up: 4 C and 10 H, matching {C4H10}.</p>',
+   'What is the condensed formula of butane?', ['{CH3CH2CH2CH3}','{CH3CH3CH3CH3}','{CH2CH2CH2CH2}'], 0,
+   'Ends are {CH3}, middles are {CH2}: {CH3CH2CH2CH3}.'),
+  B('Repeating bits get squeezed.',
+   '<p>Long chains can be shortened with brackets. {CH3(CH2)4CH3} means {CH3}, then four {CH2} groups, then {CH3}.</p><p>That’s 6 carbons in total: hexane.</p>',
+   'How many carbons are in {CH3(CH2)3CH3}?', ['3','4','5'], 2,
+   'Two {CH3} ends plus three {CH2} groups is 5 carbons: pentane.')
+ ]},
+ {id:'o22', title:'Alkenes and alkynes', sub:'Double and triple bonds', bites:[
+  B('Carbons can share more.',
+   '<p>Two carbons can share two pairs of electrons, making a <b>double bond</b>, C=C. Hydrocarbons with a C=C are <b>alkenes</b>, ending in <b>-ene</b>.</p><p>Ethene is {CH2=CH2}. Each carbon has 2 H plus a double bond, so 4 bonds total.</p>',
+   'Which bond is found in an alkene?', ['C≡C','C=C','Only C–C'], 1,
+   'Alkenes contain a carbon–carbon double bond, C=C.'),
+  B('Now a triple.',
+   '<p>Sharing three pairs makes a <b>triple bond</b>, C≡C. Hydrocarbons with a C≡C are <b>alkynes</b>, ending in <b>-yne</b>.</p><p>Ethyne, {HC≡CH}, is the gas in welding torches (often called acetylene).</p>',
+   'What ending do alkynes have?', ['-ane','-ene','-yne'], 2,
+   'Alkynes end in -yne and contain a triple bond.'),
+  B('Fewer bonds left for hydrogen.',
+   '<p>Every extra bond between carbons uses up spots for hydrogen.</p><ul><li>Alkane: C<sub>n</sub>H<sub>2n+2</sub> (ethane {C2H6})</li><li>Alkene: C<sub>n</sub>H<sub>2n</sub> (ethene {C2H4})</li><li>Alkyne: C<sub>n</sub>H<sub>2n−2</sub> (ethyne {C2H2})</li></ul>',
+   'Propene has 3 carbons and one C=C. What is its formula?', ['{C3H6}','{C3H8}','{C3H4}'], 0,
+   'Alkenes are C<sub>n</sub>H<sub>2n</sub>, so 3 carbons give 6 hydrogens: {C3H6}.'),
+  B('One more word.',
+   '<p>Alkenes and alkynes could hold more hydrogen if their multiple bond opened up, so they’re called <b>unsaturated</b>. That multiple bond also makes them more reactive than alkanes.</p>',
+   'Which compound is unsaturated?', ['Ethane','Propane','Ethene'], 2,
+   'Ethene has a C=C double bond, so it is unsaturated.')
+ ]},
+ {id:'o23', title:'Isomers', sub:'Same formula, different shape', bites:[
+  B('Same atoms, new arrangement.',
+   '<p><b>Isomers</b> are compounds with the <b>same molecular formula</b> but a <b>different structure</b>.</p><p>Because they’re shaped differently, isomers are different substances with different properties, like boiling point.</p>',
+   'Isomers have the same…', ['structure','molecular formula','boiling point'], 1,
+   'Isomers share a molecular formula but have different structures and properties.'),
+  B('Here’s the classic example.',
+   '<p>{C4H10} can be a straight chain of 4 carbons: butane, {CH3CH2CH2CH3}.</p><p>Or it can be a chain of 3 with one carbon branching off the middle: {CH3CH(CH3)CH3}, called 2-methylpropane.</p>',
+   'Butane and 2-methylpropane are isomers. What formula do they share?', ['{C4H10}','{C3H8}','{C4H8}'], 0,
+   'Both have 4 carbons and 10 hydrogens, arranged differently.'),
+  B('Watch out for this trap.',
+   '<p>Bending a chain on paper doesn’t make a new isomer. Bonds can rotate, so a chain of 4 carbons drawn with a kink is still butane.</p><p>A real isomer has a different <b>connection</b> pattern, like a carbon branching off the middle.</p>',
+   'A 4-carbon chain drawn in an L shape is…', ['a new isomer of butane','still butane'], 1,
+   'All 4 carbons are still connected end to end, so it is the same molecule.'),
+  B('Isomers add up fast.',
+   '<p>Pentane, {C5H12}, has <b>3</b> isomers: a straight chain, a chain of 4 with one branch, and a chain of 3 with two branches on the middle carbon.</p><p>Bigger alkanes have many more. Decane has 75!</p>',
+   'How many isomers does {C5H12} have?', ['2','3','5'], 1,
+   '{C5H12} has 3 isomers: straight, one branch, and two branches on one carbon.')
+ ]},
+ {id:'b2', title:'Naming: the parent chain', sub:'Step one of IUPAC names', bites:[
+  B('Names follow rules.',
+   '<p>Chemists use <b>IUPAC</b> naming rules so every compound has one clear name.</p><p>Step one: find the <b>parent chain</b>, the longest continuous chain of carbons. It gives the base name, like pentane or hexane.</p>',
+   'What is the parent chain?', ['The longest continuous carbon chain','The first carbon written','All the hydrogens'], 0,
+   'The parent chain is the longest unbroken chain of carbons.'),
+  B('Follow the path, not the line.',
+   '<p>The longest chain doesn’t have to be written in a straight line. Trace every path from one end carbon to another and count.</p><p>A carbon hanging off the chain is a <b>branch</b>, not part of the parent.</p>',
+   'When finding the parent chain, you should…', ['count only the top row','trace every path and pick the longest','count every carbon in the molecule'], 1,
+   'The chain can bend, so check every path and take the longest one.'),
+  B('Watch me do one.',
+   '<p>Look at {CH3CH(CH3)CH2CH2CH3}. The {(CH3)} in brackets is a branch hanging off carbon 2.</p><p>The main chain is {CH3}, {CH}, {CH2}, {CH2}, {CH3}: 5 carbons. So the parent is <b>pentane</b>, with one branch.</p>',
+   'What is the parent chain of {CH3CH(CH3)CH2CH2CH3}?', ['Butane','Hexane','Pentane'], 2,
+   'Five carbons run unbroken along the main chain. The bracketed {CH3} is a branch.'),
+  B('Your turn!',
+   '<p>Same method: ignore the bracketed branches and count the main chain carbons.</p><p>Molecule: {CH3CH2CH(CH3)CH2CH2CH3}</p>',
+   'How many carbons are in its parent chain?', ['5','6','7'], 1,
+   '{CH3}, {CH2}, {CH}, {CH2}, {CH2}, {CH3}: 6 carbons, so the parent is hexane.')
+ ]},
+ {id:'o24', title:'Naming branches', sub:'Methyl, ethyl and numbering', bites:[
+  B('Branches get their own names.',
+   '<p>A branch is called an <b>alkyl group</b>. Take the alkane name and change -ane to <b>-yl</b>.</p><ul><li>{CH3} is <b>methyl</b> (1 carbon)</li><li>{CH2CH3} is <b>ethyl</b> (2 carbons)</li><li>3 carbons is <b>propyl</b></li></ul>',
+   'What is a 2-carbon branch called?', ['Methyl','Ethyl','Ethane'], 1,
+   'Ethane minus its -ane plus -yl gives ethyl.'),
+  B('Number from the closer end.',
+   '<p>Number the parent chain from the end that gives the branch the <b>lowest number</b>. That number is the <b>locant</b>.</p><p>{CH3CH(CH3)CH2CH2CH3}: from the left, the branch is on C2. From the right it would be C4. Use 2.</p>',
+   'Why do we number from the left in this example?', ['It gives the branch the lowest number','We always start on the left','The left end has more hydrogens'], 0,
+   'Pick the direction that gives branches the lowest locants.'),
+  B('Put it all together.',
+   '<p>Write: locant, hyphen, branch name, then the parent name, all as one word.</p><p>{CH3CH(CH3)CH2CH2CH3} is <b>2-methylpentane</b>.</p>',
+   'Which is written correctly?', ['2-methylpentane','methyl-2-pentane','2-pentanemethyl'], 0,
+   'Locant, then branch, then parent: 2-methylpentane.'),
+  B('Two of the same branch.',
+   '<p>If a branch appears twice, use <b>di-</b> (2), and <b>tri-</b> for 3. Give every branch a locant, separated by commas.</p><p>{CH3CH(CH3)CH(CH3)CH3} has methyls on C2 and C3 of a 4-carbon chain: <b>2,3-dimethylbutane</b>.</p>',
+   'Methyl groups sit on C2 and C4 of a pentane chain. What is the name?', ['2,4-methylpentane','dimethylpentane','2,4-dimethylpentane'], 2,
+   'Two methyls means di-, and each gets a locant: 2,4-dimethylpentane.'),
+  B('Try one.',
+   '<p>Recap: find the parent, number from the end nearest the branch, then write locant-branch-parent.</p><p>Molecule: {CH3CH2CH(CH3)CH2CH2CH3}. The parent is 6 carbons. From the left, the branch is on C3; from the right, C4.</p>',
+   'What is its name?', ['4-methylhexane','3-methylhexane','3-methylpentane'], 1,
+   'Use the lower locant, 3, on a hexane parent: 3-methylhexane.')
+ ]},
+ {id:'o25', title:'Naming alkenes and alkynes', sub:'Where is the multiple bond?', bites:[
+  B('The ending changes first.',
+   '<p>Alkenes and alkynes use the same prefixes. Just swap the ending: <b>-ene</b> for a C=C, <b>-yne</b> for a C≡C.</p><p>A 3-carbon chain with a double bond is propene. A 4-carbon chain with a triple bond is butyne.</p>',
+   'A 5-carbon chain with one C≡C is called…', ['pentene','pentane','pentyne'], 2,
+   '5 carbons is pent-, and a triple bond takes -yne: pentyne.'),
+  B('Here’s the new rule.',
+   '<p>From 4 carbons up, the multiple bond can sit in different places. Number the chain from the end <b>closest to the multiple bond</b>.</p><p>The locant is the lower-numbered carbon of the bond.</p>',
+   'Which end do you number from in an alkene?', ['The end closest to the C=C','The end with the most hydrogens','Always the left end'], 0,
+   'The double bond gets the lowest possible number.'),
+  B('Watch me do two.',
+   '<p>{CH2=CHCH2CH3}: the double bond is between C1 and C2, so it’s <b>1-butene</b> (also written but-1-ene).</p><p>{CH3CH=CHCH3}: the double bond is between C2 and C3, so it’s <b>2-butene</b>. They are isomers!</p>',
+   'What is {CH3CH=CHCH3}?', ['1-butene','2-butene','3-butene'], 1,
+   'The C=C starts at carbon 2 from either end, so it’s 2-butene.'),
+  B('Your turn!',
+   '<p>Same method for alkynes: count the chain, number from the end nearest the triple bond, and use the lower carbon of the bond.</p><p>Molecule: {CH3C≡CCH2CH3}</p>',
+   'What is its name?', ['3-pentyne','2-pentyne','2-pentene'], 1,
+   '5 carbons with a triple bond starting at C2 from the left: 2-pentyne. Numbering from the right would give 3, which is higher.')
+ ]},
+ {id:'o26', title:'Rings and benzene', sub:'Cyclic hydrocarbons', bites:[
+  B('Chains can close up.',
+   '<p>If the two ends of a chain bond to each other, you get a ring. Ring alkanes are <b>cycloalkanes</b>: add <b>cyclo-</b> to the name.</p><p>Six carbons in a ring is <b>cyclohexane</b>.</p>',
+   'What is a ring of 5 carbons with single bonds called?', ['Pentane','Cyclopentane','Cyclohexane'], 1,
+   'Cyclo- plus pent- (5) plus -ane: cyclopentane.'),
+  B('Closing a ring costs hydrogens.',
+   '<p>Joining the ends uses one bond from each end carbon, so the ring loses 2 hydrogens compared with the chain.</p><p>Hexane is {C6H14}. Cyclohexane is {C6H12}. Every carbon in the ring is a {CH2}.</p>',
+   'Cyclopropane has 3 carbons. What is its formula?', ['{C3H8}','{C3H6}','{C3H4}'], 1,
+   'Each ring carbon is {CH2}, so 3 carbons give {C3H6}.'),
+  B('Meet a famous ring.',
+   '<p><b>Benzene</b>, {C6H6}, is a 6-carbon ring with one hydrogen on each carbon. It’s often drawn with alternating single and double bonds.</p><p>Really, those extra electrons are spread evenly around the whole ring, which makes benzene very stable.</p>',
+   'What is the formula of benzene?', ['{C6H12}','{C6H14}','{C6H6}'], 2,
+   'Benzene is a 6-carbon ring with one H per carbon: {C6H6}.'),
+  B('One more word.',
+   '<p>Compounds containing a benzene ring are called <b>aromatic</b>. Many have strong smells, which is where the name came from.</p><p>Benzene itself is a known carcinogen, so its levels in gasoline are limited in Canada.</p>',
+   'A compound with a benzene ring is called…', ['aromatic','saturated','an alkyne'], 0,
+   'Benzene-ring compounds are aromatic.')
+ ]},
+ {id:'b3', title:'Functional groups and alcohols', sub:'The –OH group', bites:[
+  B('Now we add other atoms.',
+   '<p>A <b>functional group</b> is a specific group of atoms attached to a carbon chain. It decides how the molecule behaves.</p><p>Molecules with the same functional group act alike, so we sort them into families.</p>',
+   'What mainly decides how an organic molecule reacts?', ['Its functional group','Its colour','How long its name is'], 0,
+   'The functional group controls a molecule’s properties and reactions.'),
+  B('First family: alcohols.',
+   '<p>An <b>alcohol</b> has an <b>–OH</b> group (hydroxyl group) bonded to a carbon.</p><p>Name it by dropping the -e of the alkane and adding <b>-ol</b>. Methane becomes <b>methanol</b>, {CH3OH}. Ethane becomes <b>ethanol</b>, {CH3CH2OH}.</p>',
+   'What functional group do alcohols have?', ['C=C','–OH','C≡C'], 1,
+   'Alcohols contain the hydroxyl group, –OH.'),
+  B('Location matters too.',
+   '<p>For 3 carbons or more, add a locant for the carbon holding the –OH, numbering from the closer end.</p><p>{CH3CH(OH)CH3} has the –OH on the middle carbon: <b>2-propanol</b>, also called isopropyl alcohol. It’s rubbing alcohol.</p>',
+   'What is {CH3CH2CH2OH}?', ['2-propanol','1-propanol','propane'], 1,
+   'The –OH is on an end carbon, C1, so it’s 1-propanol.'),
+  B('Don’t mix these up.',
+   '<p>The –OH in an alcohol is covalently bonded to carbon. It is <b>not</b> a hydroxide ion, {OH^-}, so alcohols are not bases.</p><p>Ethanol is the alcohol in drinks and is blended into Canadian gasoline. Methanol is toxic and can cause blindness.</p>',
+   'Is ethanol a base?', ['Yes, it has OH','No, its –OH is not a hydroxide ion'], 1,
+   'The –OH is part of the molecule, not a free {OH^-} ion, so alcohols aren’t bases.')
+ ]},
+ {id:'o27', title:'Aldehydes and ketones', sub:'The C=O group', bites:[
+  B('Meet the carbonyl.',
+   '<p>A carbon double-bonded to an oxygen, C=O, is called a <b>carbonyl group</b>. Two families have it: aldehydes and ketones.</p><p>The difference is <b>where</b> the C=O sits.</p>',
+   'What is a carbonyl group?', ['C–OH','C=O','C=C'], 1,
+   'A carbonyl is a carbon double-bonded to oxygen.'),
+  B('C=O at the end.',
+   '<p>In an <b>aldehyde</b>, the C=O is on an <b>end</b> carbon, which also holds an H. It’s written <b>–CHO</b>. Names end in <b>-al</b>.</p><p>Ethanal is {CH3CHO}. Methanal, {HCHO}, is formaldehyde, used to preserve specimens.</p>',
+   'What ending do aldehydes have?', ['-ol','-one','-al'], 2,
+   'Aldehydes end in -al, like ethanal.'),
+  B('C=O in the middle.',
+   '<p>In a <b>ketone</b>, the C=O is on a <b>middle</b> carbon, with carbons on both sides. Names end in <b>-one</b>.</p><p>Propanone, {CH3COCH3}, is acetone, found in nail polish remover. A ketone needs at least 3 carbons.</p>',
+   'Why can’t a ketone have only 2 carbons?', ['The C=O carbon needs a carbon on each side','Ketones need a triple bond','Oxygen can’t bond to carbon'], 0,
+   'A ketone’s C=O must sit between two other carbons, so the minimum is 3.'),
+  B('Try one.',
+   '<p>Check where the C=O is: on the end means aldehyde (-al), in the middle means ketone (-one).</p><p>Molecule: {CH3CH2CHO}</p>',
+   'What is {CH3CH2CHO}?', ['Propanone','Propanal','Propanol'], 1,
+   '–CHO is on the end, so it’s an aldehyde with 3 carbons: propanal.')
+ ]},
+ {id:'o28', title:'Carboxylic acids and esters', sub:'Sour acids and fruity smells', bites:[
+  B('These ones really are acids.',
+   '<p>A <b>carboxylic acid</b> has a <b>–COOH</b> group: a C=O and an –OH on the same end carbon. Names end in <b>-oic acid</b>.</p><p>Ethanoic acid, {CH3COOH}, is acetic acid, the acid in vinegar.</p>',
+   'What group do carboxylic acids have?', ['–OH only','–CHO','–COOH'], 2,
+   'Carboxylic acids contain –COOH.'),
+  B('Count every carbon.',
+   '<p>The carbon in –COOH counts as part of the chain.</p><p>{HCOOH} has 1 carbon: methanoic acid (ant stings). {CH3COOH} has 2: ethanoic acid. They are weak acids, which is why vinegar tastes sour.</p>',
+   'What is {CH3CH2COOH}?', ['Ethanoic acid','Propanoic acid','Butanoic acid'], 1,
+   'Count the –COOH carbon too: 3 carbons, so propanoic acid.'),
+  B('Acid plus alcohol makes this.',
+   '<p>A carboxylic acid reacts with an alcohol to make an <b>ester</b> and water. Esters have a <b>–COO–</b> link with carbon on both sides.</p><p>{CH3COOH + CH3CH2OH → CH3COOCH2CH3 + H2O}</p><p>Many esters smell fruity and are used in flavourings.</p>',
+   'An acid and an alcohol react to make an ester and…', ['water','carbon dioxide','hydrogen gas'], 0,
+   'Making an ester releases a water molecule.'),
+  B('Esters have two-part names.',
+   '<p>Name the alcohol part first as an alkyl group, then the acid part ending in <b>-oate</b>.</p><p>Ethanol + ethanoic acid gives <b>ethyl ethanoate</b>, a solvent in some glues and nail polish removers.</p>',
+   'Methanol + propanoic acid gives which ester?', ['Propyl methanoate','Methyl propanoate','Methyl propanol'], 1,
+   'Alcohol part first (methyl), acid part with -oate (propanoate): methyl propanoate.')
+ ]},
+ {id:'o29', title:'Ethers and alkyl halides', sub:'Oxygen bridges and halogen swaps', bites:[
+  B('Oxygen in the middle.',
+   '<p>An <b>ether</b> has an oxygen bonded between two carbon groups: C–O–C.</p><p>{CH3OCH3} is methoxymethane (dimethyl ether). {CH3CH2OCH2CH3} is ethoxyethane (diethyl ether), once used as a surgical anaesthetic.</p>',
+   'What link is found in an ether?', ['C–O–C','–OH','C=O'], 0,
+   'Ethers have an oxygen bridging two carbons.'),
+  B('Here’s a neat isomer.',
+   '<p>Ethanol, {CH3CH2OH}, and methoxymethane, {CH3OCH3}, both have the formula {C2H6O}.</p><p>So they are isomers. Ethanol is a liquid at room temperature, while methoxymethane is a gas.</p>',
+   'Why are ethanol and methoxymethane isomers?', ['Same formula, different structure','Both are alcohols','Both are gases'], 0,
+   'Both are {C2H6O}, but the atoms connect differently.'),
+  B('Swap in a halogen.',
+   '<p>An <b>alkyl halide</b> has a halogen (F, Cl, Br or I) in place of a hydrogen. Name the halogen as a branch: <b>fluoro, chloro, bromo, iodo</b>.</p><p>{CH3Cl} is chloromethane. {CH2Cl2} is dichloromethane, a paint stripper solvent.</p>',
+   'What is {CH3Br}?', ['Bromide methane','Bromomethane','Methyl bromine'], 1,
+   'Halogens are named as prefixes: bromo + methane = bromomethane.'),
+  B('Some cause big problems.',
+   '<p><b>CFCs</b> (chlorofluorocarbons) contain carbon, chlorine and fluorine. They were used in fridges and spray cans.</p><p>CFCs destroy the ozone layer, so they were phased out under the <b>Montreal Protocol</b> (1987).</p>',
+   'Which elements are in CFCs?', ['Carbon, fluorine, chlorine','Carbon, fluorine, calcium','Copper, fluorine, chlorine'], 0,
+   'CFC stands for chlorofluorocarbon: chlorine, fluorine and carbon.')
+ ]},
+ {id:'o30', title:'Amines and amides', sub:'Organic compounds with nitrogen', bites:[
+  B('Nitrogen joins the party.',
+   '<p>Nitrogen forms <b>3 bonds</b>. Ammonia is {NH3}. If you replace an H with a carbon group, you get an <b>amine</b>.</p><p>{CH3NH2} is methanamine (methylamine). Amines often smell fishy.</p>',
+   'What group does methanamine have?', ['–OH','–NH2','–COOH'], 1,
+   'Amines contain nitrogen, here as –NH2.'),
+  B('Amines are bases.',
+   '<p>Like ammonia, amines are <b>weak bases</b>. That’s why squeezing lemon (an acid) on fish cuts the fishy smell.</p>',
+   'Amines behave as…', ['weak acids','weak bases','neither'], 1,
+   'Amines are related to ammonia and act as weak bases.'),
+  B('Add a C=O next to N.',
+   '<p>An <b>amide</b> has a C=O carbon bonded directly to a nitrogen: <b>–CONH2</b>. Names end in <b>-amide</b>.</p><p>{CH3CONH2} is ethanamide.</p>',
+   'What makes an amide different from an amine?', ['An amide has a C=O beside the nitrogen','An amide has no nitrogen','An amide has a triple bond'], 0,
+   'In an amide, the nitrogen is bonded to a carbonyl carbon.'),
+  B('Amides hold you together.',
+   '<p>Amide links join amino acids into <b>proteins</b>, like the keratin in your hair. The same link holds together <b>nylon</b>.</p>',
+   'Which material uses amide links?', ['Nylon','Benzene','Methane'], 0,
+   'Nylon is held together by amide links, like proteins.')
+ ]},
+ {id:'o1', title:'Polarity and intermolecular forces', sub:'Why some things boil and dissolve easily', bites:[
+  B('Some atoms pull harder.',
+   '<p><b>Electronegativity</b> is how strongly an atom pulls on shared electrons. O and N pull much harder than C and H.</p><p>In a C–O or O–H bond, electrons sit closer to the O, making the bond <b>polar</b>. C–H bonds are nearly nonpolar.</p>',
+   'Which bond is polar?', ['C–H','O–H','C–C'], 1,
+   'Oxygen pulls electrons much harder than hydrogen, so O–H is polar.'),
+  B('So hydrocarbons are nonpolar.',
+   '<p>Hydrocarbons have only C–C and C–H bonds, so they are <b>nonpolar</b>. Adding –OH, C=O, or –NH2 makes a molecule more polar.</p><p>Molecules attract each other with <b>intermolecular forces</b>. Stronger forces mean a higher boiling point.</p>',
+   'Which is nonpolar?', ['Ethanol','Ethanoic acid','Hexane'], 2,
+   'Hexane is a hydrocarbon with only C–C and C–H bonds.'),
+  B('Three forces, weakest to strongest.',
+   '<ol><li><b>London dispersion</b>: in all molecules, and stronger in bigger molecules.</li><li><b>Dipole–dipole</b>: between polar molecules.</li><li><b>Hydrogen bonding</b>: when H is bonded to O or N. Alcohols, acids and amines have it.</li></ol>',
+   'Which molecules can hydrogen bond?', ['Those with H on O or N','Only hydrocarbons','Only gases'], 0,
+   'Hydrogen bonding needs an H attached to O or N, like the –OH in alcohols.'),
+  B('See it in boiling points.',
+   '<p>Ethane boils at −89 °C. Methoxymethane (polar ether) boils at −24 °C. Ethanol, with hydrogen bonding, boils at 78 °C.</p><p>Size matters too: methane boils at −162 °C, but octane boils at 126 °C thanks to stronger dispersion forces.</p>',
+   'Why does ethanol boil much higher than ethane?', ['It has hydrogen bonding','It is smaller','It is nonpolar'], 0,
+   'Ethanol’s –OH group lets it hydrogen bond, so more energy is needed to boil it.'),
+  B('Like dissolves like.',
+   '<p>Polar substances dissolve in polar ones, and nonpolar in nonpolar. Ethanol mixes with water. Hexane and oil don’t.</p><p>But a long carbon chain is nonpolar, so big alcohols like octanol barely dissolve in water.</p>',
+   'Which dissolves best in water?', ['Hexane','Ethanol','Octane'], 1,
+   'Ethanol is polar and can hydrogen bond with water. Hexane and octane are nonpolar.')
+ ]},
+ {id:'b5', title:'Polymers', sub:'Long chains made of repeating units', bites:[
+  B('Tiny links, giant chains.',
+   '<p>A <b>polymer</b> is a huge molecule made of many small repeating units called <b>monomers</b>, joined like links in a chain.</p><p>Plastics, rubber, proteins and starch are all polymers.</p>',
+   'The small repeating units in a polymer are called…', ['monomers','isomers','alkyls'], 0,
+   'Monomers link together to form a polymer.'),
+  B('Pop open the double bond.',
+   '<p>In <b>addition polymerization</b>, alkene monomers open their <b>C=C</b> double bonds and join end to end. Nothing else is made.</p><p>Ethene, {CH2=CH2}, becomes <b>polyethylene</b>, used in plastic bags and bottles.</p>',
+   'In addition polymerization, which bond opens up?', ['C–H','C=C','O–H'], 1,
+   'The alkene’s C=C opens so monomers can bond to each other.'),
+  B('Change the monomer, change the plastic.',
+   '<ul><li>Propene → polypropylene (yogurt tubs)</li><li>Chloroethene (vinyl chloride) → PVC (pipes)</li><li>Styrene → polystyrene (foam cups)</li></ul><p>All are addition polymers made from monomers with a C=C.</p>',
+   'Which monomer makes PVC?', ['Ethene','Styrene','Chloroethene'], 2,
+   'Chloroethene, also called vinyl chloride, makes polyvinyl chloride.'),
+  B('Now a second kind.',
+   '<p>In <b>condensation polymerization</b>, two monomers join and release a small molecule, usually <b>water</b>, at each link.</p><p>Acid + alcohol links make <b>polyesters</b> like PET (drink bottles). Acid + amine links make <b>polyamides</b> like nylon.</p>',
+   'What does condensation polymerization release at each link?', ['Nothing','A small molecule like water','A double bond'], 1,
+   'Each new link in a condensation polymer gives off a small molecule, usually water.')
+ ]},
+ {id:'o31', title:'Organic compounds and society', sub:'Fuels, plastics and the environment', bites:[
+  B('Most fuels are hydrocarbons.',
+   '<p>Natural gas (mostly methane), propane and gasoline are hydrocarbons. Burning them with plenty of oxygen is <b>complete combustion</b>, making {CO2} and {H2O}.</p><p>{C3H8 + 5O2 → 3CO2 + 4H2O}</p>',
+   'Complete combustion of a hydrocarbon makes…', ['{CO2} and {H2O}','{CO} and {H2}','{C} and {O2}'], 0,
+   'With enough oxygen, hydrocarbons burn to carbon dioxide and water.'),
+  B('Two big downsides.',
+   '<p>The {CO2} from burning fossil fuels is a greenhouse gas that drives climate change.</p><p>With too little oxygen, <b>incomplete combustion</b> makes <b>carbon monoxide</b>, {CO}, a deadly odourless gas. That’s why Ontario homes with fuel-burning appliances need CO alarms.</p>',
+   'Which gas comes from incomplete combustion?', ['{O2}','{CO}','{N2}'], 1,
+   'Not enough oxygen gives carbon monoxide, {CO}.'),
+  B('Plastics stick around.',
+   '<p>Polymers like polyethylene take hundreds of years to break down. They break into tiny <b>microplastics</b> found in oceans, soil and even food.</p><p>Recycling codes (1 PET, 2 HDPE, 3 PVC, 4 LDPE, 5 PP, 6 PS) tell you which polymer an item is.</p>',
+   'Recycling code 1 means the plastic is…', ['PVC','PET','polystyrene'], 1,
+   'Code 1 is PET, the polyester in most drink bottles.'),
+  B('Organic chemistry helps too.',
+   '<p>Medicines like ASA (Aspirin) are organic compounds. So are biofuels like ethanol made from corn, which can replace some gasoline.</p><p>Chemists also design replacements for harmful compounds, like the safer refrigerants that replaced CFCs.</p>',
+   'Which is a biofuel?', ['Ethanol from corn','Methane from a gas well','PVC'], 0,
+   'Ethanol made from crops is a renewable biofuel.')
+ ]}
+]};
+
+const UNIT_V = {name:'Chemistry in the Environment', lessons:[
+ {id:'v1', title:'Solutions', sub:'Solute, solvent and electrolytes', bites:[
+  B('Let’s mix some stuff.',
+   '<p>A <b>solution</b> is an even mixture where one substance is spread through another so well you can’t see the separate parts. Salt water and air are both solutions.</p>',
+   'Which of these is a solution?',['Sand in water','Oil floating on water','Salt fully dissolved in water'],2,
+   'Dissolved salt spreads evenly and you can’t see it. Sand and oil stay visibly separate.'),
+  B('Two words to know.',
+   '<p>The <b>solute</b> is the substance that gets dissolved. The <b>solvent</b> is the substance doing the dissolving, usually the one there’s more of.</p><p>In salt water, salt is the solute and water is the solvent.</p>',
+   'In sugar water, what is the solvent?',['Water','Sugar','The sugar water'],0,
+   'Water does the dissolving, so it is the solvent. Sugar is the solute.'),
+  B('Water is the big one.',
+   '<p>When water is the solvent, we call it an <b>aqueous</b> solution and write <b>(aq)</b> after the formula. {NaCl(aq)} means salt dissolved in water.</p><p>Water dissolves so many things that it’s called the universal solvent.</p>',
+   'What does (aq) after a formula tell you?',['It is a solid','It is a gas','It is dissolved in water'],2,
+   '(aq) means aqueous: dissolved in water.'),
+  B('Ions in water carry electricity.',
+   '<p>Ionic compounds like {NaCl} split into ions when they dissolve: {Na^+} and {Cl^-}. Those moving charged ions let the solution conduct electricity.</p><p>A solute that does this is an <b>electrolyte</b>. Sugar dissolves as whole molecules, so it’s a <b>non-electrolyte</b>.</p>',
+   'Why does salt water conduct electricity?',['It contains moving ions','It is wet','It contains sugar molecules'],0,
+   'Dissolved {NaCl} splits into {Na^+} and {Cl^-} ions, and moving ions carry charge.'),
+  B('Quick check.',
+   '<p>Remember: ionic compounds (a metal ion with a non-metal ion) make electrolytes. Molecular compounds made only of non-metals, like sugar or alcohol, usually don’t.</p>',
+   'Which would make an electrolyte when dissolved in water?',['Potassium chloride, {KCl}','Sugar, {C12H22O11}','Ethanol, {C2H5OH}'],0,
+   '{KCl} is ionic and splits into {K^+} and {Cl^-} ions. Sugar and ethanol are molecular.')
+ ]},
+ {id:'v20', title:'Solubility and precipitates', sub:'Predicting when a solid forms', bites:[
+  B('Not everything dissolves.',
+   '<p>A substance that dissolves well in water is <b>soluble</b>. One that barely dissolves is <b>insoluble</b>.</p><p>Chalk ({CaCO3}) is insoluble. Table salt is soluble.</p>',
+   'A substance that barely dissolves in water is called…',['soluble','insoluble','aqueous'],1,
+   'Insoluble means it barely dissolves.'),
+  B('Here are the rules of thumb.',
+   '<p><b>Almost always soluble:</b> compounds with {Na^+}, {K^+}, {NH4^+} or nitrate {NO3^-}.</p><p><b>Mostly soluble:</b> chlorides, except with silver {Ag^+} or lead {Pb^2+}.</p><p><b>Mostly insoluble:</b> carbonates and hydroxides, unless paired with {Na^+}, {K^+} or {NH4^+}.</p>',
+   'Which compound is soluble?',['{AgCl}','{CaCO3}','{KNO3}'],2,
+   '{KNO3} has both {K^+} and nitrate, so it’s always soluble. {AgCl} and {CaCO3} are exceptions that don’t dissolve.'),
+  B('When solutions make a solid.',
+   '<p>Mix two clear solutions and sometimes a cloudy solid appears. That solid is a <b>precipitate</b>, written <b>(s)</b>.</p><p>It forms when the ions swap partners and one new pair is insoluble.</p>',
+   'What is a precipitate?',['A gas that bubbles off','A solvent','A solid that forms when solutions mix'],2,
+   'A precipitate is an insoluble solid made when two solutions are mixed.'),
+  B('Watch me do one.',
+   '<p>Mix {AgNO3(aq)} with {NaCl(aq)}. Swap partners: {Ag^+} with {Cl^-}, and {Na^+} with {NO3^-}.</p><p>{NaNO3} is soluble. {AgCl} is a chloride with silver, so it’s insoluble.</p><p>{AgNO3(aq) + NaCl(aq) → AgCl(s) + NaNO3(aq)}</p>',
+   'In this reaction, what is the precipitate?',['{AgCl}','{NaNO3}','{NaCl}'],0,
+   'Silver chloride is insoluble, so it drops out as a white solid.'),
+  B('Your turn!',
+   '<p>Mix {CaCl2(aq)} with {Na2CO3(aq)}. Swapping gives {CaCO3} and {NaCl}.</p><p>Use the rules: sodium compounds dissolve; carbonates mostly don’t unless paired with {Na^+}, {K^+} or {NH4^+}.</p>',
+   'Which product is the precipitate?',['{NaCl}','{CaCO3}','Neither'],1,
+   'Calcium carbonate is a carbonate without {Na^+}, {K^+} or {NH4^+}, so it’s insoluble.')
+ ]},
+ {id:'f5', title:'Concentration', sub:'Moles per litre', bites:[
+  B('How strong is a solution?',
+   '<p><b>Concentration</b> tells you how much solute is in a certain volume of solution. More solute in the same volume means a more concentrated solution.</p>',
+   'Two cups have the same volume. Cup A has more dissolved sugar. Which is more concentrated?',['Cup A','Cup B','They are the same'],0,
+   'Same volume but more solute means higher concentration.'),
+  B('Quick mole refresher.',
+   '<p>A <b>mole</b> is a counting unit for particles. Find moles from mass with <b>n = m ÷ M</b>, where M is the molar mass (g/mol).</p><p>Example: {NaCl} has M = 22.99 + 35.45 = 58.44 g/mol. So 29.22 g is 29.22 ÷ 58.44 = 0.500 mol.</p>',
+   'How many moles are in 116.88 g of {NaCl} (M = 58.44 g/mol)?',['0.500 mol','2.00 mol','58.44 mol'],1,
+   'n = m ÷ M = 116.88 ÷ 58.44 = 2.00 mol.'),
+  B('Here’s the formula.',
+   '<p><b>c = n ÷ V</b></p><p>c is concentration in mol/L, n is moles of solute, V is volume of solution in <b>litres</b>.</p><p>Example: 0.500 mol of {NaCl} in 0.250 L gives c = 0.500 ÷ 0.250 = 2.00 mol/L.</p>',
+   'What unit must V be in for c = n ÷ V?',['Litres','Millilitres','Grams'],0,
+   'Concentration is mol per litre, so volume must be in litres.'),
+  B('Watch out for millilitres.',
+   '<p>Volumes are often in mL. Divide by 1000 to get litres: 500 mL = 0.500 L.</p><p>Example: 0.20 mol in 500 mL. c = 0.20 ÷ 0.500 = 0.40 mol/L.</p>',
+   'What is the concentration of 0.30 mol dissolved in 600 mL?',['0.50 mol/L','0.18 mol/L','2.0 mol/L'],0,
+   '600 mL = 0.600 L, and 0.30 ÷ 0.600 = 0.50 mol/L.'),
+  B('Flip it around.',
+   '<p>Rearrange to find moles: <b>n = c × V</b>.</p><p>Example: 0.300 L of 0.10 mol/L solution holds 0.10 × 0.300 = 0.030 mol.</p>',
+   'How many moles are in 2.0 L of 0.50 mol/L solution?',['0.25 mol','4.0 mol','1.0 mol'],2,
+   'n = c × V = 0.50 × 2.0 = 1.0 mol.')
+ ]},
+ {id:'v21', title:'Parts per million', sub:'Tiny amounts in drinking water', bites:[
+  B('Some amounts are super tiny.',
+   '<p>Pollutants in water are often far too small for mol/L to be handy. So we use <b>parts per million (ppm)</b>: parts of solute for every million parts of solution.</p>',
+   'What does ppm stand for?',['Particles per molecule','Percent per mass','Parts per million'],2,
+   'ppm means parts per million.'),
+  B('Here’s the shortcut for water.',
+   '<p>One litre of water has a mass of about 1 kg, which is one million mg. So in water, <b>1 ppm = 1 mg of solute per litre</b>.</p><p>ppm = mass of solute (mg) ÷ volume of water (L)</p>',
+   'In water, 1 ppm equals…',['1 g per L','1 mg per L','1 mol per L'],1,
+   'A litre of water is about a million mg, so 1 mg in it is 1 part per million.'),
+  B('Watch me do one.',
+   '<p>A 2.0 L water sample contains 3.0 mg of fluoride.</p><p>ppm = 3.0 mg ÷ 2.0 L = 1.5 ppm.</p>',
+   'A 4.0 L sample has 2.0 mg of nitrate. What is the concentration?',['0.50 ppm','2.0 ppm','8.0 ppm'],0,
+   '2.0 mg ÷ 4.0 L = 0.50 mg/L, which is 0.50 ppm.'),
+  B('Canada sets safe limits.',
+   '<p>Health Canada sets a maximum for each substance in drinking water. Fluoride’s limit is <b>1.5 mg/L</b>. Lead’s is only <b>0.005 mg/L</b>, because lead is toxic even in tiny amounts.</p>',
+   'Tap water has 0.008 mg/L of lead. Is that safe by Health Canada’s limit?',['Yes, it is below the limit','No, it is above the limit'],1,
+   '0.008 mg/L is more than the 0.005 mg/L limit, so it’s unsafe.')
+ ]},
+ {id:'v22', title:'Dilution', sub:'Using c₁V₁ = c₂V₂', bites:[
+  B('Add water, same solute.',
+   '<p><b>Dilution</b> means adding more solvent to make a solution weaker. The amount of solute (moles) stays the same. It’s just spread through more volume.</p>',
+   'When you dilute a solution, what stays the same?',['The volume','The concentration','The moles of solute'],2,
+   'Adding water changes volume and concentration, but the moles of solute don’t change.'),
+  B('Here’s the formula.',
+   '<p>Since moles = c × V and moles don’t change:</p><p><b>c<sub>1</sub>V<sub>1</sub> = c<sub>2</sub>V<sub>2</sub></b></p><p>1 is before diluting, 2 is after. Both volumes just need the same unit, so mL is fine.</p>',
+   'In c₁V₁ = c₂V₂, what does V₂ mean?',['The volume before diluting','The final volume after diluting','The volume of water added'],1,
+   'The 2 means after dilution, so V₂ is the final total volume.'),
+  B('Watch me do one.',
+   '<p>Dilute 50.0 mL of 2.00 mol/L acid to 250 mL. Find c<sub>2</sub>.</p><p>c<sub>2</sub> = c<sub>1</sub>V<sub>1</sub> ÷ V<sub>2</sub> = 2.00 × 50.0 ÷ 250 = <b>0.400 mol/L</b></p>',
+   '100 mL of 1.0 mol/L solution is diluted to 500 mL. What is c₂?',['5.0 mol/L','0.20 mol/L','0.50 mol/L'],1,
+   'c₂ = 1.0 × 100 ÷ 500 = 0.20 mol/L.'),
+  B('Your turn!',
+   '<p>To find how much stock solution you need, solve for V<sub>1</sub>.</p><p>Make 500 mL of 0.10 mol/L from 1.0 mol/L stock: V<sub>1</sub> = c<sub>2</sub>V<sub>2</sub> ÷ c<sub>1</sub> = 0.10 × 500 ÷ 1.0 = 50 mL. Then add water up to 500 mL.</p>',
+   'How much 2.0 mol/L stock do you need to make 200 mL of 0.50 mol/L?',['50 mL','800 mL','100 mL'],0,
+   'V₁ = 0.50 × 200 ÷ 2.0 = 50 mL.'),
+  B('Safety first.',
+   '<p>When diluting a strong acid, always <b>add acid to water</b>, slowly. Adding water to acid can heat up so fast it splashes.</p>',
+   'When diluting a strong acid, you should…',['add water to the acid','add the acid to water','mix them both at once'],1,
+   'Pour acid into water slowly so the heat spreads out safely.')
+ ]},
+ {id:'f6', title:'Acids and bases', sub:'Properties and indicators', bites:[
+  B('Meet the acids.',
+   '<p><b>Acids</b> taste sour, react with some metals like magnesium to give hydrogen gas, and release <b>hydrogen ions</b> ({H^+}) in water.</p><p>{HCl → H^+ + Cl^-}</p><p>Vinegar, lemon juice and stomach acid are all acids.</p>',
+   'Which ion do acids release in water?',['{H^+}','{OH^-}','{Na^+}'],0,
+   'Acids release {H^+} ions.'),
+  B('Now the bases.',
+   '<p><b>Bases</b> taste bitter, feel slippery and release <b>hydroxide ions</b> ({OH^-}) in water.</p><p>{NaOH → Na^+ + OH^-}</p><p>Baking soda, ammonia cleaner and drain cleaner are bases. Never taste or touch lab chemicals!</p>',
+   'Which household item is a base?',['Lemon juice','Vinegar','Ammonia cleaner'],2,
+   'Ammonia cleaner is a base. Lemon juice and vinegar are acids.'),
+  B('Indicators change colour.',
+   '<p>An <b>indicator</b> is a dye that changes colour in acid or base.</p><p><b>Litmus:</b> acids turn blue litmus red. Bases turn red litmus blue.</p>',
+   'A solution turns blue litmus paper red. The solution is…',['an acid','a base','neutral'],0,
+   'Acids turn blue litmus red.'),
+  B('Two more indicators.',
+   '<p><b>Phenolphthalein:</b> colourless in acid, pink in base.</p><p><b>Bromothymol blue:</b> yellow in acid, green when neutral, blue in base.</p>',
+   'A few drops of phenolphthalein turn a solution pink. It is…',['acidic','basic','neutral'],1,
+   'Phenolphthalein turns pink in a base.')
+ ]},
+ {id:'v23', title:'The pH scale', sub:'How acidic or basic', bites:[
+  B('Here’s a number for acidity.',
+   '<p>The <b>pH scale</b> usually runs from 0 to 14.</p><ul><li>Below 7: <b>acidic</b></li><li>Exactly 7: <b>neutral</b> (pure water)</li><li>Above 7: <b>basic</b></li></ul>',
+   'A solution has pH 9. It is…',['acidic','neutral','basic'],2,
+   'Above 7 is basic.'),
+  B('Lower means more acidic.',
+   '<p>The lower the pH, the stronger the acid. The higher the pH, the stronger the base.</p><p>Stomach acid is about pH 1 to 2. Blood is about 7.4. Bleach is about 12 to 13.</p>',
+   'Which is the most acidic?',['pH 6','pH 4','pH 2'],2,
+   'The lowest pH is the most acidic.'),
+  B('Each step is ten times.',
+   '<p>Each pH step means <b>10 times</b> more or less {H^+}. pH 4 is 10 times more acidic than pH 5.</p><p>Two steps is 10 × 10 = 100 times. pH 3 is 100 times more acidic than pH 5.</p>',
+   'How many times more acidic is pH 2 than pH 5?',['3 times','30 times','1000 times'],2,
+   'That is 3 steps: 10 × 10 × 10 = 1000 times.'),
+  B('Universal indicator shows pH.',
+   '<p><b>Universal indicator</b> is a mix of indicators that turns a different colour at each pH: red for strong acid, through orange, yellow and green near neutral, to blue and purple for strong base. A <b>pH meter</b> gives an exact reading.</p>',
+   'Universal indicator turns green. The pH is about…',['1','7','13'],1,
+   'Green on universal indicator means close to neutral, around pH 7.')
+ ]},
+ {id:'v24', title:'Neutralization', sub:'Acid + base → salt + water', bites:[
+  B('Acids and bases cancel out.',
+   '<p>When an acid and a base react, they <b>neutralize</b> each other. The products are a <b>salt</b> and <b>water</b>.</p><p>acid + base → salt + water</p>',
+   'What are the products of neutralization?',['Salt and water','Acid and water','Hydrogen and oxygen'],0,
+   'An acid and a base react to form a salt and water.'),
+  B('Here’s why water forms.',
+   '<p>The acid’s {H^+} joins the base’s {OH^-} to make water:</p><p>{H^+ + OH^- → H2O}</p><p>The leftover ions form the salt.</p>',
+   'Which two ions combine to make water?',['{Na^+} and {Cl^-}','{H^+} and {OH^-}','{H^+} and {Cl^-}'],1,
+   '{H^+} from the acid and {OH^-} from the base make {H2O}.'),
+  B('Watch me do one.',
+   '<p>{HCl + NaOH → NaCl + H2O}</p><p>The salt takes the metal ion from the base ({Na^+}) and the non-metal ion from the acid ({Cl^-}). In chemistry, "salt" means any ionic compound made this way.</p>',
+   'What salt forms from {HNO3} and {KOH}?',['{KOH}','{HNO3}','{KNO3}'],2,
+   '{K^+} from the base joins {NO3^-} from the acid to make {KNO3}.'),
+  B('Neutralization in real life.',
+   '<p>Antacid tablets contain bases like {Mg(OH)2} that neutralize extra stomach acid.</p><p>Farmers and lake managers add limestone ({CaCO3}) to neutralize acidic soil and water. It also gives off {CO2} gas.</p>',
+   'Why do antacids help heartburn?',['They add more acid','They contain a base that neutralizes stomach acid','They dissolve food'],1,
+   'The base in an antacid reacts with stomach acid and neutralizes it.')
+ ]},
+ {id:'v2', title:'Titration', sub:'Equipment and procedure', bites:[
+  B('Let’s find an unknown.',
+   '<p>A <b>titration</b> finds the concentration of an unknown solution. You slowly add a solution of known concentration until the reaction is just complete, and measure exactly how much you used.</p>',
+   'What is a titration used to find?',['The mass of a solid','An unknown concentration','The boiling point'],1,
+   'Titration measures the concentration of an unknown solution.'),
+  B('Meet the equipment.',
+   '<ul><li><b>Burette:</b> long tube with a tap. Holds the known solution and measures how much you add.</li><li><b>Pipette:</b> delivers an exact volume of the unknown.</li><li><b>Erlenmeyer flask:</b> holds the unknown plus indicator. It’s easy to swirl.</li></ul>',
+   'Which tool measures how much known solution you add?',['Burette','Pipette','Erlenmeyer flask'],0,
+   'The burette has a scale and a tap, so it measures the volume added.'),
+  B('Here’s the method.',
+   '<ol><li>Pipette the unknown into the flask and add indicator.</li><li>Fill the burette and record the start reading.</li><li>Add from the burette while swirling. Go drop by drop near the end.</li><li>Stop at the first lasting colour change: the <b>endpoint</b>.</li><li>Record the final reading.</li></ol>',
+   'What is the endpoint?',['When the burette is empty','The first lasting colour change','When you start adding solution'],1,
+   'The endpoint is when the indicator first changes colour permanently.'),
+  B('Reading the burette.',
+   '<p>A burette reads 0 at the top and counts <b>down</b> the tube. Read at the bottom of the curved surface (the meniscus).</p><p>Volume used = final reading − initial reading.</p>',
+   'Initial reading 1.20 mL, final reading 23.70 mL. Volume used?',['24.90 mL','22.50 mL','23.70 mL'],1,
+   '23.70 − 1.20 = 22.50 mL.'),
+  B('Do it more than once.',
+   '<p>Repeat the titration until two trials agree within about <b>0.2 mL</b>. Then average those trials. This makes your result reliable.</p>',
+   'Trials gave 22.50, 24.10 and 22.40 mL. Which two should you average?',['22.50 and 24.10','22.40 and 24.10','22.50 and 22.40'],2,
+   '22.50 and 22.40 agree within 0.2 mL. 24.10 is way off.')
+ ]},
+ {id:'v25', title:'Titration calculations', sub:'From burette reading to concentration', bites:[
+  B('Three steps, every time.',
+   '<ol><li>Moles of the known: <b>n = c × V</b></li><li>Use the balanced equation’s mole ratio to get moles of the unknown.</li><li>Concentration of the unknown: <b>c = n ÷ V</b></li></ol><p>Volumes in litres!</p>',
+   'What is the first step?',['Find moles of the known solution','Find c of the unknown','Use the mole ratio'],0,
+   'Start with what you know fully: c and V of the known give its moles.'),
+  B('Watch me do one.',
+   '<p>25.00 mL of {HCl} needs 20.00 mL of 0.100 mol/L {NaOH}.</p><p>1. n({NaOH}) = 0.100 × 0.02000 = 0.00200 mol</p><p>2. {HCl + NaOH → NaCl + H2O} is 1:1, so n({HCl}) = 0.00200 mol</p><p>3. c = 0.00200 ÷ 0.02500 = <b>0.0800 mol/L</b></p>',
+   'In this example, why is n(HCl) equal to n(NaOH)?',['They react 1:1','They have the same volume','They are both acids'],0,
+   'The balanced equation has one {HCl} for every {NaOH}.'),
+  B('Your turn!',
+   '<p>Same steps. 10.00 mL of {HCl} needs 15.00 mL of 0.200 mol/L {NaOH}.</p><p>n({NaOH}) = 0.200 × 0.01500 = 0.00300 mol, and the ratio is 1:1.</p>',
+   'What is the concentration of the {HCl}?',['0.300 mol/L','0.133 mol/L','0.0300 mol/L'],0,
+   'n({HCl}) = 0.00300 mol, and 0.00300 ÷ 0.01000 L = 0.300 mol/L.'),
+  B('Watch the ratio.',
+   '<p>{H2SO4 + 2NaOH → Na2SO4 + 2H2O}</p><p>Here 2 mol {NaOH} react with 1 mol {H2SO4}, so divide the base moles by 2.</p><p>If 0.00300 mol {NaOH} is used, n({H2SO4}) = 0.00300 ÷ 2 = 0.00150 mol.</p>',
+   'That 0.00150 mol of {H2SO4} was in 10.00 mL. What is its concentration?',['0.300 mol/L','0.150 mol/L','0.0150 mol/L'],1,
+   'c = 0.00150 ÷ 0.01000 L = 0.150 mol/L.')
+ ]},
+ {id:'v3', title:'Crude oil', sub:'Fractional distillation', bites:[
+  B('Let’s talk fuel.',
+   '<p><b>Crude oil</b> is a thick mixture of <b>hydrocarbons</b>: compounds made of only carbon and hydrogen. It formed over millions of years from the buried remains of tiny sea creatures, under heat and pressure.</p>',
+   'Hydrocarbons are made of which elements?',['Carbon and oxygen','Carbon and hydrogen','Hydrogen and oxygen'],1,
+   'Hydro = hydrogen, carbon = carbon. Nothing else.'),
+  B('Size matters.',
+   '<p>Hydrocarbons come in different sizes, from methane ({CH4}) with 1 carbon to huge molecules with 40 or more.</p><p>Bigger molecules have <b>higher boiling points</b>. That’s the key to separating them.</p>',
+   'Which has the higher boiling point?',['A small hydrocarbon like {C3H8}','A large hydrocarbon like {C20H42}'],1,
+   'Bigger hydrocarbon molecules have higher boiling points.'),
+  B('Here’s how a refinery sorts it.',
+   '<p>In <b>fractional distillation</b>, crude oil is heated until most of it turns to vapour. The vapour rises up a tall column that is hot at the bottom and cool at the top.</p><p>Each part condenses back to liquid at the height where it cools below its boiling point. Each part collected is a <b>fraction</b>.</p>',
+   'What property is used to separate the fractions?',['Colour','Density of the crude oil','Boiling point'],2,
+   'Each fraction condenses at a different height because of its boiling point.'),
+  B('Top to bottom.',
+   '<ul><li>Top (smallest, coolest): fuel gases like propane and butane</li><li>Gasoline</li><li>Kerosene and jet fuel</li><li>Diesel</li><li>Lubricating oil</li><li>Bottom (biggest): bitumen for asphalt roads</li></ul>',
+   'Where does bitumen collect in the column?',['At the top','In the middle','At the bottom'],2,
+   'Bitumen has the biggest molecules and highest boiling point, so it stays at the bottom.')
+ ]},
+ {id:'v26', title:'Combustion', sub:'Complete vs incomplete', bites:[
+  B('Burning is a reaction.',
+   '<p><b>Combustion</b> is burning a fuel in oxygen to release energy. With plenty of oxygen, a hydrocarbon burns <b>completely</b>:</p><p>hydrocarbon + oxygen → carbon dioxide + water</p><p>{CH4 + 2O2 → CO2 + 2H2O}</p>',
+   'What are the products of complete combustion of a hydrocarbon?',['{CO} and soot','{CO2} and {H2O}','{H2} and {O2}'],1,
+   'Complete combustion gives carbon dioxide and water.'),
+  B('Not enough oxygen?',
+   '<p>With too little oxygen, combustion is <b>incomplete</b>. It makes <b>carbon monoxide</b> ({CO}) and/or <b>soot</b> (carbon, C), plus water.</p><p>{2CH4 + 3O2 → 2CO + 4H2O}</p>',
+   'What causes incomplete combustion?',['Too little oxygen','Too much oxygen','Too much water'],0,
+   'Without enough oxygen, carbon ends up as {CO} or soot instead of {CO2}.'),
+  B('You can see the difference.',
+   '<p>Complete combustion: clean <b>blue</b> flame, more energy released.</p><p>Incomplete combustion: smoky <b>yellow-orange</b> flame, leaves black soot, less energy.</p>',
+   'A gas stove flame is yellow and sooty. What is happening?',['Complete combustion','Incomplete combustion'],1,
+   'A yellow, sooty flame means there isn’t enough oxygen.'),
+  B('Why CO is dangerous.',
+   '<p>Carbon monoxide has no colour or smell. It sticks to your blood and stops it carrying oxygen. That’s why Ontario homes with fuel-burning furnaces or stoves must have <b>CO alarms</b>.</p>',
+   'Why can’t you notice carbon monoxide on your own?',['It is colourless and odourless','It smells like rotten eggs','It is a bright brown gas'],0,
+   '{CO} can’t be seen or smelled, so you need an alarm to detect it.'),
+  B('Try balancing one.',
+   '<p>Propane burns completely: {C3H8 + 5O2 → 3CO2 + 4H2O}</p><p>Check: 3 C on each side, 8 H on each side, and 10 O on each side (6 in {CO2} plus 4 in {H2O}).</p>',
+   'In this equation, how many {CO2} molecules form per propane?',['1','3','4'],1,
+   'Propane has 3 carbons, so it makes 3 {CO2}.')
+ ]},
+ {id:'v4', title:'Acid rain and smog', sub:'Air pollution from burning fuel', bites:[
+  B('Rain is a little acidic already.',
+   '<p>Normal rain has a pH of about 5.6 because a bit of {CO2} dissolves in it. <b>Acid rain</b> has a pH below that, sometimes around 4.</p>',
+   'Which pH would count as acid rain?',['7.0','5.6','4.2'],2,
+   'Acid rain is more acidic than normal rain, so its pH is below 5.6.'),
+  B('Where it comes from.',
+   '<p>Coal and oil contain sulfur. Burning them releases <b>sulfur dioxide</b> ({SO2}). Hot car engines make <b>nitrogen oxides</b> like {NO2}.</p><p>In the air, these react with oxygen and water to form <b>sulfuric acid</b> ({H2SO4}) and <b>nitric acid</b> ({HNO3}).</p>',
+   'Which gas from burning coal leads to sulfuric acid in rain?',['{SO2}','{O2}','{N2}'],0,
+   'Sulfur in coal burns to {SO2}, which turns into sulfuric acid in the air.'),
+  B('What acid rain damages.',
+   '<p>Acid rain lowers the pH of lakes, which can kill fish. It harms trees and soil. It also eats away limestone and marble buildings and statues, since {CaCO3} reacts with acid.</p><p>Lakes near Sudbury, Ontario were badly hit by smelter pollution, then recovered as emissions dropped.</p>',
+   'Why do marble statues wear away in acid rain?',['Marble is {CaCO3}, which reacts with acid','Marble dissolves in pure water','Rain is basic'],0,
+   'Calcium carbonate reacts with acids, so the stone slowly dissolves.'),
+  B('Now smog.',
+   '<p><b>Smog</b> is a brownish haze over cities. Sunlight drives reactions between nitrogen oxides and fuel vapours that make <b>ground-level ozone</b> ({O3}). It irritates lungs and makes asthma worse.</p><p>Fixes include catalytic converters on cars and scrubbers on smokestacks.</p>',
+   'What harmful gas forms in smog when sunlight hits car pollution?',['Ground-level ozone, {O3}','Oxygen, {O2}','Water vapour'],0,
+   'Sunlight helps nitrogen oxides and fuel vapours react to make ozone near the ground.')
+ ]},
+ {id:'v27', title:'Greenhouse effect and ozone', sub:'Two different problems', bites:[
+  B('Earth has a blanket.',
+   '<p>Sunlight warms Earth’s surface. The surface gives off heat. <b>Greenhouse gases</b> like {CO2}, methane ({CH4}) and water vapour absorb some of that heat and keep it in.</p><p>This <b>greenhouse effect</b> is natural. Without it, Earth would average about −18 °C.</p>',
+   'Which is a greenhouse gas?',['{N2}','{CO2}','{O2}'],1,
+   'Carbon dioxide traps heat. Nitrogen and oxygen don’t.'),
+  B('Too much blanket.',
+   '<p>Burning fossil fuels adds extra {CO2}. Air had about 280 ppm of {CO2} before the 1800s. Now it’s over 420 ppm.</p><p>More greenhouse gas traps more heat, which drives <b>climate change</b>.</p>',
+   'What is the main human source of extra {CO2}?',['Burning fossil fuels','Drinking water','Breathing oxygen'],0,
+   'Combustion of coal, oil and gas releases {CO2}.'),
+  B('Ozone up high protects us.',
+   '<p>High in the atmosphere, the <b>ozone layer</b> ({O3}) absorbs harmful <b>UV light</b> from the Sun.</p><p>Old fridges and spray cans used <b>CFCs</b>. Their chlorine atoms break down ozone, thinning the layer.</p>',
+   'What do CFCs do to the ozone layer?',['They make it thicker','They turn it into {CO2}','They break down ozone'],2,
+   'Chlorine from CFCs destroys ozone molecules.'),
+  B('A Canadian success story.',
+   '<p>The <b>Montreal Protocol</b> (1987) was a worldwide deal to phase out CFCs. The ozone layer is now slowly healing.</p><p>Remember: ozone up high is good. Ozone at ground level, in smog, is harmful.</p>',
+   'Where is ozone harmful to people?',['High in the atmosphere','At ground level in smog'],1,
+   'Ground-level ozone irritates lungs. High-up ozone shields us from UV.')
+ ]},
+ {id:'v28', title:'Water pollution and treatment', sub:'What gets in, and how we clean it', bites:[
+  B('Heavy metals build up.',
+   '<p><b>Heavy metals</b> like lead and mercury are toxic. Lead can come from old pipes. Mercury can come from industry and builds up in fish.</p><p>Living things can’t get rid of them easily, so the metals build up in their bodies over time.</p>',
+   'Why are heavy metals so dangerous?',['They build up in living things','They are always harmless in water','They evaporate quickly'],0,
+   'Heavy metals stay in the body and accumulate over time.'),
+  B('Up the food chain.',
+   '<p>Small fish eat contaminated plankton. Big fish eat many small fish. The metal gets more concentrated at each step. This is <b>biomagnification</b>.</p>',
+   'Which animal likely has the most mercury?',['Plankton','A small minnow','A large pike that eats fish'],2,
+   'Top predators eat many smaller animals, so the mercury concentrates in them.'),
+  B('Too much fertilizer.',
+   '<p>Fertilizer runoff adds <b>nitrates</b> and <b>phosphates</b> to lakes. Algae grow out of control in an <b>algal bloom</b>.</p><p>When the algae die, bacteria decompose them and use up the dissolved oxygen. Fish suffocate. Lake Erie has had big blooms like this.</p>',
+   'Why do fish die after an algal bloom?',['Algae poison the water with salt','Decomposing algae use up the oxygen','The water gets too cold'],1,
+   'Bacteria breaking down dead algae use up the dissolved oxygen fish need.'),
+  B('How water gets cleaned.',
+   '<ol><li><b>Coagulation:</b> add alum ({Al2(SO4)3}) so tiny particles clump together.</li><li><b>Sedimentation:</b> clumps sink to the bottom.</li><li><b>Filtration:</b> water passes through sand, gravel and charcoal.</li><li><b>Disinfection:</b> chlorine or UV light kills germs.</li></ol>',
+   'Which step kills bacteria?',['Sedimentation','Coagulation','Disinfection'],2,
+   'Disinfection with chlorine or UV kills microbes.'),
+  B('Quick check.',
+   '<p>Order matters: first clump the particles, then let them settle, then filter what’s left, then kill germs.</p>',
+   'What comes right after coagulation?',['Disinfection','Sedimentation','Filtration'],1,
+   'Once particles clump, they settle out in sedimentation.')
+ ]}
+]};
+
+const UNIT_X = {name:'Electrochemistry', lessons:[
+ {id:'x1', title:'Oxidation and reduction', sub:'OIL RIG: electrons on the move', bites:[
+   B('New unit! It’s all about electrons.',
+     '<p>In a <b>redox reaction</b>, electrons move from one substance to another.</p><p>The word comes from <b>red</b>uction and <b>ox</b>idation, the two halves of every one of these reactions.</p>',
+     'In a redox reaction, what moves from one substance to another?', ['Protons','Electrons','Neutrons'], 1,
+     'Redox reactions are all about electrons being passed from one substance to another.'),
+   B('Here’s the memory trick.',
+     '<p>Remember <b>OIL RIG</b>:</p><ul><li><b>O</b>xidation <b>I</b>s <b>L</b>oss of electrons.</li><li><b>R</b>eduction <b>I</b>s <b>G</b>ain of electrons.</li></ul>',
+     'An atom that loses electrons is…', ['reduced','oxidized','neutralized'], 1,
+     'OIL: Oxidation Is Loss. Losing electrons means being oxidized.'),
+   B('Watch it happen.',
+     '<p>Drop zinc metal into a solution of copper ions: {Zn + Cu^2+ → Zn^2+ + Cu}.</p><p>Each zinc atom loses 2 electrons and becomes {Zn^2+}. Each {Cu^2+} ion gains those 2 electrons and becomes copper metal, which coats the zinc.</p>',
+     'In this reaction, the {Cu^2+} ion is…', ['oxidized','reduced','unchanged'], 1,
+     '{Cu^2+} gains 2 electrons to become Cu. RIG: Reduction Is Gain.'),
+   B('One more key fact.',
+     '<p>Electrons can’t just vanish. If one substance loses electrons, another must pick them up.</p><p>So oxidation and reduction <b>always happen together</b>, and the electrons lost equal the electrons gained.</p>',
+     'Can oxidation happen without reduction?', ['Yes, it happens often','No, they always happen together'], 1,
+     'Lost electrons must go somewhere, so every oxidation comes with a reduction.')
+ ]},
+ {id:'x20', title:'Oxidation number rules', sub:'A bookkeeping system for electrons', bites:[
+   B('Let’s keep score of electrons.',
+     '<p>An <b>oxidation number</b> is a number we give each atom to track its electrons.</p><p>If an atom’s oxidation number <b>goes up</b>, it was <b>oxidized</b>. If it <b>goes down</b>, it was <b>reduced</b>.</p>',
+     'An atom’s oxidation number goes from 0 to +2. It was…', ['reduced','oxidized','unchanged'], 1,
+     'The number went up, which means the atom lost electrons: oxidized.'),
+   B('Rule 1 is easy.',
+     '<p>An element on its own, not combined with anything else, has an oxidation number of <b>0</b>.</p><p>So Fe, Cu, {O2} and {Cl2} all have oxidation number 0.</p>',
+     'What is the oxidation number of O in {O2}?', ['−2','0','+2'], 1,
+     '{O2} is an element on its own, so its oxidation number is 0.'),
+   B('Rule 2: simple ions.',
+     '<p>For a simple one-atom ion, the oxidation number equals <b>its charge</b>.</p><p>{Na^+} is +1, {Cl^-} is −1 and {Fe^3+} is +3.</p>',
+     'What is the oxidation number of {Mg^2+}?', ['+2','0','−2'], 0,
+     'A simple ion’s oxidation number is its charge, so {Mg^2+} is +2.'),
+   B('Rule 3: the usual values.',
+     '<p>Inside compounds, some atoms almost always have the same value:</p><ul><li>O is usually <b>−2</b></li><li>H is usually <b>+1</b></li><li>Group 1 metals (Na, K) are <b>+1</b></li><li>Group 2 metals (Mg, Ca) are <b>+2</b></li></ul>',
+     'What is the usual oxidation number of oxygen in a compound?', ['+1','−1','−2','0'], 2,
+     'Oxygen is usually −2 in compounds.'),
+   B('Rule 4 ties it together.',
+     '<p>All the oxidation numbers in a formula must <b>add up to its overall charge</b>.</p><p>For a neutral compound like {H2O}, they add to 0. For an ion like {SO4^2-}, they add to −2.</p>',
+     'In {SO4^2-}, the oxidation numbers must add up to…', ['0','+6','−2'], 2,
+     'They add up to the overall charge, and {SO4^2-} has a charge of −2.')
+ ]},
+ {id:'x21', title:'Finding oxidation numbers', sub:'Compounds and polyatomic ions', bites:[
+   B('Watch me do one.',
+     '<p>Find C in {CO2}.</p><ol><li>O is −2, and there are 2 of them: 2 × (−2) = −4.</li><li>The compound is neutral, so everything adds to 0.</li><li>C + (−4) = 0, so C = <b>+4</b>.</li></ol>',
+     'What is the oxidation number of C in {CO2}?', ['+2','−4','+4'], 2,
+     'The two oxygens give −4, so carbon must be +4 to reach a total of 0.'),
+   B('Now with three elements.',
+     '<p>Find S in {H2SO4}.</p><ol><li>H: 2 × (+1) = +2</li><li>O: 4 × (−2) = −8</li><li>S + 2 − 8 = 0, so S = <b>+6</b>.</li></ol>',
+     'What is the oxidation number of S in {H2SO4}?', ['+6','+4','−2'], 0,
+     '+2 from hydrogen and −8 from oxygen means sulfur must be +6 for a total of 0.'),
+   B('Ions work the same way.',
+     '<p>Find N in {NO3^-}. This time the total is the ion’s charge, −1.</p><ol><li>O: 3 × (−2) = −6</li><li>N + (−6) = −1</li><li>N = <b>+5</b></li></ol>',
+     'What is the oxidation number of N in {NO3^-}?', ['+6','+5','−5','+7'], 1,
+     'The oxygens give −6, and N − 6 = −1, so N = +5.'),
+   B('Your turn!',
+     '<p>Find Mn in {KMnO4}. Use the same steps: K is a Group 1 metal, so it’s +1. Each O is −2. The compound is neutral, so the total is 0.</p>',
+     'What is the oxidation number of Mn in {KMnO4}?', ['+4','+8','+7','+6'], 2,
+     'K is +1 and 4 O give −8. So +1 + Mn − 8 = 0, and Mn = +7.'),
+   B('Two of the same atom? Divide.',
+     '<p>Find Cr in {Cr2O7^2-}.</p><ol><li>O: 7 × (−2) = −14</li><li>Both Cr together: −2 + 14 = +12</li><li>Each Cr: 12 ÷ 2 = <b>+6</b></li></ol>',
+     'What is the oxidation number of each Cr in {Cr2O7^2-}?', ['+12','+6','+7'], 1,
+     'The two chromium atoms share +12, so each one is +6.')
+ ]},
+ {id:'x22', title:'Spotting redox', sub:'What is oxidized and what is reduced', bites:[
+   B('Here’s the method.',
+     '<p>Write the oxidation number of each element on both sides of the equation.</p><ul><li>Number <b>goes up</b>: that element was <b>oxidized</b>.</li><li>Number <b>goes down</b>: that element was <b>reduced</b>.</li></ul>',
+     'An element goes from +3 on the left to 0 on the right. It was…', ['oxidized','reduced','neither'], 1,
+     'The number went down, so the element gained electrons: reduced.'),
+   B('Watch me do one.',
+     '<p>{Mg + Cl2 → MgCl2}</p><p>Mg goes from 0 to +2: <b>oxidized</b>.<br>Cl goes from 0 to −1: <b>reduced</b>.</p>',
+     'In this reaction, what is reduced?', ['Mg','{Cl2}','{MgCl2}'], 1,
+     'Chlorine’s oxidation number drops from 0 to −1, so {Cl2} is reduced.'),
+   B('A bigger one.',
+     '<p>Making iron from its ore: {2Fe2O3 + 3C → 4Fe + 3CO2}</p><p>Fe goes from +3 to 0: reduced.<br>C goes from 0 to +4: oxidized.<br>O stays at −2 the whole time.</p>',
+     'Which element is oxidized?', ['Fe','O','C'], 2,
+     'Carbon’s oxidation number rises from 0 to +4, so carbon is oxidized.'),
+   B('Not everything is redox.',
+     '<p>In {NaCl + AgNO3 → AgCl + NaNO3}, every element keeps the same oxidation number. Na stays +1, Ag stays +1, Cl stays −1.</p><p>If no oxidation numbers change, it is <b>not a redox reaction</b>.</p>',
+     'If no oxidation numbers change in a reaction, then…', ['it is a redox reaction','it is not a redox reaction','everything was oxidized'], 1,
+     'Redox needs electrons to move, which shows up as oxidation numbers changing.')
+ ]},
+ {id:'x5', title:'Writing half-reactions', sub:'Splitting a redox reaction in two', bites:[
+   B('Let’s split a reaction in half.',
+     '<p>A <b>half-reaction</b> shows just one side of a redox reaction, with the electrons written in.</p><p>In an <b>oxidation</b> half, electrons are lost, so they appear on the <b>right</b>:<br>{Zn → Zn^2+ + 2e^-}</p>',
+     'In an oxidation half-reaction, electrons appear…', ['on the left','on the right','on both sides'], 1,
+     'Oxidation loses electrons, so they show up as a product on the right.'),
+   B('Now the other half.',
+     '<p>In a <b>reduction</b> half, electrons are gained, so they appear on the <b>left</b>:<br>{Cu^2+ + 2e^- → Cu}</p>',
+     'Which of these is a reduction half-reaction?', ['{Zn → Zn^2+ + 2e^-}','{Cu^2+ + 2e^- → Cu}','{Mg → Mg^2+ + 2e^-}'], 1,
+     'Electrons are on the left, being gained, so this is a reduction.'),
+   B('How many electrons?',
+     '<p>The number of electrons equals the change in oxidation number. Al goes from 0 to +3, so it loses 3:<br>{Al → Al^3+ + 3e^-}</p><p>Check: charge on each side matches. Left is 0. Right is +3 + (−3) = 0.</p>',
+     'Fill in the blank: Fe → {Fe^3+} + ___ electrons', ['2','3','1'], 1,
+     'Fe goes from 0 to +3, so it loses 3 electrons.'),
+   B('Make the electrons match.',
+     '<p>For {Mg + Ag^+}:<br>{Mg → Mg^2+ + 2e^-}<br>{Ag^+ + e^- → Ag}</p><p>Mg loses 2 but each {Ag^+} gains only 1, so double the silver half:<br>{2Ag^+ + 2e^- → 2Ag}</p><p>Add them and the electrons cancel: {Mg + 2Ag^+ → Mg^2+ + 2Ag}</p>',
+     'Why do we double the silver half-reaction?', ['To match the 2 electrons Mg loses','Because silver is heavier','To get rid of the Mg'], 0,
+     'Electrons lost must equal electrons gained, so 2 silver ions are needed to take Mg’s 2 electrons.')
+ ]},
+ {id:'x23', title:'Oxidizing and reducing agents', sub:'Who causes the electron swap', bites:[
+   B('These names trip people up.',
+     '<p>The <b>oxidizing agent</b> is the substance that causes something else to be oxidized. It does this by taking electrons.</p><p>Taking electrons means the oxidizing agent itself gets <b>reduced</b>.</p>',
+     'The oxidizing agent itself is…', ['oxidized','reduced','unchanged'], 1,
+     'It takes electrons from the other substance, so it gains electrons and is reduced.'),
+   B('And the flip side.',
+     '<p>The <b>reducing agent</b> causes something else to be reduced by giving it electrons.</p><p>Giving away electrons means the reducing agent itself gets <b>oxidized</b>.</p>',
+     'A reducing agent…', ['gains electrons','loses protons','loses electrons'], 2,
+     'It gives its electrons away, so it loses electrons and is oxidized.'),
+   B('Watch me name them.',
+     '<p>{Zn + Cu^2+ → Zn^2+ + Cu}</p><p>Zn is oxidized, so Zn is the <b>reducing agent</b>.<br>{Cu^2+} is reduced, so {Cu^2+} is the <b>oxidizing agent</b>.</p>',
+     'What is the oxidizing agent in this reaction?', ['Zn','{Zn^2+}','{Cu^2+}'], 2,
+     '{Cu^2+} is reduced, and the substance that is reduced is the oxidizing agent.'),
+   B('Your turn!',
+     '<p>In {Mg + Cl2 → MgCl2}, Mg goes from 0 to +2 and Cl goes from 0 to −1.</p><p>Remember: the one that is oxidized is the reducing agent.</p>',
+     'What is the reducing agent?', ['Mg','{Cl2}','{MgCl2}'], 0,
+     'Mg is oxidized (0 to +2), so it is the reducing agent.')
+ ]},
+ {id:'x24', title:'The activity series', sub:'Predicting which metals react', bites:[
+   B('Some metals give up electrons easily.',
+     '<p>The <b>activity series</b> ranks metals by how easily they lose electrons. The top is most reactive:</p><p>K, Na, Ca, Mg, Al, Zn, Fe, Pb, (H), Cu, Ag, Au</p><p>Metals near the top are oxidized easily. Gold at the bottom barely reacts at all.</p>',
+     'Which metal is oxidized most easily?', ['Gold','Zinc','Silver'], 1,
+     'Zinc is much higher in the activity series than silver or gold.'),
+   B('Here’s the rule.',
+     '<p>A metal will react with the ions of any metal <b>below</b> it in the series.</p><p>Zinc is above copper, so zinc metal reacts with {Cu^2+} ions. Copper is below zinc, so copper metal does nothing in a {Zn^2+} solution.</p>',
+     'Will copper metal react with a solution of {Zn^2+} ions?', ['Yes','No, copper is below zinc'], 1,
+     'A metal only replaces ions of metals below it, and copper is below zinc.'),
+   B('Try this one.',
+     '<p>Put an iron nail in copper(II) sulfate solution. Iron is above copper, so it reacts:</p><p>{Fe + Cu^2+ → Fe^2+ + Cu}</p><p>The iron is oxidized and the copper ions are reduced to copper metal.</p>',
+     'What forms on the surface of the nail?', ['Copper metal','Iron oxide','Nothing'], 0,
+     'The {Cu^2+} ions are reduced to solid copper, which coats the nail.'),
+   B('Metals and acids.',
+     '<p>Metals <b>above hydrogen</b> in the series react with acids and give off hydrogen gas. Magnesium in hydrochloric acid fizzes.</p><p>Metals below hydrogen, like copper, silver and gold, don’t react.</p>',
+     'Which metal will NOT react with hydrochloric acid?', ['Magnesium','Zinc','Copper'], 2,
+     'Copper is below hydrogen in the activity series, so it does not react with acids like this.')
+ ]},
+ {id:'x3', title:'Parts of a galvanic cell', sub:'Turning redox into electricity', bites:[
+   B('Time to make electricity!',
+     '<p>A <b>galvanic cell</b> (also called a voltaic cell) splits a redox reaction into two separate halves.</p><p>The electrons have to travel through a <b>wire</b> to get from one half to the other. That flow of electrons is an electric current.</p>',
+     'In a galvanic cell, electrons get from one half to the other through…', ['the wire','the air','the glass beaker'], 0,
+     'The halves are kept apart, so electrons must flow through the wire, which makes a current.'),
+   B('Each half-cell has two parts.',
+     '<p>Each half is a <b>half-cell</b>: a metal strip called an <b>electrode</b>, dipped in a solution of that metal’s ions, called the <b>electrolyte</b>.</p><p>Example: a zinc strip in {ZnSO4} solution, and a copper strip in {CuSO4} solution.</p>',
+     'What is the metal strip in a half-cell called?', ['The electrolyte','The electrode','The salt bridge'], 1,
+     'The metal strip is the electrode. The ion solution is the electrolyte.'),
+   B('Two connections.',
+     '<p>A <b>wire</b> joins the two electrodes, often through a voltmeter or a bulb.</p><p>A <b>salt bridge</b> joins the two solutions. It’s a tube or strip soaked in a salt solution like {KNO3}.</p>',
+     'What connects the two solutions?', ['The wire','The voltmeter','The salt bridge'], 2,
+     'The wire joins the metal electrodes. The salt bridge joins the solutions.'),
+   B('It runs by itself.',
+     '<p>A galvanic cell uses a <b>spontaneous</b> reaction, one that happens on its own. No outside power is needed.</p><p>A zinc and copper cell makes about 1.1 V.</p>',
+     'Does a galvanic cell need an outside power source?', ['Yes, always','No, its reaction runs on its own'], 1,
+     'Galvanic cells use spontaneous reactions, so they produce electricity without outside power.')
+ ]},
+ {id:'x25', title:'Anode, cathode and salt bridge', sub:'Which way everything flows', bites:[
+   B('Another memory trick.',
+     '<p>Oxidation happens at the <b>anode</b>. Reduction happens at the <b>cathode</b>.</p><p>Remember <b>“An Ox, Red Cat”</b>: ANode OXidation, REDuction CAThode.</p>',
+     'Reduction happens at the…', ['anode','cathode','salt bridge'], 1,
+     'Red Cat: reduction happens at the cathode.'),
+   B('Let’s label a real cell.',
+     '<p>In the zinc and copper cell, zinc is oxidized, so the zinc strip is the <b>anode</b>. It slowly dissolves.</p><p>{Cu^2+} ions are reduced on the copper strip, so copper is the <b>cathode</b>. New copper builds up on it.</p>',
+     'Which electrode gets heavier as the cell runs?', ['The zinc anode','The copper cathode','Neither'], 1,
+     'Copper metal forms on the cathode, so it gains mass. The zinc anode loses mass.'),
+   B('Follow the electrons.',
+     '<p>The anode releases electrons and the cathode uses them up.</p><p>So electrons flow through the wire <b>from the anode to the cathode</b>.</p>',
+     'Electrons flow through the wire from…', ['anode to cathode','cathode to anode','salt bridge to anode'], 0,
+     'Electrons are made at the anode by oxidation and used at the cathode by reduction.'),
+   B('Why the salt bridge matters.',
+     '<p>As the cell runs, the anode side fills with positive ions and the cathode side loses them. That charge buildup would stop the cell fast.</p><p>The <b>salt bridge</b> lets ions move to keep each side neutral. Negative ions move toward the anode. Electrons never travel through the salt bridge.</p>',
+     'What happens if you remove the salt bridge?', ['The voltage doubles','Electrons flow backwards','The cell quickly stops working'], 2,
+     'Without the salt bridge, charge builds up on each side and the current stops.')
+ ]},
+ {id:'x26', title:'Cell voltage', sub:'Using a table of reduction potentials', bites:[
+   B('Every half-reaction has a number.',
+     '<p>A table of <b>standard reduction potentials</b> gives each half-reaction a value, E°, in volts.</p><p>A higher (more positive) E° means that substance is more eager to be reduced. For example:<br>{Cu^2+}/Cu: +0.34 V<br>{Zn^2+}/Zn: −0.76 V</p>',
+     'Which ion is more eager to be reduced?', ['{Zn^2+}','{Cu^2+}','They are equal'], 1,
+     '{Cu^2+} has the higher E° (+0.34 V vs −0.76 V), so it is more easily reduced.'),
+   B('Here’s the formula.',
+     '<p>E°<sub>cell</sub> = E°<sub>cathode</sub> − E°<sub>anode</sub></p><p>The half with the <b>higher E°</b> is reduced, so it is the cathode. The other half is the anode.</p>',
+     'In a cell made of copper and zinc half-cells, which is the cathode?', ['Copper','Zinc'], 0,
+     'Copper has the higher E° (+0.34 V), so it is reduced at the cathode.'),
+   B('Watch me do one.',
+     '<p>Zinc and copper cell:</p><p>E°<sub>cell</sub> = 0.34 − (−0.76)<br>E°<sub>cell</sub> = 0.34 + 0.76 = <b>+1.10 V</b></p><p>A <b>positive</b> E°<sub>cell</sub> means the reaction is <b>spontaneous</b>.</p>',
+     'What is E°<sub>cell</sub> for the zinc and copper cell?', ['−0.42 V','+1.10 V','+0.42 V'], 1,
+     'Subtracting a negative adds: 0.34 + 0.76 = +1.10 V.'),
+   B('Your turn!',
+     '<p>A cell uses silver and copper:<br>{Ag^+}/Ag: +0.80 V<br>{Cu^2+}/Cu: +0.34 V</p><p>Silver has the higher E°, so silver is the cathode. Use the same formula.</p><p>Tip: if you double a half-reaction to match electrons, don’t double its E°.</p>',
+     'What is E°<sub>cell</sub>?', ['+1.14 V','−0.46 V','+0.46 V'], 2,
+     'E°cell = 0.80 − 0.34 = +0.46 V. Positive, so it is spontaneous.'),
+   B('What a negative answer means.',
+     '<p>If E°<sub>cell</sub> comes out <b>negative</b>, the reaction is <b>not spontaneous</b>. It won’t happen on its own.</p><p>Copper metal in {Zn^2+} solution: −0.76 − 0.34 = −1.10 V. Nothing happens, just like the activity series predicts.</p>',
+     'A reaction has E°<sub>cell</sub> = −0.50 V. It is…', ['spontaneous','not spontaneous','explosive'], 1,
+     'A negative E°cell means the reaction will not happen on its own.')
+ ]},
+ {id:'x27', title:'Batteries and fuel cells', sub:'Galvanic cells you use every day', bites:[
+   B('You carry these around all day.',
+     '<p>A <b>battery</b> is one or more galvanic cells packed into a portable case.</p><p>As it runs, the reactants at the anode and cathode get used up. When they run out, the battery is dead.</p>',
+     'Why does a battery eventually go dead?', ['Electrons leak out of the case','Its reactants get used up','It gets too cold'], 1,
+     'The redox reactants are consumed, so no more electrons can be pushed through the wire.'),
+   B('The classic AA.',
+     '<p>An <b>alkaline battery</b> uses a <b>zinc anode</b> and a <b>manganese dioxide</b> ({MnO2}) cathode. It gives about 1.5 V.</p><p>Zinc is oxidized, and its electrons flow through your device to the {MnO2}.</p>',
+     'What is the anode in an alkaline battery?', ['Manganese dioxide','Zinc','Lithium'], 1,
+     'Zinc is oxidized, and oxidation happens at the anode.'),
+   B('Rechargeables.',
+     '<p><b>Lithium-ion</b> batteries power phones, laptops and electric cars.</p><p>They’re <b>rechargeable</b>. Plugging in uses outside power to run the reaction <b>backwards</b>, rebuilding the reactants so the battery can run again.</p>',
+     'What happens when you charge a lithium-ion battery?', ['It pulls lithium from the air','The salt bridge is refilled','Outside power runs the reaction backwards'], 2,
+     'Charging pushes the reaction in reverse, rebuilding the starting chemicals.'),
+   B('A battery that never runs down.',
+     '<p>A <b>fuel cell</b> is fed a constant supply of fuel and oxygen. A hydrogen fuel cell runs on:</p><p>{2H2 + O2 → 2H2O}</p><p>It keeps working as long as fuel is supplied, and the only product is water. Some buses and spacecraft use them.</p>',
+     'What is the product of a hydrogen fuel cell?', ['{CO2}','{H2O}','{O2}'], 1,
+     'Hydrogen combines with oxygen to make water, {H2O}.')
+ ]},
+ {id:'x6', title:'Corrosion', sub:'Why metal rusts and how to stop it', bites:[
+   B('Rust is redox too.',
+     '<p><b>Corrosion</b> is unwanted oxidation of a metal by its surroundings.</p><p>When iron <b>rusts</b>, oxygen and water oxidize it: {Fe → Fe^2+ + 2e^-}. The iron ions go on to form iron oxide, which is rust.</p>',
+     'When iron rusts, the iron is…', ['reduced','oxidized','melted'], 1,
+     'Iron loses electrons, so it is oxidized.'),
+   B('Why Canadian cars rust.',
+     '<p>Rusting needs both <b>oxygen</b> and <b>water</b>.</p><p>Salt dissolved in the water makes it a better electrolyte, so the redox reaction speeds up. That’s why road salt makes cars rust faster in Canadian winters.</p>',
+     'Why does road salt make cars rust faster?', ['Salt water lets the redox reaction run faster','Salt makes the air colder','Salt removes the oxygen'], 0,
+     'Salt water is a good electrolyte, which speeds up the oxidation of iron.'),
+   B('Fix #1: block it out.',
+     '<p>The simplest protection is a <b>barrier</b>. Paint, oil, grease or a plastic coating keeps water and oxygen away from the metal.</p><p>If the coating gets scratched, rust can start there.</p>',
+     'How does paint protect iron?', ['It makes iron more reactive','It keeps water and oxygen away','It adds electrons to the iron'], 1,
+     'Without water and oxygen touching it, iron can’t rust.'),
+   B('Fix #2: galvanizing.',
+     '<p><b>Galvanizing</b> coats iron with zinc. Zinc is above iron in the activity series, so it is oxidized more easily.</p><p>Even if the zinc is scratched, the zinc corrodes first and the iron stays safe.</p>',
+     'Why does zinc still protect iron when the coating is scratched?', ['Zinc is oxidized more easily, so it corrodes first','Zinc is less reactive than iron','Zinc repels water'], 0,
+     'Zinc gives up electrons more easily than iron, so it gets oxidized instead.'),
+   B('Fix #3: a sacrificial anode.',
+     '<p>A <b>sacrificial anode</b> is a block of a more reactive metal, like magnesium or zinc, attached to iron or steel.</p><p>It corrodes instead of the steel and gets replaced now and then. Ship hulls, pipelines and hot water tanks use them.</p>',
+     'Which metal could be a sacrificial anode for iron?', ['Copper','Silver','Magnesium'], 2,
+     'Magnesium is above iron in the activity series, so it corrodes first. Copper and silver are below iron.')
+ ]},
+ {id:'x28', title:'Electrolysis and electroplating', sub:'Using electricity to force a reaction', bites:[
+   B('Now we run things backwards.',
+     '<p><b>Electrolysis</b> uses an outside power source to force a reaction that would <b>not</b> happen on its own (one with a negative E°<sub>cell</sub>).</p><p>The setup is called an <b>electrolytic cell</b>.</p>',
+     'What does an electrolytic cell need that a galvanic cell doesn’t?', ['A salt bridge','An outside power source','A metal electrode'], 1,
+     'Electrolysis forces a non-spontaneous reaction, so it needs outside power.'),
+   B('Same names, same jobs.',
+     '<p>An Ox, Red Cat still holds: oxidation at the anode, reduction at the cathode.</p><p>In electrolysis, the <b>cathode</b> is connected to the <b>negative</b> terminal of the power source, which pushes electrons into it.</p>',
+     'In electrolysis, the cathode is connected to which terminal?', ['Positive','Negative'], 1,
+     'The negative terminal supplies electrons to the cathode, where reduction happens.'),
+   B('A classic example.',
+     '<p>Electrolysis can split water: {2H2O → 2H2 + O2}.</p><p><b>Hydrogen</b> gas forms at the cathode and <b>oxygen</b> gas forms at the anode. Industry also uses electrolysis to make aluminium from its ore and chlorine from salt water.</p>',
+     'Which gas forms at the cathode when water is split?', ['Oxygen','Hydrogen','Chlorine'], 1,
+     'Hydrogen forms at the cathode, and oxygen forms at the anode.'),
+   B('Electroplating.',
+     '<p><b>Electroplating</b> coats an object with a thin layer of metal.</p><p>The object is the <b>cathode</b>. The solution contains ions of the coating metal. To silver-plate a spoon, {Ag^+} ions are reduced on it: {Ag^+ + e^- → Ag}.</p>',
+     'To silver-plate a spoon, the spoon is the…', ['anode','electrolyte','cathode'], 2,
+     'Reduction happens at the cathode, where {Ag^+} ions become solid silver on the spoon.'),
+   B('Where the new metal comes from.',
+     '<p>The anode is a strip of the coating metal. It is oxidized and slowly dissolves: {Ag → Ag^+ + e^-}. This replaces the ions used up at the cathode.</p><p>Chrome on car parts and gold-plated jewellery are made this way.</p>',
+     'As a spoon is silver-plated, what happens to the silver anode?', ['It grows thicker','It slowly dissolves','It turns into a gas'], 1,
+     'The silver anode is oxidized into {Ag^+} ions, so it gets smaller over time.')
+ ]}
+]};
+
+/* rebuild SCH4C units in teach-then-check format, keeping each unit's look */
+(()=>{const META=Object.fromEntries(UNITS.map(u=>[u.id,u]));
+ const mk=(id,U)=>{const m=META[id];const unit={id:m.id,sym:m.sym,z:m.z,c:m.c,light:m.light,name:m.name,flame:m.flame,strand:m.strand,blurb:m.blurb,
+   lessons:U.lessons.map(l=>Object.assign(l,{quiz:l.bites.map(b=>b.q),lede:l.sub}))};return unit};
+ const z=UNITS[0];UNITS.length=0;
+ UNITS.push(z,mk('r',UNIT_R),mk('m',UNIT_M),mk('k',UNIT_K),mk('o',UNIT_O),mk('v',UNIT_V),mk('x',UNIT_X));})();
+
 
 const LESSONS=[];UNITS.forEach(u=>u.lessons.forEach((l,i)=>{l.unit=u;l.n=i+1;LESSONS.push(l)}));
 const byId=id=>LESSONS.find(l=>l.id===id);
@@ -1070,7 +2633,7 @@ function fizz({mood='idle',size=96,fill=.6,cls=''}={}){
 const KEY='flametest-sch4u-v2';/* key kept so existing progress carries over */
 const ds=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const dayOff=n=>{const d=new Date();d.setDate(d.getDate()+n);return ds(d)};
-function blank(){return{v:2,xp:0,done:{},cp:{},days:{},streak:{count:0,best:0,last:''},goal:30,badges:{},miss:{},sound:true,unlockAll:false,theme:'system',chat:[],hearts:5,heartsAt:0,updated:0}}
+function blank(){return{v:2,xp:0,done:{},cp:{},days:{},streak:{count:0,best:0,last:''},goal:30,badges:{},miss:{},sound:true,unlockAll:false,theme:'system',chat:[],hearts:5,heartsAt:0,intensive:{},updated:0}}
 function normalize(o){const b=blank();o=o&&typeof o==='object'?o:{};for(const k in b){if(o[k]===undefined||o[k]===null)o[k]=b[k]}o.streak=Object.assign(b.streak,o.streak);return o}
 let S=blank();
 try{const raw=localStorage.getItem(KEY);if(raw)S=normalize(JSON.parse(raw));
@@ -1169,6 +2732,7 @@ const BADGES=[
  {id:'xp500',name:'500 XP',desc:'Earn 500 XP',icon:'trophy',c:'#3E9B4F'},
  {id:'goal',name:'Goal getter',desc:'Hit your daily goal',icon:'target',c:'#E9A800'},
  {id:'night',name:'Night owl',desc:'Finish a lesson after 10 pm',icon:'moon',c:'#2D4A8A'},
+ {id:'weekend',name:'Weekend warrior',desc:'Finish both Saturday Intensive sessions',icon:'trophy',c:'#5B5BD6'},
  ...UNITS.map(u=>({id:'unit-'+u.id,name:u.name,desc:'Finish every lesson in '+u.name,sym:u.sym,c:u.c}))];
 
 function award(xp,ctx={}){
@@ -1236,7 +2800,7 @@ function badgeImg(b,on,sz=64){return `<div class="badge ${on?'':'off'}" title="$
 /* ---------- views ---------- */
 const OFF=[0,46,70,46,0,-46,-70,-46];
 function viewLearn(){
-  const cur=current();let k=0,h=topStats()+'<div class="col">'+goalCard(true);
+  const cur=current();let k=0,h=topStats()+'<div class="col">'+goalCard(true)+intensiveCard();
   UNITS.forEach(u=>{const d=unitDone(u),all=d===u.lessons.length;
     h+=`<section class="unit" style="--c:${u.c};--on:${u.light?'#1a1405':'#fff'}" id="u-${u.id}"><div class="ubanner"><div><div class="lbl">${UNITLABEL(u)} · ${d}/${u.lessons.length}</div><h2>${u.name}</h2><p>${u.blurb}</p>${S.cp[u.id]?`<span class="crown">${ic('crown',15,true)} Checkpoint cleared</span>`:''}</div><a class="notes" href="#notes-${u.lessons[0].id}" aria-label="${u.name} notes">${ic('book',24)}</a></div>`;
     u.lessons.forEach(l=>{const off=OFF[k++%8],st=isDone(l)?'done':unlocked(l)?'avail':'locked',isCur=cur===l;
@@ -1247,6 +2811,7 @@ function viewLearn(){
   return h+`<div class="card" style="text-align:center"><h3>That’s the whole course</h3><p class="small" style="margin:6px 0 0">Finish every checkpoint to earn all six element badges.</p></div></div>`;
 }
 function bindLearn(){
+  document.querySelectorAll('[data-int]').forEach(b=>b.onclick=()=>{SND.tap();startIntensive(+b.dataset.int)});
   document.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{SND.tap();openLessonSheet(byId(b.dataset.l))});
   document.querySelectorAll('[data-cp]').forEach(b=>b.onclick=()=>{SND.tap();openCpSheet(UNITS.find(u=>u.id===b.dataset.cp))});
   if(justDone){const i=LESSONS.indexOf(byId(justDone)),n=LESSONS[i+1];const el=n&&document.querySelector(`[data-l="${n.id}"]`);if(el){el.classList.add('pop');el.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'})}justDone=null}
@@ -1343,7 +2908,7 @@ function regen(){if(typeof S.hearts!=='number')S.hearts=HMAX;if(S.hearts>=HMAX){
 const nextHeartIn=()=>S.hearts>=HMAX?0:Math.max(0,S.heartsAt+HREGEN-Date.now());
 const mmss=ms=>{const t=Math.ceil(ms/1000);return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
 function loseHeart(){regen();if(S.hearts>=HMAX)S.heartsAt=Date.now();S.hearts=Math.max(0,S.hearts-1);save()}
-const usesHearts=()=>!!SES&&(SES.kind==='lesson'||SES.kind==='cp');
+const usesHearts=()=>!INT&&!!SES&&(SES.kind==='lesson'||SES.kind==='cp');
 const heartRow=()=>`<div class="hrow" aria-label="${S.hearts} of ${HMAX} hearts">${[...Array(HMAX)].map((_,i)=>`<span class="${i<S.hearts?'on':''}">${ic('heart',30,true)}</span>`).join('')}</div>`;
 function heartsSheet(after){regen();const full=S.hearts>=HMAX;
   sheet(`<div class="fizzline">${fizz({mood:S.hearts?'idle':'sad',size:70,fill:Math.max(.1,S.hearts/HMAX)})}<div style="flex:1"><h3>${S.hearts?`You have ${S.hearts} heart${S.hearts>1?'s':''}`:'You’re out of hearts'}</h3>
@@ -1398,10 +2963,47 @@ function lessonCards(l){const cards=[],bodyS=['Here’s how it works.','Keep goi
   if(l.example)cards.push({say:'Watch me work one out.',html:`<div class="ex"><div class="q">${chem(l.example.q)}</div><ol>${l.example.steps.map(s=>`<li>${chem(s)}</li>`).join('')}</ol></div>`,mood:'think'});
   return cards.map(c=>Object.assign({t:'learn'},c))}
 
+/* ---------- Saturday Chem Intensive ---------- */
+const INT_MS=30*60*1000;let INT=null;
+const isSat=()=>new Date().getDay()===6;
+function intToday(){if(!S.intensive||typeof S.intensive!=='object')S.intensive={};return S.intensive[ds()]||{}}
+const intLeft=()=>INT?Math.max(0,INT.end-Date.now()):0;
+function intensiveCard(){const t=intToday(),u=accentUnit();
+  if(!isSat()){const d=(6-new Date().getDay()+7)%7;return `<div class="card intcard soon"><div class="fizzline" style="align-items:center">${fizz({mood:'idle',size:52,fill:.5})}<div style="flex:1"><h3>Chem Intensive Saturday</h3><p class="small" style="margin:2px 0 0;font-family:var(--body)">In ${d} day${d>1?'s':''}: two 30-minute sessions with <b>2× XP</b>.</p></div></div></div>`}
+  const tile=(n)=>{const done=t['s'+n];return `<div class="itile ${done?'done':''}"><div><b>Session ${n}</b><span>${done?`${done.lessons} lesson${done.lessons===1?'':'s'} · +${done.xp} XP`:n===2&&!t.s1?'Best after Session 1 and a break':'30 minutes · 2× XP'}</span></div>${done?`<span class="ichk">${ic('check',22)}</span>`:`<button class="b3" data-int="${n}" style="padding:11px 16px">Start</button>`}</div>`};
+  return `<div class="card intcard" style="--c:#5B5BD6;--on:#fff"><div class="fizzline" style="align-items:center">${fizz({mood:'happy',size:60,fill:.9})}<div style="flex:1"><div class="ilabel">${ic('bolt',14,true)} Saturday · 2× XP</div><h3>Chem Intensive</h3><p class="small" style="margin:2px 0 0;font-family:var(--body)">Lessons back to back with review rounds. Hearts are paused, so you can just keep learning.</p></div></div>
+   <div class="itiles">${tile(1)}${tile(2)}</div>${t.s1&&t.s2?`<p class="small" style="margin:10px 0 0;color:var(--good)">Full intensive done today. Brilliant work!</p>`:''}</div>`}
+function startIntensive(n){if(!isSat()){toast('The Intensive opens on Saturdays.');return}
+  INT={n,end:Date.now()+INT_MS,start:Date.now(),xp:0,lessons:0,right:0,wrong:0,since:0,over:false};
+  const s=$('#session');s.hidden=false;document.body.style.overflow='hidden';setAccent({c:'#5B5BD6'});
+  s.innerHTML=`<div class="sbody" style="display:grid;place-items:center"><div class="sinner result" style="align-items:center;gap:16px">${fizz({mood:'happy',size:140,fill:.9})}
+   <h1 style="color:#5B5BD6">Intensive · Session ${n}</h1><p style="margin:0;color:var(--muted);max-width:42ch">30 minutes on the clock. I’ll line up lessons for you, with a quick review round every two lessons. Every bit of XP counts double.</p>
+   <div class="ribbon"><span class="pill">${ic('clock',20)} 30:00</span><span class="pill" style="color:#C98A06">${ic('bolt',20,true)} 2× XP</span><span class="pill" style="color:#E5484D">${ic('heart',20,true)} Hearts paused</span></div></div></div>
+   <div class="sfoot"><div class="sfin"><button class="b3 ghost" id="intBack">Not now</button><button class="b3" id="go" style="background:#5B5BD6;box-shadow:0 4px 0 #3a3aa8;color:#fff">Start the clock</button></div></div>`;
+  $('#go').focus();$('#intBack').onclick=()=>{INT=null;closeSession()};
+  $('#go').onclick=()=>{INT.end=Date.now()+INT_MS;INT.start=Date.now();nextIntensiveStep()}}
+function nextIntensiveStep(){if(!INT)return closeSession();if(INT.over||intLeft()<=0)return intensiveDone();
+  if(INT.since>=2&&LESSONS.some(isDone)){INT.since=0;return startQuiz('intreview')}
+  const l=current();if(l)return startLesson(l);return startQuiz('practice','all')}
+function afterResult(){if(INT)nextIntensiveStep();else closeSession()}
+function intensiveDone(){const I=INT;if(!I)return closeSession();const mins=Math.max(1,Math.round((Date.now()-I.start)/60000));
+  S.intensive[ds()]=Object.assign({},intToday(),{['s'+I.n]:{xp:I.xp,lessons:I.lessons,mins}});
+  const both=S.intensive[ds()].s1&&S.intensive[ds()].s2;let newB=false;if(both&&!S.badges.weekend){S.badges.weekend=ds();newB=true}
+  save();SND.win();confetti();const acc=I.right+I.wrong?Math.round(I.right/(I.right+I.wrong)*100):100;
+  const tiles=[['XP (2×)','#E9A800','bolt','+'+I.xp],['Lessons','#5B5BD6','book',I.lessons],['Accuracy',acc>=80?'#3E9B4F':'#DE6A1F','target',acc+'%']];
+  $('#session').innerHTML=`<div class="sbody" style="display:grid;place-items:center"><div class="sinner result" style="align-items:center;gap:20px">${fizz({mood:'happy',size:150,fill:1})}
+   <h1 style="color:#5B5BD6">Session ${I.n} complete!</h1>
+   <div class="rtiles">${tiles.map(([n,c,i,v])=>`<div class="rtile" style="--rc:${c}"><div class="rl">${n}</div><div class="rv">${ic(i,20,i==='bolt')}${v}</div></div>`).join('')}</div>
+   <p style="margin:0;color:var(--muted);max-width:42ch">${both?'That’s the full Saturday Intensive. Huge effort!':I.n===1?'Take a proper break: stretch, drink some water, get outside. Session 2 is ready whenever you are today.':'Nice! Session 1 is still waiting if you want the full intensive today.'}</p>
+   ${newB?`<div style="display:flex;flex-direction:column;gap:10px;align-items:center"><b style="font-family:var(--display)">New badge!</b>${badgeImg(BADGES.find(b=>b.id==='weekend'),true).replace('class="badge ','class="badge new ')}</div>`:''}</div></div>
+   <div class="sfoot"><div class="sfin"><span></span><button class="b3" id="go">Done</button></div></div>`;
+  INT=null;$('#go').focus();$('#go').onclick=closeSession}
+setInterval(()=>{if(!INT)return;const el=$('#intClock');if(el)el.textContent=mmss(intLeft());if(!INT.over&&INT.end&&intLeft()<=0){INT.over=true;toast('Time’s up! Finish this one and we’ll wrap up.')}},1000);
+
 /* ---------- sessions ---------- */
 let SES=null;
 function startLesson(l){const u=l.unit;setAccent(u);
-  regen();if(S.hearts<=0){heartsSheet(()=>startLesson(l));return}
+  regen();if(!INT&&S.hearts<=0){heartsSheet(()=>startLesson(l));return}
   const cards=lessonCards(l),qs=l.quiz.map((q,i)=>({t:'q',qid:l.id+'-'+i}));
   const pool=[];LESSONS.forEach(x=>{if(x!==l&&isDone(x))x.quiz.forEach((q,i)=>pool.push(x.id+'-'+i))});
   const mid=Math.max(1,Math.ceil(cards.length/2));
@@ -1414,19 +3016,20 @@ function startQuiz(kind,arg){let pool=[],u=null;
   if(kind==='cp'){regen();if(S.hearts<=0){heartsSheet(()=>startQuiz(kind,arg));return}}
   if(kind==='cp'){u=arg;u.lessons.forEach(l=>l.quiz.forEach((q,i)=>pool.push(l.id+'-'+i)))}
   else if(kind==='miss')pool=Object.keys(S.miss).filter(q=>byId(q.split('-')[0]));
+  else if(kind==='intreview')LESSONS.forEach(l=>{if(isDone(l))l.quiz.forEach((q,i)=>pool.push(l.id+'-'+i))});
   else LESSONS.forEach(l=>{if(arg==='all'||l.unit.id===arg||(arg==='done'&&isDone(l)))l.quiz.forEach((q,i)=>pool.push(l.id+'-'+i))});
-  pool.sort(()=>Math.random()-.5);pool=pool.slice(0,kind==='cp'?8:10);
+  pool.sort(()=>Math.random()-.5);pool=pool.slice(0,kind==='cp'?8:kind==='intreview'?5:10);
   if(!pool.length){toast('No questions there yet.');return}
   u=u||byId(pool[0].split('-')[0]).unit;setAccent(u);
   SES={kind,u,steps:pool.map(q=>({t:'q',qid:q})),i:0,hearts:kind==='cp'?3:null,right:0,wrong:0,combo:0,best:0,start:Date.now(),requeued:{},sel:null,checked:false};
   openSession()}
 function openSession(){const s=$('#session');s.hidden=false;document.body.style.overflow='hidden';renderStep()}
-function closeSession(){$('#session').hidden=true;$('#session').innerHTML='';document.body.style.overflow='';SES=null;closeSheet();setAccent(accentUnit());route()}
+function closeSession(){INT=null;$('#session').hidden=true;$('#session').innerHTML='';document.body.style.overflow='';SES=null;closeSheet();setAccent(accentUnit());route()}
 const getQ=qid=>{const[l,i]=qid.split('-');return byId(l).quiz[+i]};
 
 function shead(){const pct=SES.i/SES.steps.length*100;
   return `<div class="shead"><button class="xbtn" id="sx" aria-label="Quit">${ic('x',28)}</button><div class="sbar" role="progressbar" aria-valuenow="${Math.round(pct)}" aria-valuemin="0" aria-valuemax="100"><span style="width:${pct}%"></span></div>
-  ${usesHearts()?`<div class="hearts" id="hearts">${ic('heart',26,true)}${S.hearts}</div>`:`<div class="hearts" style="color:#C98A06">${ic('bolt',24,true)}${SES.right*2}</div>`}</div>`}
+  ${INT?`<div class="hearts intclock">${ic('clock',22)}<span id="intClock">${mmss(intLeft())}</span></div>`:usesHearts()?`<div class="hearts" id="hearts">${ic('heart',26,true)}${S.hearts}</div>`:`<div class="hearts" style="color:#C98A06">${ic('bolt',24,true)}${SES.right*2}</div>`}</div>`}
 function renderStep(){const s=$('#session'),st=SES.steps[SES.i];SES.sel=null;SES.checked=false;
   if(st.t==='learn'){const l=SES.l;
     const moreLearn=SES.steps.slice(SES.i+1).some(x=>x.t==='learn');
@@ -1480,23 +3083,25 @@ function finish(){const sec=Math.round((Date.now()-SES.start)/1000),total=SES.ri
   if(SES.kind==='lesson'){const l=SES.l,prev=S.done[l.id];xp=(prev?5:10)+(perfect?5:0);S.done[l.id]={best:Math.max(acc,prev?prev.best:0),n:(prev?prev.n:0)+1};ctx.lesson=true;ctx.perfect=perfect;justDone=prev?null:l.id}
   else if(SES.kind==='cp'){const first=!S.cp[SES.u.id];xp=first?20:SES.right*2;S.cp[SES.u.id]=1;ctx.cp=true;title='Checkpoint cleared!'}
   else{xp=SES.right*2;title=SES.kind==='miss'?'Mistakes reviewed!':'Practice complete!'}
+  if(INT){xp*=2;INT.xp+=xp;INT.right+=SES.right;INT.wrong+=SES.wrong;if(SES.kind==='lesson'){INT.lessons++;INT.since++}}
+  if(SES.kind==='intreview')title='Review round done!';
   const r=award(xp,ctx);SND.win();
   const s=$('#session');const mood=acc>=60?'happy':'idle';
   const tiles=[['Total XP','#E9A800','bolt',`<span id="xpCount">0</span>`],['Accuracy',acc>=80?'#3E9B4F':'#DE6A1F','target',acc+'%'],['Time','#1B8FA3','clock',Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0')]];
   s.innerHTML=`<div class="sbody" style="display:grid;place-items:center"><div class="sinner result" style="align-items:center;gap:22px">${fizz({mood,size:150,fill:Math.min(1,todayXP()/S.goal)})}
    <h1>${perfect&&total?'Perfect '+(SES.kind==='lesson'?'lesson':'run')+'!':title}</h1>
    <div class="rtiles">${tiles.map(([n,c,i,v])=>`<div class="rtile" style="--rc:${c}"><div class="rl">${n}</div><div class="rv">${ic(i,20,i==='bolt')}${v}</div></div>`).join('')}</div>
-   <div class="ribbon">${r.goalHit?`<span class="pill" style="color:#C98A06">${ic('target',20)} Daily goal reached</span>`:''}${SES.best>=3?`<span class="pill" style="color:#E8691C">${ic('bolt',20,true)} Best combo ${SES.best}</span>`:''}${ctx.lesson||ctx.cp?`<span class="pill" style="color:#E8691C">${ic('flame',20,true)} ${streakNow()} day streak</span>`:''}</div>
+   <div class="ribbon">${INT?`<span class="pill" style="color:#5B5BD6">${ic('clock',20)} ${INT.over||intLeft()<=0?'Time’s up':mmss(intLeft())+' left'}</span><span class="pill" style="color:#C98A06">${ic('bolt',20,true)} 2× XP</span>`:''}${r.goalHit?`<span class="pill" style="color:#C98A06">${ic('target',20)} Daily goal reached</span>`:''}${SES.best>=3?`<span class="pill" style="color:#E8691C">${ic('bolt',20,true)} Best combo ${SES.best}</span>`:''}${ctx.lesson||ctx.cp?`<span class="pill" style="color:#E8691C">${ic('flame',20,true)} ${streakNow()} day streak</span>`:''}</div>
    ${r.newBadges.length?`<div style="display:flex;flex-direction:column;gap:10px;align-items:center"><b style="font-family:var(--display)">New badge${r.newBadges.length>1?'s':''}!</b><div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">${r.newBadges.map(b=>badgeImg(b,true).replace('class="badge ','class="badge new ')).join('')}</div></div>`:''}
   </div></div><div class="sfoot"><div class="sfin"><span></span><button class="b3" id="go">Continue</button></div></div>`;
   confetti();
   let n=0;const el=$('#xpCount'),step=()=>{n=Math.min(xp,n+1);el.textContent='+'+n;if(n<xp)setTimeout(step,RM?0:Math.max(25,600/xp))};step();
   $('#go').focus();
-  $('#go').onclick=()=>r.lvlUp?levelUp(r.lvlUp):closeSession()}
+  $('#go').onclick=()=>r.lvlUp?levelUp(r.lvlUp):afterResult()}
 function levelUp(L){const s=$('#session');SND.win();confetti();
   s.innerHTML=`<div class="sbody" style="display:grid;place-items:center"><div class="sinner result" style="align-items:center;gap:18px">${fizz({mood:'happy',size:150,fill:1})}
   <div class="small">Level up</div><h1>Level ${L}: ${rank(L)}</h1><p style="margin:0;color:var(--muted);max-width:40ch">${lvlXP(L+1)-S.xp} XP until ${rank(L+1)}.</p></div></div>
-  <div class="sfoot"><div class="sfin"><span></span><button class="b3" id="go">Continue</button></div></div>`;$('#go').focus();$('#go').onclick=closeSession}
+  <div class="sfoot"><div class="sfin"><span></span><button class="b3" id="go">Continue</button></div></div>`;$('#go').focus();$('#go').onclick=afterResult}
 
 document.addEventListener('keydown',e=>{if(!SES||$('#session').hidden||$('#sheetHost').innerHTML)return;
   if(/^[1-4]$/.test(e.key)&&!SES.checked&&SES.steps[SES.i]&&SES.steps[SES.i].t==='q'){const b=document.querySelector(`.opt[data-i="${+e.key-1}"]`);if(b){e.preventDefault();selectOpt(+e.key-1)}}
