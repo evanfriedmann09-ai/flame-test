@@ -352,6 +352,7 @@ dt{color:var(--muted)} dd{margin:0}
 .sfoot.idk{background:color-mix(in oklab,var(--c) 13%,var(--bg));border-color:transparent}
 .idk .msg .ico{color:color-mix(in oklab,var(--c) 70%,var(--ink))}
 .idk .msg h3{color:color-mix(in oklab,var(--c) 70%,var(--ink))}
+.tgcard .fizz{flex:none}
 /* bottom tabs (mobile) */
 .btabs{display:none}
 @media (max-width:1180px){.app{grid-template-columns:220px minmax(0,1fr)}.aside{display:none}}
@@ -1082,7 +1083,8 @@ const syncHTML=()=>`<span class="sync ${syncState}" id="syncEl"><i></i>${{local:
 function save(){S.updated=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}clearTimeout(saveT);saveT=setTimeout(push,700)}
 /* ---------- Supabase sync (standalone build) ---------- */
 const SB_URL='https://eagsztlompasbqrrinzs.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhZ3N6dGxvbXBhc2JxcnJpbnpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNzQ3ODgsImV4cCI6MjEwNjk1MDc4OH0.j0YDXceNFwp6F6BQ30pz_dn00itgrWuObqeUCwFJbXg',SB_TABLE='flametest_progress';
-let sb=null,sbUser=null,firstPull=true,RECOVERY=false;
+let sb=null,sbUser=null,firstPull=true,RECOVERY=false,TG=undefined,TG_POLL=null;
+const BOT_USERNAME='__BOT__';
 function mergeState(a,b){const n=(a.updated||0)>=(b.updated||0)?a:b,o=n===a?b:a,m=normalize(JSON.parse(JSON.stringify(n)));
   m.done=Object.assign({},o.done||{},m.done);m.cp=Object.assign({},o.cp||{},m.cp);m.badges=Object.assign({},o.badges||{},m.badges);m.miss=Object.assign({},o.miss||{},m.miss);
   for(const d in (o.days||{}))m.days[d]=Math.max(m.days[d]||0,o.days[d]);m.xp=Math.max(m.xp||0,o.xp||0);m.streak.best=Math.max(m.streak.best||0,(o.streak&&o.streak.best)||0);
@@ -1104,7 +1106,7 @@ function initCloud(){if(!window.supabase||SB_URL.startsWith('__'))return;
   if(location.hash==='#profile'&&!SES)route();
   sb.auth.onAuthStateChange((ev,session)=>{const u=session&&session.user||null,changed=(u&&u.id)!==(sbUser&&sbUser.id);sbUser=u;
     if(ev==='PASSWORD_RECOVERY'){RECOVERY=true;setTimeout(()=>{if(location.hash!=='#profile')location.hash='profile';else route()},0)}
-    if(changed){if(u){firstPull=true;setTimeout(pull,0)}else setSync('local');if(location.hash==='#profile'&&!SES)setTimeout(route,0)}});
+    if(changed){TG=undefined;if(u){firstPull=true;setTimeout(pull,0)}else setSync('local');if(location.hash==='#profile'&&!SES)setTimeout(route,0)}});
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&sbUser&&!SES)pull()})}
 function accountCard(){
   if(!sb)return `<div class="card"><h3>Sync across devices</h3><p class="small" style="margin:6px 0 0;font-family:var(--body)">Sync isn’t available right now. Your progress is saved on this device.</p></div>`;
@@ -1118,7 +1120,22 @@ function accountCard(){
    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="b3" type="submit" id="sbIn" style="flex:1">Sign in</button><button class="b3 ghost" type="button" id="sbUp" style="flex:1">Create account</button></div>
    <button type="button" class="linkb" id="sbForgot">Forgot password?</button>
    <p class="small" id="sbMsg" style="margin:0" hidden></p></form></div>`}
-function bindAccount(){
+function tgCard(){if(!sb||BOT_USERNAME.startsWith('__'))return'';
+  const head=`<div class="card tgcard"><div class="fizzline" style="align-items:center">${fizz({mood:'happy',size:54,fill:.7})}<div style="flex:1"><h3>Fizz on Telegram</h3><p class="small" style="margin:2px 0 0;font-family:var(--body)">A daily message with your streak, hearts and next lesson, plus a heads-up before your streak breaks.</p></div></div>`;
+  if(!sbUser)return head+`<p class="small" style="margin:12px 0 0;font-family:var(--body)">Sign in above first so Fizz can see your progress.</p></div>`;
+  if(TG===undefined)return head+`<p class="small" style="margin:12px 0 0">Checking…</p></div>`;
+  if(TG)return head+`<div class="setrow" style="border:0;padding-bottom:0"><span>✓ Connected<br><span class="small">${TG.paused?'Paused (send /resume to Fizz)':'Daily at '+String(TG.remind_hour).padStart(2,'0')+':00 · change with /time in Telegram'}</span></span><button class="b3 ghost" id="tgOff" style="padding:10px 14px;font-size:13px">Disconnect</button></div></div>`;
+  return head+`<button class="b3 wide" id="tgOn" style="margin-top:14px">${ic('send',20)} Connect Telegram</button><p class="small" id="tgMsg" style="margin:8px 0 0" hidden></p></div>`}
+async function loadTG(){if(!sb||!sbUser){TG=undefined;return}const{data,error}=await sb.from('flametest_telegram').select('remind_hour,paused').eq('user_id',sbUser.id).maybeSingle();
+  const was=JSON.stringify(TG);TG=error?undefined:(data||null);if(JSON.stringify(TG)!==was&&location.hash==='#profile'&&!SES)route()}
+function bindTG(){if(sbUser&&TG===undefined)loadTG();
+  const on=$('#tgOn');if(on)on.onclick=async()=>{on.disabled=true;const a=new Uint8Array(18);crypto.getRandomValues(a);const code=btoa(String.fromCharCode(...a)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    const{error}=await sb.from('flametest_tg_codes').insert({code,user_id:sbUser.id});on.disabled=false;
+    if(error){const m=$('#tgMsg');m.hidden=false;m.style.color='var(--bad)';m.textContent='Couldn’t start connecting. Check your internet and try again.';return}
+    clearInterval(TG_POLL);let n=0;TG_POLL=setInterval(()=>{if(++n>40||TG){clearInterval(TG_POLL);return}loadTG()},3000);
+    location.href='https://t.me/'+BOT_USERNAME+'?start='+code};
+  const off=$('#tgOff');if(off)off.onclick=async()=>{off.disabled=true;await sb.from('flametest_telegram').delete().eq('user_id',sbUser.id);TG=null;toast('Telegram disconnected');route()}}
+function bindAccount(){bindTG();
   const nf=$('#sbNew');if(nf){nf.onsubmit=async e=>{e.preventDefault();const b=$('#sbNewGo');b.disabled=true;const{error}=await sb.auth.updateUser({password:$('#sbNewPass').value});b.disabled=false;
     if(error){const m=$('#sbMsg');m.hidden=false;m.style.color='var(--bad)';m.textContent=error.message}else{RECOVERY=false;toast('Password saved. You’re signed in.');route()}};return}const o=$('#sbOut');if(o)o.onclick=async()=>{await sb.auth.signOut();toast('Signed out. Progress stays on this device.')};
   const f=$('#sbForm');if(!f)return;const msg=(t,bad)=>{const m=$('#sbMsg');m.hidden=false;m.style.color=bad?'var(--bad)':'var(--good)';m.textContent=t};
@@ -1299,6 +1316,7 @@ function viewProfile(){const L=level(),nx=lvlXP(L+1),pv=lvlXP(L),u=accentUnit();
   <div class="card"><h3 style="margin-bottom:14px">Last 7 days</h3><div class="week">${days.map(d=>`<div><span class="v">${d.x||''}</span><i class="${d.x?'':'zero'}" style="height:${Math.max(3,d.x/mx*90)}px"></i><small>${'SMTWTFS'[d.d.getDay()]}</small></div>`).join('')}</div></div>
   <div class="card"><h3 style="margin-bottom:14px">Badges · ${BADGES.filter(b=>S.badges[b.id]).length}/${BADGES.length}</h3><div class="badges">${BADGES.map(b=>badgeImg(b,!!S.badges[b.id])).join('')}</div></div>
   ${accountCard()}
+  ${tgCard()}
   <div class="card"><h3>Settings</h3>
    <div class="setrow"><span>Daily goal</span><div class="seg" id="goalSeg">${[10,20,30,50].map(g=>`<button data-g="${g}" aria-pressed="${S.goal===g}">${g} XP</button>`).join('')}</div></div>
    <div class="setrow"><span>Sound effects</span><div class="seg"><button id="sndT" aria-pressed="${S.sound}">${S.sound?'On':'Off'}</button></div></div>
