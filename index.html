@@ -349,6 +349,9 @@ dt{color:var(--muted)} dd{margin:0}
 .bite{padding:18px 20px;display:flex;flex-direction:column;gap:14px;animation:stepin .35s cubic-bezier(.16,1,.3,1) both}
 .bite .ltitle{font-size:clamp(26px,5vw,34px);letter-spacing:-.02em}
 .bite .tbl{border:0;border-radius:10px}
+.sfoot.idk{background:color-mix(in oklab,var(--c) 13%,var(--bg));border-color:transparent}
+.idk .msg .ico{color:color-mix(in oklab,var(--c) 70%,var(--ink))}
+.idk .msg h3{color:color-mix(in oklab,var(--c) 70%,var(--ink))}
 /* bottom tabs (mobile) */
 .btabs{display:none}
 @media (max-width:1180px){.app{grid-template-columns:220px minmax(0,1fr)}.aside{display:none}}
@@ -832,6 +835,125 @@ const UNITS=[
         {q:'Why do cars rust faster in Canadian winters?',o:['Cold speeds up rusting','Road salt helps electrons move','Snow is acidic','Less oxygen'],a:1,w:'Salt water is an electrolyte, which speeds up the redox reaction.'}]}
 ]}
 ];
+/* ===== Chemistry from Zero: teach one idea, check it right away ===== */
+const B=(say,html,q,o,a,w)=>({say,html,q:{q,o,a,w}});
+const ZERO={id:'z',sym:'Cs',z:55,c:'#5B5BD6',name:'Chemistry from Zero',flame:'caesium · blue-violet',strand:'Absolute basics',
+ blurb:'No experience needed. Tiny lessons that teach one idea at a time, then check it.',lessons:[
+ {id:'z1',title:'What is chemistry?',sub:'Matter and what it’s made of',bites:[
+  B('Let’s start at the very beginning.','<p><b>Chemistry</b> is the science of <b>matter</b>: what stuff is made of, and how it changes.</p><p>Matter is anything that has mass and takes up space. Your phone, water, air and you are all matter.</p>',
+    'Which of these is matter?',['Air','A thought','A song’s melody'],0,'Air has mass and takes up space, even though you can’t see it. Thoughts and melodies aren’t stuff.'),
+  B('Two words you’ll see a lot.','<p><b>Mass</b> is how much stuff something contains. We measure it in grams (g).</p><p><b>Volume</b> is how much space it takes up. We measure it in millilitres (mL) or litres (L).</p>',
+    'Which unit measures mass?',['Litres','Grams','Degrees'],1,'Grams measure mass. Litres measure volume.'),
+  B('Chemistry happens everywhere.','<p>Cooking an egg, rust on a bike, a battery powering your phone and fireworks exploding are all chemistry: substances changing into new substances.</p>',
+    'Which of these is an example of chemistry?',['A bike rusting','Throwing a ball','Folding paper'],0,'Rusting turns iron into a new substance. Throwing or folding doesn’t change what something is made of.')]},
+ {id:'z2',title:'Solids, liquids and gases',sub:'The three states of matter',bites:[
+  B('Everything is made of tiny particles.','<p>Matter is made of particles far too small to see. How tightly they’re packed decides the <b>state</b>.</p><p><b>Solid</b>: particles packed tight, only vibrating. Keeps its shape.<br><b>Liquid</b>: particles close but sliding past each other. Takes the shape of its container.<br><b>Gas</b>: particles far apart, zooming around. Fills any space.</p>',
+    'In which state are particles farthest apart?',['Solid','Liquid','Gas'],2,'Gas particles are spread far apart and move freely.'),
+  B('States can change.','<p>Heat a solid and it <b>melts</b> into a liquid. Heat a liquid and it <b>boils</b> (or evaporates) into a gas.</p><p>Cool a gas and it <b>condenses</b> into a liquid. Cool a liquid and it <b>freezes</b> into a solid.</p>',
+    'Water vapour turning into droplets on a cold window is called…',['melting','condensing','freezing'],1,'Gas turning into liquid is condensation.'),
+  B('Same stuff, different state.','<p>Ice, liquid water and steam are all the same substance, {H2O}. Changing state doesn’t make a new substance; it just moves the particles closer or farther apart.</p>',
+    'When ice melts, is a new substance made?',['Yes','No'],1,'It’s still {H2O}. Only the state changed.')]},
+ {id:'z3',title:'Elements and atoms',sub:'The building blocks',bites:[
+  B('Here’s the big idea of chemistry.','<p>All matter is built from tiny pieces called <b>atoms</b>. An atom is so small that a single grain of sand contains more atoms than there are grains of sand on every beach on Earth.</p>',
+    'What is all matter built from?',['Cells','Atoms','Light'],1,'Everything is made of atoms.'),
+  B('There are different kinds of atoms.','<p>An <b>element</b> is a substance made of only one kind of atom. Gold is made only of gold atoms. Oxygen is made only of oxygen atoms.</p><p>There are 118 known elements, but only about 30 come up often.</p>',
+    'A substance made of only one kind of atom is called…',['an element','a mixture','a liquid'],0,'One kind of atom = an element.'),
+  B('Elements combine to make everything else.','<p>Just as 26 letters make every word in English, around 90 natural elements combine to make every substance in the universe. Water is hydrogen + oxygen. Table salt is sodium + chlorine.</p>',
+    'Water is made from which two elements?',['Carbon and oxygen','Hydrogen and oxygen','Sodium and chlorine'],1,'Water, {H2O}, is hydrogen and oxygen.')]},
+ {id:'z4',title:'Element symbols',sub:'Chemistry’s short forms',bites:[
+  B('Every element has a symbol.','<p>Instead of writing “oxygen” every time, chemists write <b>O</b>. Hydrogen is <b>H</b>, carbon is <b>C</b>, nitrogen is <b>N</b>.</p>',
+    'What is the symbol for carbon?',['Ca','C','Cb'],1,'Carbon is C. (Ca is calcium.)'),
+  B('Here’s the rule for writing them.','<p>A symbol is one or two letters. The first is <b>always a capital</b>; the second is <b>always lowercase</b>.</p><p>So <b>Co</b> is cobalt (one element), but <b>CO</b> is carbon + oxygen (carbon monoxide).</p>',
+    'Which is written correctly for chlorine?',['CL','Cl','cl'],1,'First letter capital, second lowercase: Cl.'),
+  B('Some symbols come from Latin.','<p>A few symbols don’t match the English name, because they come from Latin:</p><p><b>Na</b> = sodium (natrium) · <b>K</b> = potassium (kalium) · <b>Fe</b> = iron (ferrum) · <b>Cu</b> = copper (cuprum) · <b>Ag</b> = silver (argentum) · <b>Au</b> = gold (aurum) · <b>Pb</b> = lead (plumbum)</p>',
+    'What is the symbol for sodium?',['So','S','Na'],2,'Sodium is Na, from its Latin name natrium.'),
+  B('Quick check on the Latin ones.','<p>Remember: <b>Fe</b> is iron, like in “ferrous metals”. <b>Au</b> is gold, from aurum.</p>',
+    'What element is Fe?',['Fluorine','Iron','Lead'],1,'Fe comes from ferrum, Latin for iron.')]},
+ {id:'z5',title:'Inside an atom',sub:'Protons, neutrons and electrons',bites:[
+  B('Atoms have even smaller parts.','<p>Every atom has three kinds of particles:</p><p><b>Protons</b>: positive charge (+)<br><b>Neutrons</b>: no charge (0)<br><b>Electrons</b>: negative charge (−)</p>',
+    'Which particle has a negative charge?',['Proton','Neutron','Electron'],2,'Electrons are negative.'),
+  B('Here’s where they live.','<p>Protons and neutrons are packed together in the centre, called the <b>nucleus</b>. Electrons move around the outside in a cloud.</p><p>The nucleus holds almost all the mass; electrons are tiny and light.</p>',
+    'Where are protons found?',['In the nucleus','Orbiting outside','Between atoms'],0,'Protons and neutrons sit in the nucleus at the centre.'),
+  B('Atoms are usually neutral.','<p>A normal atom has the <b>same number of protons and electrons</b>, so the + and − charges cancel out. Overall, it has no charge.</p>',
+    'An atom has 6 protons. How many electrons does a neutral atom have?',['3','6','12'],1,'Neutral means protons = electrons, so 6.')]},
+ {id:'z6',title:'Reading the periodic table',sub:'What the numbers in each box mean',bites:[
+  B('Each element gets a box.','<p>Every box on the periodic table shows a symbol, a name, and two important numbers. For carbon: <b>atomic number 6</b> and <b>atomic mass 12.01</b>.</p>',
+    'What two numbers are in each element’s box?',['Atomic number and atomic mass','Temperature and colour','Price and weight'],0,'Each box shows the atomic number and atomic mass.'),
+  B('The atomic number is the element’s ID.','<p>The <b>atomic number</b> is the number of protons. It decides which element an atom is. Every atom with 6 protons is carbon. With 8 protons, it’s oxygen.</p>',
+    'Oxygen’s atomic number is 8. How many protons does oxygen have?',['16','8','4'],1,'Atomic number = number of protons.'),
+  B('The atomic mass is the weight.','<p>The <b>atomic mass</b> is how heavy one atom is, roughly protons + neutrons. Carbon’s is about 12, because it has 6 protons and 6 neutrons.</p><p>You’ll use atomic masses a lot in calculations later.</p>',
+    'Carbon has 6 protons and 6 neutrons. Its atomic mass is about…',['6','12','18'],1,'Protons + neutrons ≈ 6 + 6 = 12.')]},
+ {id:'z7',title:'The layout of the table',sub:'Rows, columns, metals and non-metals',bites:[
+  B('The table has rows and columns.','<p>Rows across are called <b>periods</b>. Columns down are called <b>groups</b>. There are 7 periods and 18 groups.</p>',
+    'A column on the periodic table is called a…',['period','group','row'],1,'Columns are groups; rows are periods.'),
+  B('Groups are families.','<p>Elements in the same group behave alike. Group 1 (lithium, sodium, potassium) are soft metals that react with water. Group 18 (helium, neon, argon) are the <b>noble gases</b>, which barely react with anything.</p>',
+    'Which group barely reacts with anything?',['Group 1','Group 17','Group 18, the noble gases'],2,'Noble gases are very unreactive.'),
+  B('Metals on the left, non-metals on the right.','<p><b>Metals</b> fill the left and middle: shiny, conduct electricity, bendable (iron, copper, sodium).</p><p><b>Non-metals</b> are on the upper right: often gases or brittle solids (oxygen, nitrogen, sulfur). A staircase line separates them.</p>',
+    'Is oxygen a metal or a non-metal?',['Metal','Non-metal'],1,'Oxygen is on the upper right: a non-metal.')]},
+ {id:'z8',title:'Electron shells',sub:'Why elements react',bites:[
+  B('Electrons live in layers.','<p>Electrons sit in layers around the nucleus called <b>shells</b>. The first shell holds up to <b>2</b>, the second up to <b>8</b>, and the third up to <b>8</b> (for the elements you’ll use).</p>',
+    'How many electrons fit in the first shell?',['2','8','18'],0,'The first shell holds 2.'),
+  B('Let’s fill some shells.','<p>Sodium has 11 electrons: 2 in the first shell, 8 in the second, and <b>1</b> in the third. We write that as 2, 8, 1.</p>',
+    'Oxygen has 8 electrons. How are they arranged?',['2, 6','8','4, 4'],0,'First shell 2, then the remaining 6 go in the second shell.'),
+  B('The outer shell is what matters.','<p>Electrons in the outermost shell are called <b>valence electrons</b>. Atoms are most stable with a full outer shell (usually 8), and they react to get there.</p><p>Handy shortcut: for groups 1–2, valence electrons = group number. For groups 13–18, subtract 10.</p>',
+    'Chlorine is in group 17. How many valence electrons does it have?',['1','7','17'],1,'17 − 10 = 7 valence electrons.')]},
+ {id:'z9',title:'Ions',sub:'Atoms with a charge',bites:[
+  B('Atoms can gain or lose electrons.','<p>When an atom gains or loses electrons, it gets a charge. A charged atom is called an <b>ion</b>.</p><p>Lose electrons → more protons than electrons → <b>positive</b>.<br>Gain electrons → more electrons than protons → <b>negative</b>.</p>',
+    'An atom loses an electron. What charge does it get?',['Positive','Negative','None'],0,'Losing a negative electron leaves it positive.'),
+  B('Metals lose, non-metals gain.','<p>Sodium has 1 valence electron. It’s easier to lose 1 than gain 7, so it becomes {Na^+}.</p><p>Chlorine has 7. It’s easier to gain 1, so it becomes {Cl^-}.</p>',
+    'What ion does chlorine usually form?',['{Cl^+}','{Cl^-}','{Cl^2+}'],1,'Chlorine gains 1 electron to fill its shell: {Cl^-}.'),
+  B('How to read an ion.','<p>The little number and sign tell you the charge. {Mg^2+} lost 2 electrons. {O^2-} gained 2 electrons. A sign with no number means 1.</p>',
+    'How many electrons did {Mg^2+} lose?',['1','2','12'],1,'2+ means it lost 2 electrons.')]},
+ {id:'z10',title:'Molecules and compounds',sub:'When atoms join up',bites:[
+  B('Atoms can bond together.','<p>When two or more atoms join together, they form a <b>molecule</b>. Oxygen gas in the air is {O2}: two oxygen atoms bonded together.</p>',
+    'What do you call two or more atoms bonded together?',['An ion','A molecule','An element box'],1,'Bonded atoms form a molecule.'),
+  B('Compounds mix different elements.','<p>A <b>compound</b> is made of two or more <i>different</i> elements bonded together. Water ({H2O}) and carbon dioxide ({CO2}) are compounds. {O2} is not, because it’s only oxygen.</p>',
+    'Which is a compound?',['{O2}','{CO2}','{N2}'],1,'{CO2} has two different elements: carbon and oxygen.'),
+  B('Compounds are new substances.','<p>A compound can be totally different from its elements. Sodium is a metal that explodes in water and chlorine is a poisonous gas, but together they make table salt.</p><p>A <b>mixture</b> is different: things just mixed, not bonded, like salt stirred into water.</p>',
+    'Salt stirred into water is a…',['compound','mixture','element'],1,'The salt and water aren’t bonded together, so it’s a mixture.')]},
+ {id:'z11',title:'Reading formulas',sub:'What the little numbers mean',bites:[
+  B('A formula is a recipe for a molecule.','<p>A <b>chemical formula</b> shows which atoms are in a substance and how many. In {H2O}, the small <b>2</b> means 2 hydrogen atoms. No number means 1, so there’s 1 oxygen.</p>',
+    'How many hydrogen atoms are in {H2O}?',['1','2','3'],1,'The subscript 2 after H means 2 hydrogen atoms.'),
+  B('Let’s count a bigger one.','<p>{CO2}: 1 carbon, 2 oxygen.<br>{CH4} (methane): 1 carbon, 4 hydrogen.<br>{C6H12O6} (glucose): 6 carbon, 12 hydrogen, 6 oxygen.</p>',
+    'How many hydrogen atoms are in {CH4}?',['1','4','5'],1,'The 4 after H means 4 hydrogen atoms.'),
+  B('Brackets multiply everything inside.','<p>In {Ca(OH)2}, the 2 outside the brackets doubles everything inside. So there’s 1 Ca, 2 O and 2 H.</p>',
+    'How many oxygen atoms are in {Ca(OH)2}?',['1','2','4'],1,'The 2 outside the brackets doubles the one O inside.'),
+  B('A big number in front means copies.','<p>A big number <b>in front</b> is a <b>coefficient</b>: how many whole molecules. {2H2O} means two water molecules, so 4 H and 2 O in total.</p>',
+    'How many water molecules is {3H2O}?',['2','3','6'],1,'The 3 in front means 3 molecules.')]},
+ {id:'z12',title:'Physical vs chemical changes',sub:'How to tell a reaction happened',bites:[
+  B('Two kinds of change.','<p>A <b>physical change</b> changes how something looks but not what it is: melting, cutting, dissolving.</p><p>A <b>chemical change</b> (a <b>reaction</b>) makes a brand-new substance: burning, rusting, baking.</p>',
+    'Burning paper is a…',['physical change','chemical change'],1,'Burning makes new substances (ash, smoke, {CO2}).'),
+  B('Here are the clues.','<p>Signs a chemical reaction happened:</p><p>• bubbles of gas form<br>• the colour changes<br>• a solid appears in a liquid (a <b>precipitate</b>)<br>• heat or light is given off<br>• a new smell</p>',
+    'Mixing two clear liquids makes a cloudy solid appear. What is that solid called?',['a precipitate','a molecule','a vapour'],0,'A solid forming in a liquid is a precipitate, a sign of a reaction.'),
+  B('One more check.','<p>Remember: if it’s still the same substance, it’s physical. If something new formed, it’s chemical.</p>',
+    'Ice melting is a…',['physical change','chemical change'],0,'Melted ice is still water. Nothing new formed.')]},
+ {id:'z13',title:'Chemical equations',sub:'Writing down a reaction',bites:[
+  B('Reactions are written as equations.','<p>A <b>chemical equation</b> shows a reaction. The starting substances, the <b>reactants</b>, go on the left. The new substances, the <b>products</b>, go on the right. The arrow means “turns into”.</p><p>{C + O2 → CO2}</p>',
+    'In {C + O2 → CO2}, what is the product?',['C','{O2}','{CO2}'],2,'Products are on the right of the arrow.'),
+  B('Atoms are never lost.','<p>In a reaction, atoms just rearrange. None are created or destroyed. This is the <b>law of conservation of mass</b>: the total mass before equals the total mass after.</p>',
+    '10 g of reactants react completely. What mass of products forms?',['less than 10 g','10 g','more than 10 g'],1,'Mass is conserved: 10 g in, 10 g out.'),
+  B('So equations must balance.','<p>Both sides need the same number of each atom. {H2 + O2 → H2O} has 2 O on the left but 1 on the right, so it’s unbalanced. Adding coefficients fixes it: {2H2 + O2 → 2H2O}.</p><p>You’ll practise this properly in Unit 1.</p>',
+    'Why do we add coefficients to equations?',['To make them look neat','So both sides have the same atoms','To speed up the reaction'],1,'Atoms can’t appear or vanish, so both sides must match.')]},
+ {id:'z14',title:'Measurements and big numbers',sub:'Units and scientific notation',bites:[
+  B('Chemists use metric units.','<p>Mass in <b>grams (g)</b>. Volume in <b>millilitres (mL)</b> or <b>litres (L)</b>, where 1000 mL = 1 L. Temperature in <b>degrees Celsius (°C)</b>.</p>',
+    'How many millilitres are in 1 L?',['10','100','1000'],2,'1 L = 1000 mL.'),
+  B('Converting is just multiplying or dividing.','<p>mL → L: divide by 1000. So 250 mL = 0.250 L.<br>L → mL: multiply by 1000. So 2 L = 2000 mL.</p>',
+    'What is 500 mL in litres?',['0.5 L','5 L','50 L'],0,'500 ÷ 1000 = 0.5 L.'),
+  B('Scientific notation shortens huge numbers.','<p>Atoms are so small that chemists count them in huge numbers. Instead of 602 000 000 000 000 000 000 000, we write <b>6.02 × 10<sup>23</sup></b>. The power of 10 tells you how many places to move the decimal.</p><p>10<sup>3</sup> = 1000, so 5 × 10<sup>3</sup> = 5000.</p>',
+    'What is 3 × 10<sup>2</sup>?',['30','300','3000'],1,'10² = 100, so 3 × 100 = 300.'),
+  B('Negative powers mean small numbers.','<p>A negative power moves the decimal left. 10<sup>−2</sup> = 0.01, so 4 × 10<sup>−2</sup> = 0.04. You’ll see these in pH and concentration.</p>',
+    'What is 10<sup>−1</sup>?',['10','0.1','−10'],1,'A negative power means a small number: 10⁻¹ = 0.1.')]},
+ {id:'z15',title:'Lab equipment and safety',sub:'The tools you’ll use',bites:[
+  B('Meet the glassware.','<p><b>Beaker</b>: a wide cup for holding and mixing.<br><b>Erlenmeyer flask</b>: cone-shaped, so it swirls without spilling.<br><b>Graduated cylinder</b>: tall and thin, for measuring volume.<br><b>Burette</b>: a long tube with a tap, for adding liquid drop by drop.</p>',
+    'Which tool measures volume most accurately?',['Beaker','Graduated cylinder','Test tube'],1,'Beakers only give rough volumes; graduated cylinders are made for measuring.'),
+  B('Reading a measurement.','<p>Liquids curve in a tube. That curve is called the <b>meniscus</b>. Always read the bottom of the curve, with your eye at the same level.</p>',
+    'Where do you read the volume in a graduated cylinder?',['Top of the curve','Bottom of the curve','Anywhere'],1,'Read at the bottom of the meniscus, at eye level.'),
+  B('Stay safe.','<p>Wear goggles. Tie back long hair. Never taste or directly smell chemicals: waft the smell toward you with your hand. In Canada, chemical labels use <b>WHMIS</b> symbols to show hazards like flammable, corrosive or toxic.</p>',
+    'How should you smell a chemical in the lab?',['Sniff it directly','Waft it toward you','Never check smells at all'],1,'Wafting keeps you from breathing in a strong dose.')]}
+]};
+ZERO.lessons.forEach(l=>{l.quiz=l.bites.map(b=>b.q);l.lede=l.sub});
+UNITS.unshift(ZERO);
+
 const LESSONS=[];UNITS.forEach(u=>u.lessons.forEach((l,i)=>{l.unit=u;l.n=i+1;LESSONS.push(l)}));
 const byId=id=>LESSONS.find(l=>l.id===id);
 
@@ -877,7 +999,7 @@ function parseFormula(str){
 }
 
 
-const UNITLABEL=u=>{const i=UNITS.indexOf(u);return i===0?'Start here':'Unit '+i+' · '+u.strand};
+const UNITLABEL=u=>{const i=UNITS.indexOf(u);return i===0?'Start here':i===1?'Warm-up · '+u.strand:'Unit '+(i-1)+' · '+u.strand};
 
 /* ---------- icons ---------- */
 const ICONS={
@@ -1139,6 +1261,7 @@ function viewNotes(l){const u=l.unit,idx=LESSONS.indexOf(l),prev=LESSONS[idx-1],
   ${unlocked(l)?`<button class="b3" id="notesGo">${isDone(l)?'Practise this lesson':'Start this lesson'}</button>`:''}
   ${next?`<a class="b3 ghost" href="#notes-${next.id}">Next →</a>`:''}</div></div>`}
 function learnHTML(l,part){let h='';
+  if(l.bites)return part==='all'?l.bites.map(b=>chem(b.html)).join(''):'';
   const A=()=>{let s=`<p class="lede">${chem(l.lede)}</p>`;if(l.diagram==='pe')s+=peDiagram();if(l.body)s+=chem(l.body);return s};
   const B=()=>{let s='';if(l.table)s+=`<div class="tbl"><table><thead><tr>${l.table.head.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${l.table.rows.map(r=>`<tr>${r.map((c,i)=>`<td${i===0&&/^[\d.×°≈]+$/.test(c)?' class="num"':''}>${chem(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
     if(l.diagram==='cell')s+=cellDiagram();if(l.sim)s+=simHTML();
@@ -1266,6 +1389,7 @@ function startLesson(l){const u=l.unit;setAccent(u);
   const mid=Math.max(1,Math.ceil(cards.length/2));
   const steps=[...cards.slice(0,mid),qs[0],...cards.slice(mid),...qs.slice(1)];
   if(pool.length&&cards.length>=3)steps.splice(2,0,{t:'q',qid:pick(pool),review:true});
+  if(l.bites){steps.length=0;l.bites.forEach((b,i)=>steps.push({t:'learn',say:b.say,html:(i===0?'<h1 class="ltitle">'+l.title+'</h1>':'')+chem(b.html)},{t:'q',qid:l.id+'-'+i}));if(pool.length)steps.push({t:'q',qid:pick(pool),review:true})}
   SES={kind:'lesson',l,u,steps,i:0,hearts:3,right:0,wrong:0,combo:0,best:0,start:Date.now(),requeued:{},sel:null,checked:false,replay:isDone(l)};
   openSession()}
 function startQuiz(kind,arg){let pool=[],u=null;
@@ -1297,9 +1421,9 @@ function renderStep(){const s=$('#session'),st=SES.steps[SES.i];SES.sel=null;SES
     s.innerHTML=shead()+`<div class="sbody"><div class="sinner">${st.review||SES.kind!=='lesson'?`<span class="review">${ic('repeat',16)} ${st.review?'Review · ':''}${src.unit.name}: ${src.title}</span>`:''}${st.again?`<span class="review" style="color:var(--bad)">${ic('repeat',16)} Previous mistake</span>`:''}
       <div class="fizzline">${fizz({mood:'think',size:62,fill:.65})}<div class="say qprompt" style="flex:1;font-size:19px">${chem(q.q)}</div></div>
       <div class="opts" role="group" aria-label="Answers">${q.o.map((o,i)=>`<button class="opt" data-i="${i}" aria-pressed="false"><span class="k">${i+1}</span><span>${chem(o)}</span></button>`).join('')}</div></div></div>
-      <div class="sfoot" id="sf"><div class="sfin"><span class="small">Press 1–${q.o.length}, then Enter</span><button class="b3" id="go" disabled>Check</button></div></div>`;
+      <div class="sfoot" id="sf"><div class="sfin"><button class="b3 ghost" id="idk" type="button">I don’t know yet</button><button class="b3" id="go" disabled>Check</button></div></div>`;
     s.querySelectorAll('.opt').forEach(b=>b.onclick=()=>selectOpt(+b.dataset.i));
-    $('#go').onclick=check}
+    $('#go').onclick=check;$('#idk').onclick=dontKnow}
   $('#sx').onclick=quitAsk;
   const body=s.querySelector('.sbody');body&&(body.scrollTop=0)}
 function selectOpt(i){if(SES.checked)return;SES.sel=i;SND.tap();document.querySelectorAll('.opt').forEach((b,j)=>b.setAttribute('aria-pressed',j===i));$('#go').disabled=false}
@@ -1318,6 +1442,13 @@ function check(){if(SES.sel===null||SES.checked)return;SES.checked=true;const st
   if(ok){const sv=document.querySelector('.sinner .fizz');if(sv)sv.outerHTML=fizz({mood:'happy',size:62,fill:.65})}
   else{const sv=document.querySelector('.sinner .fizz');if(sv)sv.outerHTML=fizz({mood:'sad',size:62,fill:.65})}
   try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function dontKnow(){if(SES.checked)return;SES.checked=true;const st=SES.steps[SES.i],q=getQ(st.qid);SES.combo=0;SND.tap();
+  document.querySelectorAll('.opt').forEach((b,j)=>{b.disabled=true;b.setAttribute('aria-pressed','false');if(j===q.a)b.classList.add('right')});
+  if(SES.kind!=='miss'&&!SES.requeued[st.qid]){SES.requeued[st.qid]=1;SES.steps.push({t:'q',qid:st.qid,again:true})}S.miss[st.qid]=1;
+  const sv=document.querySelector('.sinner .fizz');if(sv)sv.outerHTML=fizz({mood:'idle',size:62,fill:.65});
+  const sf=$('#sf');sf.className='sfoot idk';
+  sf.innerHTML=`<div class="sfin"><div class="msg"><span class="ico">${ic('book',24)}</span><div><h3>No problem, here’s how it works</h3><p><b>Answer:</b> ${chem(q.o[q.a])}. ${chem(q.w)}</p><p class="small" style="margin-top:6px;font-family:var(--body)">No heart lost. You’ll see this one again at the end.</p></div></div><button class="b3" id="go">Got it</button></div>`;
+  const g=$('#go');g.onclick=next;g.focus();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function next(){if(usesHearts()&&S.hearts<=0){failScreen();return}SES.i++;if(SES.i>=SES.steps.length){finish();return}renderStep()}
 function quitAsk(){sheet(`<div class="fizzline">${fizz({mood:'sad',size:70,fill:.5})}<div style="flex:1"><h3>Leaving already?</h3><p>You’ll lose your progress in this ${SES.kind==='lesson'?'lesson':'session'}.</p></div></div><div class="btns"><button class="b3 wide" data-close>Keep learning</button><button class="b3 ghost wide" id="quitY">Quit</button></div>`);
   $('#sheetHost').querySelector('.sheet').style.zIndex=70;$('#sheetHost').querySelector('.scrim').style.zIndex=69;$('#quitY').onclick=closeSession}
