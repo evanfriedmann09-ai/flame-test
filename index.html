@@ -1084,7 +1084,7 @@ function save(){S.updated=Date.now();try{localStorage.setItem(KEY,JSON.stringify
 /* ---------- Supabase sync (standalone build) ---------- */
 const SB_URL='https://eagsztlompasbqrrinzs.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhZ3N6dGxvbXBhc2JxcnJpbnpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNzQ3ODgsImV4cCI6MjEwNjk1MDc4OH0.j0YDXceNFwp6F6BQ30pz_dn00itgrWuObqeUCwFJbXg',SB_TABLE='flametest_progress';
 let sb=null,sbUser=null,firstPull=true,RECOVERY=false,TG=undefined,TG_POLL=null;
-const BOT_USERNAME='__BOT__';
+const BOT_USERNAME='FizzChemBot';
 function mergeState(a,b){const n=(a.updated||0)>=(b.updated||0)?a:b,o=n===a?b:a,m=normalize(JSON.parse(JSON.stringify(n)));
   m.done=Object.assign({},o.done||{},m.done);m.cp=Object.assign({},o.cp||{},m.cp);m.badges=Object.assign({},o.badges||{},m.badges);m.miss=Object.assign({},o.miss||{},m.miss);
   for(const d in (o.days||{}))m.days[d]=Math.max(m.days[d]||0,o.days[d]);m.xp=Math.max(m.xp||0,o.xp||0);m.streak.best=Math.max(m.streak.best||0,(o.streak&&o.streak.best)||0);
